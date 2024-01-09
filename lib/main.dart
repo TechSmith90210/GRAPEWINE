@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'Colors/colors.dart';
 import 'View/splash_screen.dart';
 
@@ -15,7 +16,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'GrapeWine Demo',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(scaffoldBackgroundColor: backgroundColor),
+      theme: ThemeData(
+          scaffoldBackgroundColor: backgroundColor,
+          fontFamily: 'Red Hat Display',
+      ),
       home: SplashScreen(),
     );
   }

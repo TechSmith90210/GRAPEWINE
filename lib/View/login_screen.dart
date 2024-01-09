@@ -21,7 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
         scrollDirection: Axis.vertical,
         child: Center(
           child: Container(
-            margin: EdgeInsets.only(left: 16, right: 16, top: 120, bottom: 30),
+            margin: EdgeInsets.only(left: 16, right: 16, top: 100, bottom: 30),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -161,9 +161,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Container(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () {
-
-                            },
+                            onPressed: () {},
                             style: ElevatedButton.styleFrom(
                               padding: EdgeInsets.all(15),
                               shape: RoundedRectangleBorder(
@@ -217,9 +215,13 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: Text(
                                 'Sign Up now',
                                 style: GoogleFonts.redHatDisplay(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700,
-                                    color: redColor),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700,
+                                  color: redColor,
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: redColor,
+                                  decorationThickness: 1.0,
+                                ),
                               ),
                             ),
                           ],
