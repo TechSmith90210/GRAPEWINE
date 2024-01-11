@@ -1,9 +1,17 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:grapewine_music_app/firebase_options.dart';
 import 'Colors/colors.dart';
 import 'View/splash_screen.dart';
 
-void main() {
+Future<void> main() async {
+  await WidgetsFlutterBinding.ensureInitialized();
+  print('widgets binded');
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  print('Firebase Initialized');
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
   runApp(const MyApp());
 }
 
@@ -17,8 +25,8 @@ class MyApp extends StatelessWidget {
       title: 'GrapeWine Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          scaffoldBackgroundColor: backgroundColor,
-          fontFamily: 'Red Hat Display',
+        scaffoldBackgroundColor: backgroundColor,
+        fontFamily: 'Red Hat Display',
       ),
       home: SplashScreen(),
     );

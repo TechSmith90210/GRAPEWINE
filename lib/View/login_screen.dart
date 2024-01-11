@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:grapewine_music_app/Authentications/login_function.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
 import 'signup_screen.dart';
+import 'package:grapewine_music_app/Authentications/login_function.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -128,7 +130,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         Container(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              var email = emailController.text.trim();
+                              var password = passwordController.text.trim();
+                              Auth auth = Auth();
+                              await auth.login(context, email, password);
+                            },
                             style: ElevatedButton.styleFrom(
                               padding: EdgeInsets.all(15),
                               shape: RoundedRectangleBorder(
@@ -161,7 +168,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         Container(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Auth auth = Auth();
+                              auth.signinwithgoogle(context);
+                            },
                             style: ElevatedButton.styleFrom(
                               padding: EdgeInsets.all(15),
                               shape: RoundedRectangleBorder(

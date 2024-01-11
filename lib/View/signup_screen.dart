@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:grapewine_music_app/Authentications/login_function.dart';
+import 'package:grapewine_music_app/Authentications/signUp_function.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
 import 'package:grapewine_music_app/View/login_screen.dart';
 import 'package:intl/intl.dart';
@@ -13,7 +15,11 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   bool _obscureText = true;
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
   TextEditingController _dateofbirthController = TextEditingController();
+  DateTime dob = DateTime.now();
 
   Future<void> _showDatePicker() async {
     DateTime? _picked = await showDatePicker(
@@ -23,7 +29,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         lastDate: DateTime(2026));
 
     String _formatDate(DateTime date) {
-      return DateFormat('dd/MM/yyyy')
+      return DateFormat('dd MMM yyyy')
           .format(date); // Change the date format here
     }
 
@@ -72,7 +78,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Container(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      // signUpWithGoogle();
+                      Auth auth = Auth();
+                      auth.signinwithgoogle(context);
+                    },
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.all(15),
                       shape: RoundedRectangleBorder(
@@ -124,12 +134,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   height: 10,
                 ),
                 TextField(
-                  // controller: emailController,
+                  controller: _nameController,
                   style: GoogleFonts.redHatDisplay(
                     fontSize: 20,
                     fontWeight: FontWeight.w400,
                   ),
-                  keyboardType: TextInputType.emailAddress,
+                  keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                     labelText: 'What’s your Name?',
                     hintText: 'Enter your name',
@@ -148,7 +158,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   height: 10,
                 ),
                 TextField(
-                  // controller: emailController,
+                  controller: _emailController,
                   style: GoogleFonts.redHatDisplay(
                     fontSize: 20,
                     fontWeight: FontWeight.w400,
@@ -172,7 +182,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   height: 10,
                 ),
                 TextField(
-                  // controller: passwordController,
+                  controller: _passwordController,
                   style: GoogleFonts.redHatDisplay(
                     fontSize: 20,
                     fontWeight: FontWeight.w400,
@@ -295,7 +305,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Container(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      var name = _nameController.text.trim();
+                      var email = _emailController.text.trim();
+                      var password = _passwordController.text.trim();
+                      var dateofbirth = _dateofbirthController.text.trim();
+
+                      DateTime? dob =
+                          DateFormat('dd MMM yyyy').parse(dateofbirth);
+
+                      var gender = _genderDropdownValue.toString().trim();
+
+                      signUp(context, name, email, password, dob, gender);
+                    },
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.all(15),
                       shape: RoundedRectangleBorder(

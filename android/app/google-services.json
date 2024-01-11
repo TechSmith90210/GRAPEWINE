@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "411742732648",
+    "project_id": "grapewine-music-app",
+    "storage_bucket": "grapewine-music-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:411742732648:android:be9377710ccb5ab5f8d6dd",
+        "android_client_info": {
+          "package_name": "com.example.grapewine.grapewine_music_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "411742732648-saat6pib3hph2aol36qaf1p25gok7rqu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.grapewine.grapewine_music_app",
+            "certificate_hash": "cbdec9f2e8c40b584299a33b0d708c8dc2eb2189"
+          }
+        },
+        {
+          "client_id": "411742732648-cbhr5gh2cb8sid2r8sagee80bscircdo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjl_OI8JGl0AODCPFGtIwns1WRSMJxlDw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "411742732648-cbhr5gh2cb8sid2r8sagee80bscircdo.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "411742732648-7v4b82f3rhekavoff80esv7l56ol3159.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.grapewine.grapewineMusicApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
