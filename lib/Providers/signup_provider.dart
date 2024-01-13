@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:grapewine_music_app/Presentation/Screens/home_screen.dart';
+import 'package:get/get.dart';
+import 'package:grapewine_music_app/Colors/colors.dart';
 
 class SignupProvider extends ChangeNotifier {
   Future<void> signUpUser(BuildContext context, String name, String email,
@@ -11,8 +12,7 @@ class SignupProvider extends ChangeNotifier {
 
       if (user == null) {
         // User is not authenticated
-        // You might want to handle this case, perhaps redirecting to a login screen
-        print('User not authenticated');
+        showErrorDialog(context, 'User not authenticated');
         return;
       }
 
@@ -45,22 +45,34 @@ class SignupProvider extends ChangeNotifier {
       });
 
       // Close loading indicator
-      Navigator.pop(context);
-
+      Get.back();
       // Navigate to home screen
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-      );
+      Get.toNamed('/home');
 
       print('Successfully created account');
     } on FirebaseAuthException catch (e) {
       // Close loading indicator in case of an error
-      Navigator.pop(context);
-
+      Get.back();
       // Handle error - you might want to show an error message to the user
       print('Error: $e');
     }
     notifyListeners();
+  }
+
+  void showErrorDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Error'),
+        content: Text(message),
+        backgroundColor: redColor,
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
 import 'login_screen.dart';
@@ -53,8 +54,7 @@ class WelcomeScreen extends StatelessWidget {
                 margin: EdgeInsets.only(left: 16, right: 16),
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => LoginScreen()));
+                    Get.toNamed('/login');
                   },
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.all(20),

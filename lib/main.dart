@@ -1,15 +1,17 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:grapewine_music_app/Presentation/Screens/Routes/routes.dart';
 import 'package:grapewine_music_app/Providers/date_provider.dart';
 import 'package:grapewine_music_app/Providers/gender_provider.dart';
 import 'package:grapewine_music_app/Providers/google_signin_provider.dart';
 import 'package:grapewine_music_app/Providers/login_provider.dart';
+import 'package:grapewine_music_app/Providers/password_provider.dart';
 import 'package:grapewine_music_app/Providers/signup_provider.dart';
 import 'package:grapewine_music_app/config/firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'Colors/colors.dart';
-import 'Presentation/Screens/splash_screen.dart';
 
 Future<void> main() async {
   await WidgetsFlutterBinding.ensureInitialized();
@@ -32,17 +34,19 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => SignupProvider()),
         ChangeNotifierProvider(create: (context) => GoogleSignInProvider()),
         ChangeNotifierProvider(create: (context) => GenderProvider()),
+        ChangeNotifierProvider(create: (context) => PasswordProvider()),
         ChangeNotifierProvider(
             create: (context) => DateProvider(initialDate: DateTime.now())),
       ],
-      child: MaterialApp(
+      child: GetMaterialApp(
         title: 'GrapeWine Demo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           scaffoldBackgroundColor: backgroundColor,
           fontFamily: 'Red Hat Display',
         ),
-        home: SplashScreen(),
+        initialRoute: '/splash',
+        routes: routes,
       ),
     );
   }

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
-import 'package:grapewine_music_app/Presentation/Screens/login_screen.dart';
-import 'package:grapewine_music_app/Presentation/widgets/DatePickerWidget.dart';
 import 'package:grapewine_music_app/Presentation/widgets/googleSignInWidget.dart';
 import 'package:grapewine_music_app/Providers/date_provider.dart';
 import 'package:grapewine_music_app/Providers/gender_provider.dart';
@@ -23,8 +22,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _dateofbirthController = TextEditingController();
+  DateTime? dob;
+  Future<void> _showDatePicker(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: dob ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2026),
+    );
 
-  String _genderDropdownValue = 'Gender';
+    if (pickedDate != null) {
+      setState(() {
+        dob = pickedDate;
+        _dateofbirthController.text =
+            DateFormat('dd MMM yyyy').format(pickedDate);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -166,10 +180,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Row(
                   children: [
                     // DatePickerWidget(),
-                    Consumer<DateProvider>(
-                      builder: (context, dateProvider, child) {
-                        return DatePickerWidget();
-                      },
+                    Expanded(
+                      child: Container(
+                        width: double.infinity,
+                        child: TextField(
+                          controller: _dateofbirthController,
+                          readOnly: true,
+                          style: GoogleFonts.redHatDisplay(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          onTap: () {
+                            _showDatePicker(context);
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'Date of Birth',
+                            prefixIcon: Icon(Icons.calendar_today_outlined),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(25.0),
+                            ),
+                            filled: true,
+                            floatingLabelBehavior: FloatingLabelBehavior.never,
+                            fillColor: whiteColor,
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 14.0),
+                          ),
+                        ),
+                      ),
                     ),
                     Expanded(
                       child: Align(
@@ -202,8 +239,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   onChanged: (String? newValue) {
                                     genderProvider.setGender(newValue!);
                                     print('Only i build');
+                                    genderProvider.notifyListeners();
                                   },
-                                  value: genderProvider.gender,
+                                  value: genderProvider.selectedGender,
                                   icon: const Icon(
                                     Icons.keyboard_arrow_down_outlined,
                                   ),
@@ -221,36 +259,49 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 Container(
                   width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      var name = _nameController.text.trim();
-                      var email = _emailController.text.trim();
-                      var password = _passwordController.text.trim();
-                      var dateofbirth = _dateofbirthController.text.trim();
+                  child: Consumer<DateProvider>(
+                    builder: (context, value, child) {
+                      return ElevatedButton(
+                        onPressed: () {
+                          var name = _nameController.text.trim();
+                          var email = _emailController.text.trim();
+                          var password = _passwordController.text.trim();
+                          try {
+                            var dateofbirth =
+                                _dateofbirthController.text.trim();
+                            print(dateofbirth);
 
-                      DateTime? dob =
-                          DateFormat('dd MMM yyyy').parse(dateofbirth);
+                            DateTime? dob =
+                                DateFormat('dd MMM yyyy').parse(dateofbirth);
 
-                      var gender = _genderDropdownValue.toString().trim();
+                            var gender = Provider.of<GenderProvider>(context,
+                                    listen: false)
+                                .selectedGender;
 
-                      // signUp(context, name, email, password, dob, gender);
-                      signUpProvider.signUpUser(
-                          context, name, email, password, dob, gender);
+                            // var gender = _genderDropdownValue.toString().trim();
+                            // signUp(context, name, email, password, dob, gender);
+                            signUpProvider.signUpUser(
+                                context, name, email, password, dob, gender);
+                          } catch (e) {
+                            print(e);
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.all(15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          backgroundColor: redColor,
+                        ),
+                        child: Text(
+                          "SIGN UP",
+                          style: GoogleFonts.redHatDisplay(
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                              fontSize: 18),
+                        ),
+                      );
                     },
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.all(15),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      backgroundColor: redColor,
-                    ),
-                    child: Text(
-                      "SIGN UP",
-                      style: GoogleFonts.redHatDisplay(
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                          fontSize: 18),
-                    ),
                   ),
                 ),
                 Row(
@@ -265,10 +316,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginScreen()));
+                        Get.toNamed('/login');
                       },
                       child: Text(
                         'Login now',

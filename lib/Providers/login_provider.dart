@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:grapewine_music_app/Presentation/Screens/home_screen.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class LoginProvider extends ChangeNotifier {
   Future<void> login(
@@ -26,8 +27,7 @@ class LoginProvider extends ChangeNotifier {
               .signInWithEmailAndPassword(email: email, password: password))
           .user;
       if (firebaseUser != null) {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => HomeScreen()));
+        Get.toNamed('/home');
         print('Login Success');
       } else {
         Fluttertoast.showToast(

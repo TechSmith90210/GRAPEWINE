@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:grapewine_music_app/Presentation/Screens/welcome_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -14,8 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(
       Duration(seconds: 2),
       () {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => WelcomeScreen()));
+        Get.toNamed('/welcome');
       },
     );
     super.initState();

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
 import 'package:grapewine_music_app/Presentation/widgets/googleSignInWidget.dart';
 import 'package:grapewine_music_app/Providers/login_provider.dart';
+import 'package:grapewine_music_app/Providers/password_provider.dart';
 import 'package:provider/provider.dart';
 import 'signup_screen.dart';
 
@@ -15,12 +17,10 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  bool _obscureText = true;
   @override
   Widget build(BuildContext context) {
+    print('Widget tree rebuilt');
     var loginProvider = Provider.of<LoginProvider>(context);
-
     return Scaffold(
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -82,42 +82,42 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(
                           height: 10,
                         ),
-                        // Text(
-                        //   'Password',
-                        //   style: GoogleFonts.redHatDisplay(
-                        //       color: greyColor, fontWeight: FontWeight.w600),
-                        // ),
-                        TextField(
-                          controller: passwordController,
-                          style: GoogleFonts.redHatDisplay(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          keyboardType: TextInputType.text,
-                          obscureText: _obscureText,
-                          decoration: InputDecoration(
-                            labelText: 'Password',
-                            hintText: 'Enter password',
-                            suffixIcon: InkWell(
-                              onTap: () {
-                                setState(() {
-                                  _obscureText = !_obscureText;
-                                });
-                              },
-                              child: Icon(_obscureText
-                                  ? Icons.visibility
-                                  : Icons.visibility_off),
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(25.0),
-                            ),
-                            filled: true,
-                            fillColor: whiteColor,
-                            floatingLabelBehavior: FloatingLabelBehavior.never,
-                            focusColor: purpleColor,
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 14.0),
-                          ),
+
+                        Consumer<PasswordProvider>(
+                          builder: (context, passwordProvider, child) {
+                            return TextField(
+                              controller: passwordProvider.passwordController,
+                              style: GoogleFonts.redHatDisplay(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              keyboardType: TextInputType.text,
+                              obscureText: passwordProvider.obscureText,
+                              decoration: InputDecoration(
+                                labelText: 'Password',
+                                hintText: 'Enter password',
+                                suffixIcon: InkWell(
+                                  onTap: () {
+                                    print('I rebuilt!');
+                                    passwordProvider.seePassword();
+                                  },
+                                  child: Icon(passwordProvider.obscureText
+                                      ? Icons.visibility
+                                      : Icons.visibility_off),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(25.0),
+                                ),
+                                filled: true,
+                                fillColor: whiteColor,
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.never,
+                                focusColor: purpleColor,
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 16.0, vertical: 14.0),
+                              ),
+                            );
+                          },
                         ),
                         Align(
                           alignment: Alignment.centerRight,
@@ -132,27 +132,33 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         Container(
                           width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              var email = emailController.text.trim();
-                              var password = passwordController.text.trim();
+                          child: Consumer<PasswordProvider>(
+                            builder: (context, passwordProvider, child) {
+                              return ElevatedButton(
+                                onPressed: () async {
+                                  var email = emailController.text.trim();
+                                  var password = passwordProvider
+                                      .passwordController.text
+                                      .trim();
 
-                              loginProvider.login(context, email, password);
+                                  loginProvider.login(context, email, password);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  padding: EdgeInsets.all(15),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  backgroundColor: redColor,
+                                ),
+                                child: Text(
+                                  "LOGIN",
+                                  style: GoogleFonts.redHatDisplay(
+                                      fontWeight: FontWeight.w700,
+                                      color: whiteColor,
+                                      fontSize: 18),
+                                ),
+                              );
                             },
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.all(15),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              backgroundColor: redColor,
-                            ),
-                            child: Text(
-                              "LOGIN",
-                              style: GoogleFonts.redHatDisplay(
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
-                                  fontSize: 18),
-                            ),
                           ),
                         ),
                         SizedBox(
@@ -184,10 +190,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             TextButton(
                               onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => SignUpScreen()));
+                                Get.toNamed('/signup');
                               },
                               child: Text(
                                 'Sign Up now',
