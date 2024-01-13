@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:grapewine_music_app/View/welcome_screen.dart';
+import 'package:grapewine_music_app/Presentation/Screens/welcome_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

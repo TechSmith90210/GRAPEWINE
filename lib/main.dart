@@ -1,10 +1,15 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:grapewine_music_app/firebase_options.dart';
+import 'package:grapewine_music_app/Providers/date_provider.dart';
+import 'package:grapewine_music_app/Providers/gender_provider.dart';
+import 'package:grapewine_music_app/Providers/google_signin_provider.dart';
+import 'package:grapewine_music_app/Providers/login_provider.dart';
+import 'package:grapewine_music_app/Providers/signup_provider.dart';
+import 'package:grapewine_music_app/config/firebase_options.dart';
+import 'package:provider/provider.dart';
 import 'Colors/colors.dart';
-import 'View/splash_screen.dart';
+import 'Presentation/Screens/splash_screen.dart';
 
 Future<void> main() async {
   await WidgetsFlutterBinding.ensureInitialized();
@@ -21,14 +26,24 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'GrapeWine Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        scaffoldBackgroundColor: backgroundColor,
-        fontFamily: 'Red Hat Display',
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => LoginProvider()),
+        ChangeNotifierProvider(create: (context) => SignupProvider()),
+        ChangeNotifierProvider(create: (context) => GoogleSignInProvider()),
+        ChangeNotifierProvider(create: (context) => GenderProvider()),
+        ChangeNotifierProvider(
+            create: (context) => DateProvider(initialDate: DateTime.now())),
+      ],
+      child: MaterialApp(
+        title: 'GrapeWine Demo',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          scaffoldBackgroundColor: backgroundColor,
+          fontFamily: 'Red Hat Display',
+        ),
+        home: SplashScreen(),
       ),
-      home: SplashScreen(),
     );
   }
 }

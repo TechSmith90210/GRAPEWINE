@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:grapewine_music_app/Authentications/login_function.dart';
-import 'package:grapewine_music_app/Authentications/signUp_function.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
-import 'package:grapewine_music_app/View/login_screen.dart';
+import 'package:grapewine_music_app/Presentation/Screens/login_screen.dart';
+import 'package:grapewine_music_app/Presentation/widgets/DatePickerWidget.dart';
+import 'package:grapewine_music_app/Presentation/widgets/googleSignInWidget.dart';
+import 'package:grapewine_music_app/Providers/date_provider.dart';
+import 'package:grapewine_music_app/Providers/gender_provider.dart';
+import 'package:grapewine_music_app/Providers/signup_provider.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -19,33 +23,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _dateofbirthController = TextEditingController();
-  DateTime dob = DateTime.now();
-
-  Future<void> _showDatePicker() async {
-    DateTime? _picked = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2026));
-
-    String _formatDate(DateTime date) {
-      return DateFormat('dd MMM yyyy')
-          .format(date); // Change the date format here
-    }
-
-    if (_picked != null) {
-      setState(() {
-        _dateofbirthController.text = _formatDate(_picked);
-      });
-    }
-  }
 
   String _genderDropdownValue = 'Gender';
 
-  var _genders = ['Gender', 'Male', 'Female'];
-
   @override
   Widget build(BuildContext context) {
+    print('Widget tree builded');
+    var signUpProvider = Provider.of<SignupProvider>(context);
     return Scaffold(
         body: SingleChildScrollView(
       scrollDirection: Axis.vertical,
@@ -75,44 +59,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 SizedBox(
                   height: 20,
                 ),
-                Container(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // signUpWithGoogle();
-                      Auth auth = Auth();
-                      auth.signinwithgoogle(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.all(15),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      backgroundColor: whiteColor,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'assets/google_icon.png',
-                          height: 20,
-                          width: 20,
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          "Sign up with Google",
-                          style: GoogleFonts.redHatDisplay(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                            color: eerieblackColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                GoogleSignInButton(text: 'Sign Up with Google'),
                 SizedBox(
                   height: 10,
                 ),
@@ -216,84 +163,54 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 SizedBox(
                   height: 10,
                 ),
-                // Container(
-                //   color: whiteColor,
-                //   child: MaterialButton(
-                //       onPressed: () {
-                //         _showDatePicker();
-                //       },
-                //       child: Text('date of birth')),
-                // )
-
                 Row(
                   children: [
-                    Expanded(
-                      child: Container(
-                        width: (double.infinity / 2),
-                        child: TextField(
-                          controller: _dateofbirthController,
-                          readOnly: true,
-                          style: GoogleFonts.redHatDisplay(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          onTap: () {
-                            _showDatePicker();
-                          },
-                          decoration: InputDecoration(
-                            hintText: 'Date of Birth',
-                            prefixIcon: Icon(Icons.calendar_today_outlined),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(25.0),
-                            ),
-                            filled: true,
-                            fillColor: whiteColor,
-                            floatingLabelBehavior: FloatingLabelBehavior.never,
-                            focusColor: purpleColor,
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 14.0),
-                          ),
-                        ),
-                      ),
+                    // DatePickerWidget(),
+                    Consumer<DateProvider>(
+                      builder: (context, dateProvider, child) {
+                        return DatePickerWidget();
+                      },
                     ),
                     Expanded(
                       child: Align(
                         alignment: Alignment.centerRight,
-                        child: Container(
-                          // width: double.infinity,
-                          padding: EdgeInsets.only(left: 30, right: 30),
-                          decoration: BoxDecoration(
-                            color: whiteColor,
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: DropdownButtonHideUnderline(
-                            // Hide the default underline
-                            child: DropdownButton<String>(
-                              style: GoogleFonts.redHatDisplay(
-                                  color: backgroundColor,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500),
-                              items: _genders.map((String item) {
-                                return DropdownMenuItem<String>(
-                                  value: item,
-                                  child: Text(
-                                    item,
-                                    textAlign: TextAlign.center,
+                        child: Consumer<GenderProvider>(
+                          builder: (context, genderProvider, child) {
+                            return Container(
+                              padding: EdgeInsets.only(left: 30, right: 30),
+                              decoration: BoxDecoration(
+                                color: whiteColor,
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton<String>(
+                                  style: GoogleFonts.redHatDisplay(
+                                    color: backgroundColor,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                );
-                              }).toList(),
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  // Ensure UI updates with setState
-                                  _genderDropdownValue = newValue!;
-                                });
-                              },
-                              value: _genderDropdownValue,
-                              icon: const Icon(
-                                Icons.keyboard_arrow_down_outlined,
-                              ), // Add an explicit arrow icon
-                            ),
-                          ),
+                                  items:
+                                      genderProvider.genders.map((String item) {
+                                    return DropdownMenuItem<String>(
+                                      value: item,
+                                      child: Text(
+                                        item,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    );
+                                  }).toList(),
+                                  onChanged: (String? newValue) {
+                                    genderProvider.setGender(newValue!);
+                                    print('Only i build');
+                                  },
+                                  value: genderProvider.gender,
+                                  icon: const Icon(
+                                    Icons.keyboard_arrow_down_outlined,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ),
@@ -316,10 +233,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                       var gender = _genderDropdownValue.toString().trim();
 
-                      signUp(context, name, email, password, dob, gender);
+                      // signUp(context, name, email, password, dob, gender);
+                      signUpProvider.signUpUser(
+                          context, name, email, password, dob, gender);
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.all(15),
+                      padding: const EdgeInsets.all(15),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),

@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Authentications/login_function.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
+import 'package:grapewine_music_app/Presentation/widgets/googleSignInWidget.dart';
+import 'package:grapewine_music_app/Providers/google_signin_provider.dart';
+import 'package:grapewine_music_app/Providers/login_provider.dart';
+import 'package:provider/provider.dart';
 import 'signup_screen.dart';
+import 'package:grapewine_music_app/Providers/google_signin_provider.dart';
 import 'package:grapewine_music_app/Authentications/login_function.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -18,6 +23,9 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _obscureText = true;
   @override
   Widget build(BuildContext context) {
+    var loginProvider = Provider.of<LoginProvider>(context);
+    var googleSignInProvider = Provider.of<GoogleSignInProvider>(context);
+
     return Scaffold(
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -133,8 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             onPressed: () async {
                               var email = emailController.text.trim();
                               var password = passwordController.text.trim();
-                              Auth auth = Auth();
-                              await auth.login(context, email, password);
+                              loginProvider.login(context, email, password);
                             },
                             style: ElevatedButton.styleFrom(
                               padding: EdgeInsets.all(15),
@@ -165,43 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(
                           height: 10,
                         ),
-                        Container(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Auth auth = Auth();
-                              auth.signinwithgoogle(context);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.all(15),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              backgroundColor: whiteColor,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  'assets/google_icon.png',
-                                  height: 20,
-                                  width: 20,
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  "Google",
-                                  style: GoogleFonts.redHatDisplay(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500,
-                                    color: eerieblackColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                        GoogleSignInButton(text: 'Google'),
                         SizedBox(
                           height: 18,
                         ),
