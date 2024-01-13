@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:grapewine_music_app/Authentications/login_function.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
 import 'package:grapewine_music_app/Presentation/widgets/googleSignInWidget.dart';
-import 'package:grapewine_music_app/Providers/google_signin_provider.dart';
 import 'package:grapewine_music_app/Providers/login_provider.dart';
 import 'package:provider/provider.dart';
 import 'signup_screen.dart';
-import 'package:grapewine_music_app/Providers/google_signin_provider.dart';
-import 'package:grapewine_music_app/Authentications/login_function.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -24,7 +20,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     var loginProvider = Provider.of<LoginProvider>(context);
-    var googleSignInProvider = Provider.of<GoogleSignInProvider>(context);
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -141,6 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             onPressed: () async {
                               var email = emailController.text.trim();
                               var password = passwordController.text.trim();
+
                               loginProvider.login(context, email, password);
                             },
                             style: ElevatedButton.styleFrom(
