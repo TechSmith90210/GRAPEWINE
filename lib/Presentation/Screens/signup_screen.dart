@@ -22,7 +22,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _dateofbirthController = TextEditingController();
-  DateTime? dob;
+  DateTime? dob=DateTime.now();
   Future<void> _showDatePicker(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -273,7 +273,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                             DateTime? dob =
                                 DateFormat('dd MMM yyyy').parse(dateofbirth);
-
+                            if (dob == null) {
+                              signUpProvider.showErrorDialog(
+                                  context, 'Enter date of birth please');
+                            }
                             var gender = Provider.of<GenderProvider>(context,
                                     listen: false)
                                 .selectedGender;

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
 
 class SignupProvider extends ChangeNotifier {
@@ -10,9 +11,30 @@ class SignupProvider extends ChangeNotifier {
     try {
       User? user = FirebaseAuth.instance.currentUser;
 
+      if (email.isEmpty || password.isEmpty) {
+        showErrorDialog(context, 'Please enter both email and password.');
+        return;
+      }
+
+      if (!email.contains('@')) {
+        showErrorDialog(context, 'Please enter a valid email address.');
+        return;
+      }
+
+      if (password.length < 8) {
+        showErrorDialog(
+            context, 'Password must be at least 8 characters long.');
+        return;
+      }
       if (user == null) {
         // User is not authenticated
         showErrorDialog(context, 'User not authenticated');
+        return;
+      }
+      Timestamp dob = Timestamp.fromDate(dateOfBirth);
+
+      if (dob == null) {
+        showErrorDialog(context, 'Enter your birth date please');
         return;
       }
 
@@ -25,8 +47,6 @@ class SignupProvider extends ChangeNotifier {
           );
         },
       );
-
-      Timestamp dob = Timestamp.fromDate(dateOfBirth);
 
       await FirebaseFirestore.instance.collection("users").doc(user.uid).set({
         'name': name,
@@ -63,13 +83,20 @@ class SignupProvider extends ChangeNotifier {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Error'),
-        content: Text(message),
+        title: Text(
+          'Error',
+          style: GoogleFonts.redHatDisplay(color: whiteColor),
+        ),
+        content: Text(
+          message,
+          style: GoogleFonts.redHatDisplay(color: whiteColor),
+        ),
         backgroundColor: redColor,
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text('OK'),
+            onPressed: () => Get.back(),
+            child:
+                Text('OK', style: GoogleFonts.redHatDisplay(color: whiteColor)),
           ),
         ],
       ),
