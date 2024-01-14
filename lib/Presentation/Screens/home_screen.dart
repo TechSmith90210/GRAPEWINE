@@ -14,23 +14,26 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            'Home Screen',
-            style: GoogleFonts.redHatDisplay(color: whiteColor),
-          ),
-          ElevatedButton(
-              onPressed: () {
-                Get.toNamed('/login');
-              },
-              child: Text(
-                'Go Back',
-                style: GoogleFonts.redHatDisplay(color: whiteColor),
-              ))
-        ],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              'Home Screen',
+              style: GoogleFonts.redHatDisplay(color: whiteColor),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: redColor),
+                onPressed: () {
+                  Get.toNamed('/login');
+                },
+                child: Text(
+                  'Go Back',
+                  style: GoogleFonts.redHatDisplay(color: whiteColor),
+                ))
+          ],
+        ),
       ),
     );
   }

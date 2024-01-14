@@ -1,43 +1,42 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
+import 'package:grapewine_music_app/Presentation/Screens/home_screen.dart';
 
 class SignupProvider extends ChangeNotifier {
   Future<void> signUpUser(BuildContext context, String name, String email,
       String password, DateTime dateOfBirth, String gender) async {
     try {
-      User? user = FirebaseAuth.instance.currentUser;
-
+      // validations
+      if (name.isEmpty) {
+        showErrorDialog(context, 'Please enter your name');
+        return;
+      }
       if (email.isEmpty || password.isEmpty) {
-        showErrorDialog(context, 'Please enter both email and password.');
+        showErrorDialog(context, 'Please enter email and password');
         return;
       }
-
       if (!email.contains('@')) {
-        showErrorDialog(context, 'Please enter a valid email address.');
+        showErrorDialog(context, 'Please enter valid email address');
         return;
       }
 
-      if (password.length < 8) {
-        showErrorDialog(
-            context, 'Password must be at least 8 characters long.');
-        return;
-      }
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password)
+          .then((auth) {
+        var currentUser = auth.user;
+        print("this is the user $currentUser");
+      });
+      User? user = FirebaseAuth.instance.currentUser;
+      print(user);
       if (user == null) {
         // User is not authenticated
-        showErrorDialog(context, 'User not authenticated');
+        // You might want to handle this case, perhaps redirecting to a login screen
+        print('User not authenticated');
         return;
       }
-      Timestamp dob = Timestamp.fromDate(dateOfBirth);
-
-      if (dob == null) {
-        showErrorDialog(context, 'Enter your birth date please');
-        return;
-      }
-
       // Show loading indicator
       showDialog(
         context: context,
@@ -48,6 +47,8 @@ class SignupProvider extends ChangeNotifier {
         },
       );
 
+      Timestamp dob = Timestamp.fromDate(dateOfBirth);
+
       await FirebaseFirestore.instance.collection("users").doc(user.uid).set({
         'name': name,
         'email': email,
@@ -57,22 +58,20 @@ class SignupProvider extends ChangeNotifier {
         'userId': user.uid,
       });
 
-      await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password)
-          .then((auth) {
-        var currentUser = auth.user;
-        print("this is the user $currentUser");
-      });
-
       // Close loading indicator
-      Get.back();
+      Navigator.pop(context);
+
       // Navigate to home screen
-      Get.toNamed('/home');
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+      );
 
       print('Successfully created account');
     } on FirebaseAuthException catch (e) {
       // Close loading indicator in case of an error
-      Get.back();
+      Navigator.pop(context);
+
       // Handle error - you might want to show an error message to the user
       print('Error: $e');
     }
@@ -94,9 +93,11 @@ class SignupProvider extends ChangeNotifier {
         backgroundColor: redColor,
         actions: [
           TextButton(
-            onPressed: () => Get.back(),
-            child:
-                Text('OK', style: GoogleFonts.redHatDisplay(color: whiteColor)),
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(
+              'OK',
+              style: GoogleFonts.redHatDisplay(color: whiteColor),
+            ),
           ),
         ],
       ),

@@ -262,10 +262,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: Consumer<DateProvider>(
                     builder: (context, value, child) {
                       return ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           var name = _nameController.text.trim();
                           var email = _emailController.text.trim();
                           var password = _passwordController.text.trim();
+                          print(email);
+                          print(password);
                           try {
                             var dateofbirth =
                                 _dateofbirthController.text.trim();
@@ -273,17 +275,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                             DateTime? dob =
                                 DateFormat('dd MMM yyyy').parse(dateofbirth);
-                            if (dob == null) {
-                              signUpProvider.showErrorDialog(
-                                  context, 'Enter date of birth please');
-                            }
+
                             var gender = Provider.of<GenderProvider>(context,
                                     listen: false)
                                 .selectedGender;
 
                             // var gender = _genderDropdownValue.toString().trim();
                             // signUp(context, name, email, password, dob, gender);
-                            signUpProvider.signUpUser(
+                            await signUpProvider.signUpUser(
                                 context, name, email, password, dob, gender);
                           } catch (e) {
                             print(e);
