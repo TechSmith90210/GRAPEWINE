@@ -22,13 +22,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _dateofbirthController = TextEditingController();
-  DateTime? dob=DateTime.now();
+  DateTime? dob;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _dateofbirthController.text =
+        DateFormat('dd MMM yyyy').format(DateTime.now());
+  }
+
   Future<void> _showDatePicker(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: dob ?? DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2026),
+      currentDate: DateTime.now(),
     );
 
     if (pickedDate != null) {
@@ -50,7 +60,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       child: SafeArea(
         child: Center(
             child: Container(
-          margin: EdgeInsets.only(left: 16, right: 16, top: 50, bottom: 30),
+          margin: EdgeInsets.only(left: 16, right: 16, top: 70, bottom: 30),
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -97,7 +107,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 TextField(
                   controller: _nameController,
                   style: GoogleFonts.redHatDisplay(
-                    fontSize: 20,
+                    // fontSize: 20,
                     fontWeight: FontWeight.w400,
                   ),
                   keyboardType: TextInputType.text,
@@ -121,7 +131,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 TextField(
                   controller: _emailController,
                   style: GoogleFonts.redHatDisplay(
-                    fontSize: 20,
+                    // fontSize: 20,
                     fontWeight: FontWeight.w400,
                   ),
                   keyboardType: TextInputType.emailAddress,
@@ -145,7 +155,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 TextField(
                   controller: _passwordController,
                   style: GoogleFonts.redHatDisplay(
-                    fontSize: 20,
+                    // fontSize: 20,
                     fontWeight: FontWeight.w400,
                   ),
                   keyboardType: TextInputType.text,
@@ -187,7 +197,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           controller: _dateofbirthController,
                           readOnly: true,
                           style: GoogleFonts.redHatDisplay(
-                            fontSize: 15,
+                            // fontSize: 15,
                             fontWeight: FontWeight.w500,
                           ),
                           onTap: () {
