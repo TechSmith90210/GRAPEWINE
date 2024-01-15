@@ -6,6 +6,7 @@ import 'package:grapewine_music_app/Presentation/widgets/googleSignInWidget.dart
 import 'package:grapewine_music_app/Providers/date_provider.dart';
 import 'package:grapewine_music_app/Providers/gender_provider.dart';
 import 'package:grapewine_music_app/Providers/signup_provider.dart';
+import 'package:grapewine_music_app/config/screen_size.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -23,7 +24,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _dateofbirthController = TextEditingController();
   DateTime? dob;
-
   @override
   void initState() {
     super.initState();
@@ -52,7 +52,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('Widget tree builded');
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    EdgeInsets margin = calculateMargin(screenHeight, screenWidth);
     var signUpProvider = Provider.of<SignupProvider>(context);
     return Scaffold(
         body: SingleChildScrollView(
@@ -60,7 +63,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       child: SafeArea(
         child: Center(
             child: Container(
-          margin: EdgeInsets.only(left: 16, right: 16, top: 70, bottom: 30),
+          margin: margin,
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -119,6 +122,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     filled: true,
                     fillColor: whiteColor,
+                    prefixIcon: Icon(Icons.person),
                     floatingLabelBehavior: FloatingLabelBehavior.never,
                     focusColor: purpleColor,
                     contentPadding:
@@ -143,6 +147,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     filled: true,
                     fillColor: whiteColor,
+                    prefixIcon: Icon(Icons.alternate_email),
                     floatingLabelBehavior: FloatingLabelBehavior.never,
                     focusColor: purpleColor,
                     contentPadding:
@@ -178,6 +183,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     filled: true,
                     fillColor: whiteColor,
+                    prefixIcon: Icon(Icons.password),
                     floatingLabelBehavior: FloatingLabelBehavior.never,
                     focusColor: purpleColor,
                     contentPadding:
