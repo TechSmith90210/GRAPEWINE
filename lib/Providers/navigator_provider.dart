@@ -9,5 +9,3 @@ class NavigatorProvider with ChangeNotifier {
     notifyListeners();
   }
 }
-
-
