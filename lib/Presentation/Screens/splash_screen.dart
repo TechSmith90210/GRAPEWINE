@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:grapewine_music_app/Presentation/Screens/welcome_screen.dart';
-
-import '../../config/screen_size.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -16,8 +13,8 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     Future.delayed(
       Duration(seconds: 3),
-      () {
-        Get.toNamed('/welcome');
+          () {
+        Get.toNamed('/home');
       },
     );
     super.initState();
