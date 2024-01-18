@@ -33,7 +33,6 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => NavigatorProvider()),
-
         ChangeNotifierProvider(create: (context) => LoginProvider()),
         ChangeNotifierProvider(create: (context) => SignupProvider()),
         ChangeNotifierProvider(create: (context) => GoogleSignInProvider()),
@@ -51,7 +50,7 @@ class MyApp extends StatelessWidget {
         ),
         // initialRoute: '/splash',
         // routes: routes,
-      home: TheMusicPages(),
+        home: TheMusicPages(),
       ),
     );
   }

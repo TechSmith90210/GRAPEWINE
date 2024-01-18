@@ -3,7 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
-import 'package:grapewine_music_app/Presentation/Screens/home_screen.dart';
+
+import '../Presentation/Navbar Pages/home_screen.dart';
 
 class SignupProvider extends ChangeNotifier {
   Future<void> signUpUser(BuildContext context, String name, String email,

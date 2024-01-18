@@ -2,7 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:grapewine_music_app/Presentation/Screens/home_screen.dart';
+
+import '../Presentation/Navbar Pages/home_screen.dart';
 
 class GoogleSignInProvider extends ChangeNotifier {
   Future<void> signinwithgoogle(BuildContext context) async {
