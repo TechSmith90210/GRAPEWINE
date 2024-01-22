@@ -45,7 +45,9 @@ class MyApp extends StatelessWidget {
         title: 'GrapeWine Demo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
+          useMaterial3: true,
           scaffoldBackgroundColor: backgroundColor,
+          colorSchemeSeed: whiteColor,
           fontFamily: 'Red Hat Display',
         ),
         // initialRoute: '/splash',

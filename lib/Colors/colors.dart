@@ -7,6 +7,8 @@ Color whiteColor = const Color(0xFFE2DFD2);
 Color greyColor = const Color(0xFF999999);
 Color eerieblackColor = const Color(0xFF151515);
 Color blackColor = const Color(0xFF050909);
+Color greenColor = const Color(0xFF577F2B);
+Color darkgreyColor = const Color(0xFF979797);
 
 
 
