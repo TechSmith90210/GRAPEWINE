@@ -44,3 +44,4 @@ app.*.map.json
 
 # Project Related Notes
 /Notes
+/lib/CustomStrings.dart
