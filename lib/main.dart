@@ -5,6 +5,7 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:grapewine_music_app/Presentation/Screens/Routes/routes.dart';
 import 'package:grapewine_music_app/Presentation/Screens/demo.dart';
 import 'package:grapewine_music_app/Presentation/Screens/the_music_pages.dart';
+import 'package:grapewine_music_app/Providers/albumInfo_provider.dart';
 import 'package:grapewine_music_app/Providers/date_provider.dart';
 import 'package:grapewine_music_app/Providers/gender_provider.dart';
 import 'package:grapewine_music_app/Providers/google_signin_provider.dart';
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => PasswordProvider()),
         ChangeNotifierProvider(
             create: (context) => DateProvider(initialDate: DateTime.now())),
+        ChangeNotifierProvider(create: (context) => AlbumInfoProvider()),
       ],
       child: GetMaterialApp(
         title: 'GrapeWine Demo',
@@ -54,7 +56,7 @@ class MyApp extends StatelessWidget {
         // initialRoute: '/splash',
         // routes: routes,
         // home: TheMusicPages(),
-      home: DemoPage(),
+        home: DemoPage(),
       ),
     );
   }

@@ -31,7 +31,7 @@ class _PreviouslyPlayedCircleWidgetState
                     fit: BoxFit.cover),
                 shape: RoundedRectangleBorder(
                     side: BorderSide(
-                      width: 3,
+                      width: 1,
                       strokeAlign: BorderSide.strokeAlignCenter,
                       color: purpleColor,
                     ),
