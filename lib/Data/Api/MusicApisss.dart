@@ -28,12 +28,12 @@ Future<void> fetchData(BuildContext context) async {
   if (response.statusCode == 200) {
     final Map<String, dynamic> data = json.decode(response.body);
     final accessToken = data['access_token'];
-    print('Access Token: $accessToken');
+    // print('Access Token: $accessToken');
 
     var albumInfo = AlbumInfo();
     await albumInfo.fetchAlbumInfo(
         accessToken); // fetching the album data & filling the three lists with data
-    albumInfo.getListsData(); // print the fetched Data for debugging
+    // albumInfo.getListsData(); // print the fetched Data for debugging
     var albumDataProvider = Provider.of<AlbumInfoProvider>(context,
         listen: false); //initializing the provider
 
@@ -41,6 +41,8 @@ Future<void> fetchData(BuildContext context) async {
     albumDataProvider.updateArtistNames(albumInfo.artistNames); //artist Names
     albumDataProvider.updateAlbumNames(albumInfo.albumNames); // album Names
     albumDataProvider.updateAlbumCovers(albumInfo.albumCovers); // album Covers
+    // print(albumDataProvider.albumCoversProviders.toString());
+    // print(albumDataProvider.albumNamesProviders.toString());
   } else {
     print('Failed to get access token. Status code: ${response.statusCode}');
     print('Response body: ${response.body}');

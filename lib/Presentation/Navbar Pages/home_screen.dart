@@ -39,7 +39,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemCount: 6,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
-                    return PreviouslyPlayedCircleWidget();
+                    return PreviouslyPlayedCircleWidget(
+                      index: index,
+                    );
                   },
                 ),
               ),

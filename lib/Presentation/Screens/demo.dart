@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
+import 'package:grapewine_music_app/Presentation/widgets/PreviouslyPlayedCircleWidget.dart';
 import 'package:grapewine_music_app/Providers/albumInfo_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -40,27 +41,7 @@ class _DemoPageState extends State<DemoPage> {
           decoration: BoxDecoration(
             color: eerieblackColor,
           ),
-          child: FutureBuilder(
-            future: fetchDataFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                // Loading state
-                return Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                // Error state
-                return Center(child: Text('Error: ${snapshot.error}'));
-              } else {
-                // Success state
-                var provider =
-                    Provider.of<AlbumInfoProvider>(context, listen: false);
-                return Center(
-                    child: Text(
-                  provider.artistNamesProviders.toString(),
-                  style: GoogleFonts.redHatDisplay(color: whiteColor),
-                ));
-              }
-            },
-          ),
+          child: PreviouslyPlayedCircleWidget(index: 1,)
         ),
       ),
     );

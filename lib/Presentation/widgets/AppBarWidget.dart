@@ -27,7 +27,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
           style: GoogleFonts.redHatDisplay(
             color: redColor,
             fontWeight: FontWeight.w900,
-            fontSize: 30,
+            fontSize: 26,
           ),
         ),
         actions: const [

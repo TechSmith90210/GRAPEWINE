@@ -24,4 +24,12 @@ class AlbumInfoProvider with ChangeNotifier {
     _albumCoversProviders = newAlbumCovers;
     notifyListeners();
   }
+
+  int _index = 0;
+  int get index => _index;
+  void updateIndex(int newIndex) {
+    // _index=newIndex;
+    newIndex + 1;
+    notifyListeners();
+  }
 }

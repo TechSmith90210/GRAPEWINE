@@ -48,15 +48,16 @@ class MyApp extends StatelessWidget {
         title: 'GrapeWine Demo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          useMaterial3: true,
+          // useMaterial3: true,
           scaffoldBackgroundColor: backgroundColor,
           colorSchemeSeed: whiteColor,
           fontFamily: 'Red Hat Display',
         ),
-        // initialRoute: '/splash',
-        // routes: routes,
+        initialRoute: '/splash',
+        routes: routes,
         // home: TheMusicPages(),
-        home: DemoPage(),
+        // home: DemoPage(),
+
       ),
     );
   }
