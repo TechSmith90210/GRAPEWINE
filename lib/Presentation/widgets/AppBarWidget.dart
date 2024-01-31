@@ -15,7 +15,8 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     EdgeInsets margin = calculateMargin(screenHeight, screenWidth);
     return Container(
-      margin: margin,
+      // margin: margin,
+      padding: EdgeInsets.symmetric(vertical: 5),
       child: AppBar(
         leading: ImageIcon(
           const AssetImage("assets/grapewine logo medium.png"),

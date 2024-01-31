@@ -7,27 +7,8 @@ class AlbumInfo {
   List<String> artistNames = [];
   List<String> albumNames = [];
   List<String> albumCovers = [];
-  Future<void> fetchAlbumInfo(String accessToken) async {
-    const albumIds = [
-      //diamond eyes
-      '1GjjBpY2iDwSQs5bykQI5e?si=P--e3obzQvGRW0xd284uvg',
 
-      // 5th AMNDMNT
-      '5IJAhCl93xn2Ybqk8OGm6n?si=if_ooLW9TEar8VuCBWc5iQ',
-
-      // Come Over when you're sober pt 2
-      '52JymrguPgkmmwLaWIusst?si=VXifyNBVSr-txNmpaiMGsQ',
-
-      // MM...FOOD
-      '1UcS2nqUhxrZjrBZ3tHk2N?si=yrLU11b4QU2kjFORbSV4Cw',
-
-      // ANTI(DELUXE)
-      '4UlGauD7ROb3YbVOFMgW5u?si=n3JEUQqnThSju7IB7-5evw',
-
-      // Cilvia Demo
-      '6JF49ixyHmOgS0Rsda2k42?si=_v5kT_7QQsOcXHzOcLLLqg'
-    ];
-
+  Future<void> fetchAlbumInfo(String accessToken, List<String> albumIds) async {
     // logic to get the three lists of album data (artist names, album names, album covers)
     for (final i in albumIds) {
       // print(i);

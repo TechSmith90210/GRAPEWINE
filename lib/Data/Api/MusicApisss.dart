@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:grapewine_music_app/Data/Api/fetchAlbumInfo.dart';
+import 'package:grapewine_music_app/Data/Api/fetchNewReleases.dart';
 import 'package:grapewine_music_app/Providers/albumInfo_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -28,19 +29,27 @@ Future<void> fetchData(BuildContext context) async {
   if (response.statusCode == 200) {
     final Map<String, dynamic> data = json.decode(response.body);
     final accessToken = data['access_token'];
-    // print('Access Token: $accessToken');
+    print('Access Token: $accessToken');
 
     var albumInfo = AlbumInfo();
-    await albumInfo.fetchAlbumInfo(
-        accessToken); // fetching the album data & filling the three lists with data
-    // albumInfo.getListsData(); // print the fetched Data for debugging
     var albumDataProvider = Provider.of<AlbumInfoProvider>(context,
         listen: false); //initializing the provider
+
+    //fetching the previously played
+    await albumInfo.fetchAlbumInfo(
+        accessToken,
+        AlbumInfoProvider
+            .albumIds); // fetching the album data & filling the three lists with data
+    // albumInfo.getListsData(); // print the fetched Data for debugging
 
     // assigning the fetched lists from the fetchAlbumInfo() method to the provider's lists
     albumDataProvider.updateArtistNames(albumInfo.artistNames); //artist Names
     albumDataProvider.updateAlbumNames(albumInfo.albumNames); // album Names
     albumDataProvider.updateAlbumCovers(albumInfo.albumCovers); // album Covers
+
+    //fetching the New Releases
+// FetchNewReleases fetchNewReleases = FetchNewReleases();
+// fetchNewReleases.fetchNewReleases(accessToken);
     // print(albumDataProvider.albumCoversProviders.toString());
     // print(albumDataProvider.albumNamesProviders.toString());
   } else {

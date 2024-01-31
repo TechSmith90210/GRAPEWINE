@@ -53,7 +53,6 @@ class MyApp extends StatelessWidget {
         routes: routes,
         // home: TheMusicPages(),
         // home: DemoPage(),
-
       ),
     );
   }

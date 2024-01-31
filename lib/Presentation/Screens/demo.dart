@@ -34,16 +34,11 @@ class _DemoPageState extends State<DemoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Container(
-          width: 300,
-          height: 200,
-          decoration: BoxDecoration(
-            color: eerieblackColor,
-          ),
-          child: PreviouslyPlayedCircleWidget(index: 1,)
-        ),
+        body: Center(
+      child: Text(
+        'New Releases',
+        style: GoogleFonts.redHatDisplay(color: greenColor),
       ),
-    );
+    ));
   }
 }
