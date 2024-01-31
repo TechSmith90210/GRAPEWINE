@@ -16,6 +16,6 @@ EdgeInsets calculateMargin(double screenHeight, double screenWidth) {
     return EdgeInsets.only(left: 16, right: 16);
   } else {
     // Large screen
-    return EdgeInsets.only(left: 16, right: 16, top: 10);
+    return EdgeInsets.only(left: 16, right: 16);
   }
 }

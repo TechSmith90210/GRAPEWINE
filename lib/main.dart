@@ -18,10 +18,6 @@ import 'Colors/colors.dart';
 import 'Providers/navigator_provider.dart';
 
 Future<void> main() async {
-  await WidgetsFlutterBinding.ensureInitialized();
-  print('widgets binded');
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  print('Firebase Initialized');
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
   runApp(const MyApp());
 }
