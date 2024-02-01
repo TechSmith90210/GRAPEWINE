@@ -29,7 +29,7 @@ Future<void> fetchData(BuildContext context) async {
   if (response.statusCode == 200) {
     final Map<String, dynamic> data = json.decode(response.body);
     final accessToken = data['access_token'];
-    print('Access Token: $accessToken');
+    // print('Access Token: $accessToken');
 
     var albumInfo = AlbumInfo();
     var albumDataProvider = Provider.of<AlbumInfoProvider>(context,
@@ -48,8 +48,8 @@ Future<void> fetchData(BuildContext context) async {
     albumDataProvider.updateAlbumCovers(albumInfo.albumCovers); // album Covers
 
     //fetching the New Releases
-// FetchNewReleases fetchNewReleases = FetchNewReleases();
-// fetchNewReleases.fetchNewReleases(accessToken);
+    // FetchNewReleases fetchNewReleases = FetchNewReleases();
+    // fetchNewReleases.fetchNewReleases(accessToken);
     // print(albumDataProvider.albumCoversProviders.toString());
     // print(albumDataProvider.albumNamesProviders.toString());
   } else {
