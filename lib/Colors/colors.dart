@@ -10,7 +10,12 @@ Color blackColor = const Color(0xFF050909);
 Color greenColor = const Color(0xFF577F2B);
 Color darkgreyColor = const Color(0xFF979797);
 
-
+// Bubble Colours
+Color purpleBubbleColor = const Color(0xFF32083D);
+Color blueBubbleColor = const Color(0xFF5E5A80);
+Color darkblueBubbleColor = const Color(0xFF2B2940);
+Color lightpurpleBubbleColor = const Color(0xFF5A3065);
+Color pinkBubbleColor = const Color(0xFFAE6866);
 
 // Brand / Primary Colors
 Color redColor = const Color(0xFFDC3535);
