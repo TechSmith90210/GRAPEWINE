@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => AlbumInfoProvider()),
         ChangeNotifierProvider(create: (context) => LikedProvider()),
       ],
-      child: GetMaterialApp(
+      child: MaterialApp(
         title: 'GrapeWine Demo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
