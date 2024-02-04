@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:grapewine_music_app/Presentation/Screens/Routes/routes.dart';
 import 'package:grapewine_music_app/Presentation/Screens/demo.dart';
+import 'package:grapewine_music_app/Presentation/Screens/song_player_screen.dart';
 import 'package:grapewine_music_app/Presentation/Screens/the_music_pages.dart';
 import 'package:grapewine_music_app/Providers/albumInfo_provider.dart';
 import 'package:grapewine_music_app/Providers/date_provider.dart';
@@ -51,10 +52,11 @@ class MyApp extends StatelessWidget {
           colorSchemeSeed: whiteColor,
           fontFamily: 'Red Hat Display',
         ),
-        initialRoute: '/splash',
-        routes: routes,
+        // initialRoute: '/splash',
+        // routes: routes,
         // home: TheMusicPages(),
         // home: DemoPage(),
+      home: SongPlayerScreen(),
       ),
     );
   }
