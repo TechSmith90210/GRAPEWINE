@@ -18,7 +18,7 @@ class _ArtistChipsWidgetState extends State<ArtistChipsWidget> {
       child: Chip(
           shape: StadiumBorder(),
           avatar: CircleAvatar(
-            foregroundImage: NetworkImage(
+            backgroundImage: NetworkImage(
                 'https://i.scdn.co/image/ab6761610000e5eb876faa285687786c3d314ae0'),
           ),
           backgroundColor: eerieblackColor,

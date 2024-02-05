@@ -18,6 +18,19 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
   @override
   Widget build(BuildContext context) {
     double _value = 2.0;
+    List<String> aritstNames = [
+      'Kid Cudi',
+      'Pharrell Williams',
+      'Travis Scott'
+    ];
+    List<String> aritstImages = [
+      // Cudi
+      'https://i.scdn.co/image/ab6761610000e5eb876faa285687786c3d314ae0',
+      //pharell
+      'https://i.scdn.co/image/ab6761610000e5ebf0789cd783c20985ec3deb4e',
+      //travis
+      'https://i.scdn.co/image/ab6761610000e5eb19c2790744c792d05570bb71',
+    ];
     return Scaffold(
       backgroundColor: darkblueBubbleColor,
       body: Container(
@@ -160,19 +173,65 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
                     initialProgress: 0.0,
                     iconSize: 30,
                     unfocusedHeight: 20,
+                    focusedHeight: 30,
                     min: 1.0,
                     max: 15.0,
                     onChanged: (value) => setState(() => _value = value),
                   ),
                 ),
+                // Container(
+                //   height: 40,
+                //   width: 370,
+                //   child: ListView.builder(
+                //     scrollDirection: Axis.horizontal,
+                //     itemCount: 4,
+                //     itemBuilder: (context, index) {
+                //       return ArtistChipsWidget();
+                //     },
+                //   ),
+                // ),
+                SizedBox(
+                  height: 5,
+                ),
                 Container(
-                  height: 40,
                   width: 370,
+                  height: 50,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: 4,
+                    itemCount: aritstImages.length,
                     itemBuilder: (context, index) {
-                      return ArtistChipsWidget();
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 5, right: 2),
+                        child: Container(
+                          height: 50,
+                          padding: EdgeInsets.only(left: 10, right: 10),
+                          decoration: ShapeDecoration(
+                            shape: StadiumBorder(
+                              side: BorderSide(width: 0.1, color: whiteColor),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              CircleAvatar(
+                                backgroundImage: NetworkImage(
+                                    aritstImages[index].toString()),
+                                radius: 18,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                aritstNames[index].toString(),
+                                style: GoogleFonts.redHatDisplay(
+                                  color: whiteColor,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      );
                     },
                   ),
                 )
