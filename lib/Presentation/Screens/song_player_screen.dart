@@ -33,8 +33,7 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
     ];
     return Scaffold(
       backgroundColor: darkblueBubbleColor,
-      body: Container(
-        // margin: EdgeInsets.only(left: 16, right: 16),
+      body: SafeArea(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -42,14 +41,14 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
               // crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
-                  height: 50,
+                  height: 40,
                 ),
                 Text(
                   'Now Playing',
                   style: GoogleFonts.redHatDisplay(
                       color: whiteColor,
                       fontSize: 12,
-                      fontWeight: FontWeight.w500),
+                      fontWeight: FontWeight.w400),
                 ),
                 Text(
                   'At The Party',
@@ -58,11 +57,8 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
                       fontSize: 16,
                       fontWeight: FontWeight.w700),
                 ),
-                Icon(
-                  Icons.keyboard_arrow_down_sharp,
-                  size: 60,
-                  color: darkgreyColor,
-                ),
+                Icon(Icons.keyboard_arrow_down_sharp,
+                    size: 55, color: darkgreyColor),
                 Container(
                   height: 300,
                   width: 300,
@@ -75,7 +71,7 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
                       borderRadius: BorderRadius.circular(11)),
                 ),
                 SizedBox(
-                  height: 20,
+                  height: 15,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -141,31 +137,40 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
                 ),
                 Row(
                   children: [
-                    Icon(
-                      Icons.fast_rewind_rounded,
+                    IconButton(
+                      onPressed: () {},
+                      icon: Icon(
+                        Icons.fast_rewind_rounded,
+                        size: 55,
+                      ),
                       color: whiteColor,
-                      size: 60,
                     ),
                     SizedBox(
                       width: 12,
                     ),
-                    Icon(
-                      Icons.play_arrow_rounded,
+                    IconButton(
+                      onPressed: () {},
+                      icon: Icon(
+                        Icons.play_arrow_rounded,
+                        size: 65,
+                      ),
                       color: whiteColor,
-                      size: 90,
                     ),
                     SizedBox(
                       width: 12,
                     ),
-                    Icon(
-                      Icons.fast_forward_rounded,
+                    IconButton(
+                      onPressed: () {},
+                      icon: Icon(
+                        Icons.fast_forward_rounded,
+                        size: 55,
+                      ),
                       color: whiteColor,
-                      size: 60,
                     ),
                   ],
                 ),
                 Container(
-                  width: 330,
+                  width: 360,
                   child: InteractiveSlider(
                     startIcon: const Icon(Icons.volume_down),
                     endIcon: const Icon(Icons.volume_up),
@@ -193,6 +198,7 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
                 SizedBox(
                   height: 5,
                 ),
+
                 Container(
                   width: 370,
                   height: 50,
