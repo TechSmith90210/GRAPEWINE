@@ -12,6 +12,7 @@ import 'package:grapewine_music_app/Providers/gender_provider.dart';
 import 'package:grapewine_music_app/Providers/google_signin_provider.dart';
 import 'package:grapewine_music_app/Providers/like_provider.dart';
 import 'package:grapewine_music_app/Providers/login_provider.dart';
+import 'package:grapewine_music_app/Providers/musicPlayer_provider.dart';
 import 'package:grapewine_music_app/Providers/password_provider.dart';
 import 'package:grapewine_music_app/Providers/signup_provider.dart';
 import 'package:grapewine_music_app/config/firebase_options.dart';
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
             create: (context) => DateProvider(initialDate: DateTime.now())),
         ChangeNotifierProvider(create: (context) => AlbumInfoProvider()),
         ChangeNotifierProvider(create: (context) => LikedProvider()),
+        ChangeNotifierProvider(create: (context)=> MusicPlayerProvider())
       ],
       child: MaterialApp(
         title: 'GrapeWine Demo',
