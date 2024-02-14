@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:grapewine_music_app/Data/Api/fetchNewReleases.dart';
 import 'package:http/http.dart' as http;
 import '../../models/album_model.dart';
 import 'MusicApisss.dart';
@@ -36,6 +37,9 @@ class AlbumInfo {
         //album Cover Art
         String? albumCoverUrl = fetchedAlbum?.albumCoverUrl[0].toString();
         albumCovers.add(albumCoverUrl!);
+
+        // FetchNewReleases fetchNewReleases=FetchNewReleases();
+        // fetchNewReleases.fetchNewReleases(accessToken);
         // for (final j in artistNames) {
         //   print(j);
         // }

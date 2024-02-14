@@ -23,6 +23,8 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
   final player = AudioPlayer();
   Duration? duration;
   Uri? audioUrl;
+
+  @override
   void initState() {
     final credentials = SpotifyApiCredentials(
         CustomStrings.clientId, CustomStrings.clientSecret);
@@ -81,7 +83,7 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
                   decoration: BoxDecoration(
                       image: DecorationImage(
                         image: NetworkImage(
-                            'https://www.universalmusic.ca/wp-content/uploads/2023/11/AtTheParty-Single-Artwork_FINAL-scaled.jpg'),
+                            'https://i.scdn.co/image/ab67616d0000b273581f1908ffdfef41ca3ce7f4'),
                         fit: BoxFit.cover,
                       ),
                       borderRadius: BorderRadius.circular(11)),

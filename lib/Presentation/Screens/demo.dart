@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
+import 'package:grapewine_music_app/Data/Api/fetchNewReleases.dart';
+import 'package:grapewine_music_app/Presentation/widgets/NewReleasesWidget.dart';
 import 'package:grapewine_music_app/Presentation/widgets/PreviouslyPlayedCircleWidget.dart';
 import 'package:grapewine_music_app/Providers/albumInfo_provider.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +25,8 @@ class _DemoPageState extends State<DemoPage> {
     super.initState();
 
     fetchDataFuture = fetchData(context);
+    FetchNewReleases fetchNewReleases=FetchNewReleases();
+
   }
 
   // Future<void> fetchDataAndBuild() async {
@@ -34,11 +38,21 @@ class _DemoPageState extends State<DemoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Center(
-      child: Text(
-        'New Releases',
-        style: GoogleFonts.redHatDisplay(color: greenColor),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: 180,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: 4,
+              itemBuilder: (context, index) {
+                return NewReleasesWidget();
+              },
+            ),
+          ),
+        ],
       ),
-    ));
+    );
   }
 }

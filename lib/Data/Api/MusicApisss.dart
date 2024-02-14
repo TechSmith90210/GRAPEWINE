@@ -48,8 +48,8 @@ Future<void> fetchData(BuildContext context) async {
     albumDataProvider.updateAlbumCovers(albumInfo.albumCovers); // album Covers
 
     //fetching the New Releases
-    // FetchNewReleases fetchNewReleases = FetchNewReleases();
-    // fetchNewReleases.fetchNewReleases(accessToken);
+    FetchNewReleases fetchNewReleases = FetchNewReleases();
+    fetchNewReleases.fetchNewReleases(accessToken, context);
     // print(albumDataProvider.albumCoversProviders.toString());
     // print(albumDataProvider.albumNamesProviders.toString());
   } else {

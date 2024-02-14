@@ -20,7 +20,7 @@ class AlbumInfoProvider with ChangeNotifier {
     // Cilvia Demo
     '6JF49ixyHmOgS0Rsda2k42?si=_v5kT_7QQsOcXHzOcLLLqg'
   ];
-  static const albumIds2=[
+  static const albumIds2 = [
     //
   ];
   //artist Names with setter methods

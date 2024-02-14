@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:grapewine_music_app/Presentation/Screens/the_music_pages.dart';
 import '../../Colors/colors.dart';
 import '../../config/firebase_options.dart';
 
@@ -50,9 +51,14 @@ class _SplashScreenState extends State<SplashScreen> {
             //Success then direct to the main page or authentication
             print('Loading Completed');
             Future.delayed(
-              Duration(seconds: 3),
-              () => Get.toNamed('/themusicpages'),
-            );
+                Duration(seconds: 3),
+                () => Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TheMusicPages(),
+                    ))
+                // Get.toNamed('/themusicpages'),
+                );
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

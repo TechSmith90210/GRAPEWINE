@@ -5,6 +5,7 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:grapewine_music_app/Presentation/Screens/Routes/routes.dart';
 import 'package:grapewine_music_app/Presentation/Screens/demo.dart';
 import 'package:grapewine_music_app/Presentation/Screens/song_player_screen.dart';
+import 'package:grapewine_music_app/Presentation/Screens/splash_screen.dart';
 import 'package:grapewine_music_app/Presentation/Screens/the_music_pages.dart';
 import 'package:grapewine_music_app/Providers/albumInfo_provider.dart';
 import 'package:grapewine_music_app/Providers/date_provider.dart';
@@ -13,6 +14,7 @@ import 'package:grapewine_music_app/Providers/google_signin_provider.dart';
 import 'package:grapewine_music_app/Providers/like_provider.dart';
 import 'package:grapewine_music_app/Providers/login_provider.dart';
 import 'package:grapewine_music_app/Providers/musicPlayer_provider.dart';
+import 'package:grapewine_music_app/Providers/newReleases_provider.dart';
 import 'package:grapewine_music_app/Providers/password_provider.dart';
 import 'package:grapewine_music_app/Providers/signup_provider.dart';
 import 'package:grapewine_music_app/config/firebase_options.dart';
@@ -43,7 +45,8 @@ class MyApp extends StatelessWidget {
             create: (context) => DateProvider(initialDate: DateTime.now())),
         ChangeNotifierProvider(create: (context) => AlbumInfoProvider()),
         ChangeNotifierProvider(create: (context) => LikedProvider()),
-        ChangeNotifierProvider(create: (context)=> MusicPlayerProvider())
+        ChangeNotifierProvider(create: (context) => MusicPlayerProvider()),
+        ChangeNotifierProvider(create: (context) => NewReleasesProvider()),
       ],
       child: MaterialApp(
         title: 'GrapeWine Demo',
@@ -57,8 +60,9 @@ class MyApp extends StatelessWidget {
         // initialRoute: '/splash',
         // routes: routes,
         // home: TheMusicPages(),
-        // home: DemoPage(),
-      home: SongPlayerScreen(),
+        // home: SplashScreen()
+        home: DemoPage(),
+        // home: SongPlayerScreen(),
       ),
     );
   }
