@@ -81,7 +81,9 @@ class HomeScreen extends StatelessWidget {
                     scrollDirection: Axis.horizontal,
                     itemCount: 6,
                     itemBuilder: (context, index) {
-                      return NewFindsWidget(index: index,);
+                      return NewFindsWidget(
+                        index: index,
+                      );
                     },
                   ),
                 ),
@@ -91,4 +93,3 @@ class HomeScreen extends StatelessWidget {
         ));
   }
 }
-

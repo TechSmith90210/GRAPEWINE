@@ -1,7 +1,5 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:grapewine_music_app/Presentation/Screens/Routes/routes.dart';
 import 'package:grapewine_music_app/Presentation/Screens/demo.dart';
 import 'package:grapewine_music_app/Presentation/Screens/song_player_screen.dart';
@@ -18,7 +16,6 @@ import 'package:grapewine_music_app/Providers/newFinds_provider.dart';
 import 'package:grapewine_music_app/Providers/newReleases_provider.dart';
 import 'package:grapewine_music_app/Providers/password_provider.dart';
 import 'package:grapewine_music_app/Providers/signup_provider.dart';
-import 'package:grapewine_music_app/config/firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'Colors/colors.dart';
 import 'Providers/navigator_provider.dart';

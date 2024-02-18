@@ -3,18 +3,12 @@ import 'package:grapewine_music_app/Presentation/Navbar Screens/liked_songs_scre
 import 'package:grapewine_music_app/Presentation/Navbar Screens/search_screen.dart';
 import 'package:grapewine_music_app/Presentation/widgets/BottomNavBarWidget.dart';
 import 'package:provider/provider.dart';
-
 import '../../Providers/navigator_provider.dart';
 import '../Navbar Screens/home_screen.dart';
 
-class TheMusicPages extends StatefulWidget {
-  const TheMusicPages({Key? key});
+class TheMusicPages extends StatelessWidget {
+  const TheMusicPages({super.key});
 
-  @override
-  State<TheMusicPages> createState() => _TheMusicPagesState();
-}
-
-class _TheMusicPagesState extends State<TheMusicPages> {
   @override
   Widget build(BuildContext context) {
     return Consumer<NavigatorProvider>(

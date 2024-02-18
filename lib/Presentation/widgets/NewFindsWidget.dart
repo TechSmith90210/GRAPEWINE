@@ -37,14 +37,14 @@ class _NewFindsWidgetState extends State<NewFindsWidget> {
                 image: DecorationImage(
                     image: NetworkImage(
                         provider.albumCovers[widget.index].toString()),
-                    fit: BoxFit.cover),
+                    fit: BoxFit.fill),
                 borderRadius: BorderRadius.circular(11),
                 border: Border(
                     bottom: BorderSide(
                         width: 50, color: blackColor.withOpacity(0.6)))),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 13, bottom: 8),
+            padding: const EdgeInsets.only(bottom: 8),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.center,

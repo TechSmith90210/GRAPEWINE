@@ -11,6 +11,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
   @override
   Widget build(BuildContext context) {
     return SearchAnchor(
+      isFullScreen: false,
       builder: (context, controller) {
         return SearchBar(
           controller: controller,
