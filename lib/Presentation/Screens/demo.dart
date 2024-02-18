@@ -5,6 +5,7 @@ import 'package:grapewine_music_app/Data/Api/fetchNewReleases.dart';
 import 'package:grapewine_music_app/Presentation/widgets/NewReleasesWidget.dart';
 import 'package:grapewine_music_app/Presentation/widgets/PreviouslyPlayedCircleWidget.dart';
 import 'package:grapewine_music_app/Providers/albumInfo_provider.dart';
+import 'package:grapewine_music_app/Providers/newReleases_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../Data/Api/MusicApisss.dart';
@@ -24,8 +25,8 @@ class _DemoPageState extends State<DemoPage> {
   void initState() {
     super.initState();
 
-    fetchDataFuture = fetchData(context);
-    FetchNewReleases fetchNewReleases=FetchNewReleases();
+    // fetchDataFuture = fetchData(context);
+    // FetchNewReleases fetchNewReleases=FetchNewReleases();
 
   }
 
@@ -37,6 +38,7 @@ class _DemoPageState extends State<DemoPage> {
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<NewReleasesProvider>(context);
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -45,9 +47,10 @@ class _DemoPageState extends State<DemoPage> {
             height: 180,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: 4,
+              itemCount: 7,
               itemBuilder: (context, index) {
-                return NewReleasesWidget();
+                // provider.updateIndex(index);
+                return NewReleasesWidget(index: index,);
               },
             ),
           ),

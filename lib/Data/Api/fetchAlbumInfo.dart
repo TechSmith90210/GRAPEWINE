@@ -39,11 +39,11 @@ class AlbumInfo {
         albumCovers.add(albumCoverUrl!);
 
         // FetchNewReleases fetchNewReleases=FetchNewReleases();
-        // fetchNewReleases.fetchNewReleases(accessToken);
+        // fetchNewReleases.fetchNewReleases(accessToken,context);
         // for (final j in artistNames) {
         //   print(j);
         // }
-        // print(artistNames.toString());
+        // print(albumCovers.toString());
       } else {
         print(
             'Failed to fetch public data. Status code: ${response.statusCode}');

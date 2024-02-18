@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:grapewine_music_app/Data/Api/fetchAlbumInfo.dart';
 import 'package:grapewine_music_app/Data/Api/fetchNewReleases.dart';
 import 'package:grapewine_music_app/Providers/albumInfo_provider.dart';
+import 'package:grapewine_music_app/Providers/newReleases_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import '../../CustomStrings.dart';
@@ -34,22 +36,34 @@ Future<void> fetchData(BuildContext context) async {
     var albumInfo = AlbumInfo();
     var albumDataProvider = Provider.of<AlbumInfoProvider>(context,
         listen: false); //initializing the provider
+    // var newReleasesProvider = Provider.of<NewReleasesProvider>(context);
 
     //fetching the previously played
     await albumInfo.fetchAlbumInfo(
         accessToken,
         AlbumInfoProvider
-            .albumIds); // fetching the album data & filling the three lists with data
+            .albumIds
+    // newReleasesProvider.albumIds
+    ); // fetching the album data & filling the three lists with data
     // albumInfo.getListsData(); // print the fetched Data for debugging
 
+    // print(albumInfo.albumCovers);
     // assigning the fetched lists from the fetchAlbumInfo() method to the provider's lists
     albumDataProvider.updateArtistNames(albumInfo.artistNames); //artist Names
     albumDataProvider.updateAlbumNames(albumInfo.albumNames); // album Names
     albumDataProvider.updateAlbumCovers(albumInfo.albumCovers); // album Covers
 
+    // await albumInfo.fetchAlbumInfo(accessToken, newReleasesProvider.albumIds);
+    //
+    // await newReleasesProvider.updateArtistNames(albumInfo.albumNames);
+    // print(newReleasesProvider.albumArtists);
     //fetching the New Releases
-    FetchNewReleases fetchNewReleases = FetchNewReleases();
-    fetchNewReleases.fetchNewReleases(accessToken, context);
+    // Future.delayed(Duration(seconds: 5),() {
+
+    // },);
+    // Timer(Duration(seconds: 5), () { FetchNewReleases fetchNewReleases = FetchNewReleases();
+    // fetchNewReleases.fetchNewReleases(accessToken, context); });
+
     // print(albumDataProvider.albumCoversProviders.toString());
     // print(albumDataProvider.albumNamesProviders.toString());
   } else {

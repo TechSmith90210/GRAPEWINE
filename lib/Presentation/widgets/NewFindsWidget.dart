@@ -1,18 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:grapewine_music_app/Providers/newFinds_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../../Colors/colors.dart';
 
 class NewFindsWidget extends StatefulWidget {
-  const NewFindsWidget({super.key});
+  int index;
+  NewFindsWidget({super.key, required this.index});
 
   @override
   State<NewFindsWidget> createState() => _NewFindsWidgetState();
 }
 
 class _NewFindsWidgetState extends State<NewFindsWidget> {
+  String truncateText(String text, int maxLength) {
+    if (text.length > maxLength) {
+      return text.substring(0, maxLength) + '...';
+    }
+    return text;
+  }
+
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<NewFindsProvider>(context);
     return Padding(
       padding: const EdgeInsets.only(left: 13, right: 5, top: 10, bottom: 5),
       child: Stack(
@@ -24,8 +35,9 @@ class _NewFindsWidgetState extends State<NewFindsWidget> {
             height: 150,
             decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: NetworkImage('https://i.redd.it/d3oirpfd91171.jpg'),
-                    fit: BoxFit.fill),
+                    image: NetworkImage(
+                        provider.albumCovers[widget.index].toString()),
+                    fit: BoxFit.cover),
                 borderRadius: BorderRadius.circular(11),
                 border: Border(
                     bottom: BorderSide(
@@ -38,7 +50,8 @@ class _NewFindsWidgetState extends State<NewFindsWidget> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  'INFINITY',
+                  truncateText(
+                      provider.albumNames[widget.index].toString(), 15),
                   style: GoogleFonts.redHatDisplay(
                     color: whiteColor,
                     fontWeight: FontWeight.w800,
@@ -46,10 +59,11 @@ class _NewFindsWidgetState extends State<NewFindsWidget> {
                   ),
                 ),
                 Text(
-                  'Scarlxrd',
+                  truncateText(
+                      provider.albumArtists[widget.index].toString(), 15),
                   style: GoogleFonts.redHatDisplay(
                     color: greyColor,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w600,
                     fontSize: 12,
                   ),
                 ),

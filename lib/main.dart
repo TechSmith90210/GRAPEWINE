@@ -14,6 +14,7 @@ import 'package:grapewine_music_app/Providers/google_signin_provider.dart';
 import 'package:grapewine_music_app/Providers/like_provider.dart';
 import 'package:grapewine_music_app/Providers/login_provider.dart';
 import 'package:grapewine_music_app/Providers/musicPlayer_provider.dart';
+import 'package:grapewine_music_app/Providers/newFinds_provider.dart';
 import 'package:grapewine_music_app/Providers/newReleases_provider.dart';
 import 'package:grapewine_music_app/Providers/password_provider.dart';
 import 'package:grapewine_music_app/Providers/signup_provider.dart';
@@ -47,6 +48,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => LikedProvider()),
         ChangeNotifierProvider(create: (context) => MusicPlayerProvider()),
         ChangeNotifierProvider(create: (context) => NewReleasesProvider()),
+        ChangeNotifierProvider(create: (context) => NewFindsProvider()),
       ],
       child: MaterialApp(
         title: 'GrapeWine Demo',
@@ -59,9 +61,9 @@ class MyApp extends StatelessWidget {
         ),
         // initialRoute: '/splash',
         // routes: routes,
-        // home: TheMusicPages(),
+        home: TheMusicPages(),
         // home: SplashScreen()
-        home: DemoPage(),
+        // home: DemoPage(),
         // home: SongPlayerScreen(),
       ),
     );

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
+import 'package:grapewine_music_app/Providers/newReleases_provider.dart';
+import 'package:provider/provider.dart';
 
 class NewReleasesWidget extends StatefulWidget {
-  const NewReleasesWidget({super.key});
+  int index;
+  NewReleasesWidget({super.key, required this.index});
 
   @override
   State<NewReleasesWidget> createState() => _NewReleasesWidgetState();
@@ -12,6 +15,8 @@ class NewReleasesWidget extends StatefulWidget {
 class _NewReleasesWidgetState extends State<NewReleasesWidget> {
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<NewReleasesProvider>(context);
+
     return Padding(
       padding: const EdgeInsets.only(left: 13, right: 5, top: 10, bottom: 5),
       child: Stack(
@@ -23,7 +28,7 @@ class _NewReleasesWidgetState extends State<NewReleasesWidget> {
             decoration: BoxDecoration(
                 image: DecorationImage(
                     image: NetworkImage(
-                        'https://i.scdn.co/image/ab67616d0000b273581f1908ffdfef41ca3ce7f4'),
+                        provider.albumCovers[widget.index].toString()),
                     fit: BoxFit.cover),
                 borderRadius: BorderRadius.circular(11),
                 border: Border(
@@ -37,7 +42,7 @@ class _NewReleasesWidgetState extends State<NewReleasesWidget> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  'At The Party',
+                  provider.albumNames[widget.index].toString(),
                   style: GoogleFonts.redHatDisplay(
                     color: whiteColor,
                     fontWeight: FontWeight.w800,
@@ -45,10 +50,10 @@ class _NewReleasesWidgetState extends State<NewReleasesWidget> {
                   ),
                 ),
                 Text(
-                  'Kid Cudi',
+                  provider.albumArtists[widget.index].toString(),
                   style: GoogleFonts.redHatDisplay(
                     color: greyColor,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w600,
                     fontSize: 12,
                   ),
                 ),

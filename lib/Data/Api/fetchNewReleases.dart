@@ -23,22 +23,19 @@ class FetchNewReleases {
       //get album ids and then fetch images for each id in the list
       var albumids =
           await newReleases.map((album) => album.id).take(7).toList();
-      provider.updateIds(albumids);
+      // provider.updateIds(albumids);
       var albumNames =
           await newReleases.map((album) => album.name).take(7).toList();
-      provider.updateNames(albumNames);
+      // provider.updateNames(albumNames);
 
       // get album artists
       var allAlbumArtists = <List<String?>>[];
       await Future.forEach(newReleases, (album) {
         var artistNames =
-            album.artists?.map((artist) => artist.name).toList() ?? [];
+            album.artists?.map((artist) => artist.name).take(7).toList() ?? [];
         allAlbumArtists.add(artistNames);
       });
-      print(allAlbumArtists);
-      print(allAlbumArtists[0].toString());
-
-
+      // print(allAlbumArtists);
 
       // get album covers
       List<String?> covers = [];
@@ -62,7 +59,7 @@ class FetchNewReleases {
 
       // print(covers);
       // provider.updateCovers(covers);
-      // print(provider.albumCovers);
+      print(provider.albumCovers);
       // print(provider.albumIds);
       // print(albumids);
       // print(albumNames);

@@ -6,14 +6,9 @@ import 'package:grapewine_music_app/Presentation/widgets/NewFindsWidget.dart';
 import 'package:grapewine_music_app/Presentation/widgets/NewReleasesWidget.dart';
 import 'package:grapewine_music_app/Presentation/widgets/PreviouslyPlayedCircleWidget.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,9 +56,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 180,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: 4,
+                    itemCount: 6,
                     itemBuilder: (context, index) {
-                      return NewReleasesWidget();
+                      return NewReleasesWidget(
+                        index: index,
+                      );
                     },
                   ),
                 ),
@@ -82,9 +79,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 180,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: 4,
+                    itemCount: 6,
                     itemBuilder: (context, index) {
-                      return NewFindsWidget();
+                      return NewFindsWidget(index: index,);
                     },
                   ),
                 ),
@@ -94,3 +91,4 @@ class _HomeScreenState extends State<HomeScreen> {
         ));
   }
 }
+
