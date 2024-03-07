@@ -47,6 +47,12 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
   }
 
   @override
+  void dispose() {
+    player.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var musicPlayerProvider = Provider.of<MusicPlayerProvider>(context);
     return Scaffold(
@@ -238,10 +244,10 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
                     },
                   ),
                 ),
-                SizedBox(
-                  height: 5,
-                ),
-                ArtistChipsWidget(),
+                // SizedBox(
+                //   height: 5,
+                // ),
+                // ArtistChipsWidget(),
               ],
             ),
           ],

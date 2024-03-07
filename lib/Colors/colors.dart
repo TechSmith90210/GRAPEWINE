@@ -10,9 +10,7 @@ Color blackColor = const Color(0xFF050909);
 Color greenColor = const Color(0xFF577F2B);
 Color darkgreyColor = const Color(0xFF979797);
 Color yellowColor = const Color(0xFFFFE15D);
-Color linearColor1=const Color(0xFFD72571);
-
-
+Color linearColor1 = const Color(0xFFD72571);
 
 // Bubble Colours
 Color purpleBubbleColor = const Color(0xFF32083D);
