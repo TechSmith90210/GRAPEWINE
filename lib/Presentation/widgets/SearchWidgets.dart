@@ -10,11 +10,13 @@ Widget ArtistWidget(BuildContext context, int index) {
   return ListTile(
     title: Text(
       provider.searchArtistNames[index],
-      style: GoogleFonts.redHatDisplay(color: whiteColor),
+      style: GoogleFonts.redHatDisplay(
+          color: whiteColor, fontWeight: FontWeight.w500),
     ),
     subtitle: Text(
       'Artist',
-      style: GoogleFonts.redHatDisplay(color: greyColor),
+      style: GoogleFonts.redHatDisplay(
+          color: greyColor, fontWeight: FontWeight.w500),
     ),
     leading: Container(
       height: 60,
@@ -48,11 +50,13 @@ Widget TrackWidget(BuildContext context, int index) {
   return ListTile(
     title: Text(
       provider.searchTrackNames[index],
-      style: GoogleFonts.redHatDisplay(color: whiteColor),
+      style: GoogleFonts.redHatDisplay(
+          color: whiteColor, fontWeight: FontWeight.w500),
     ),
     subtitle: Text(
       'Track • ${formattedText(provider.searchTrackArtists[index])}',
-      style: GoogleFonts.redHatDisplay(color: greyColor),
+      style: GoogleFonts.redHatDisplay(
+          color: greyColor, fontWeight: FontWeight.w500),
     ),
     leading: Container(
       height: 60,
@@ -86,11 +90,13 @@ Widget AlbumWidget(BuildContext context, int index) {
   return ListTile(
     title: Text(
       provider.searchAlbumNames[index],
-      style: GoogleFonts.redHatDisplay(color: whiteColor),
+      style: GoogleFonts.redHatDisplay(
+          color: whiteColor, fontWeight: FontWeight.w500),
     ),
     subtitle: Text(
       'Album • ${formattedText(provider.searchAlbumArtists[index])}',
-      style: GoogleFonts.redHatDisplay(color: greyColor),
+      style: GoogleFonts.redHatDisplay(
+          color: greyColor, fontWeight: FontWeight.w500),
     ),
     leading: Container(
       height: 60,
