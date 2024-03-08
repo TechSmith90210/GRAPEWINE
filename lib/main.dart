@@ -5,6 +5,7 @@ import 'package:grapewine_music_app/Presentation/Screens/demo.dart';
 import 'package:grapewine_music_app/Presentation/Screens/song_player_screen.dart';
 import 'package:grapewine_music_app/Presentation/Screens/splash_screen.dart';
 import 'package:grapewine_music_app/Presentation/Screens/the_music_pages.dart';
+import 'package:grapewine_music_app/Providers/accessToken_provider.dart';
 import 'package:grapewine_music_app/Providers/albumInfo_provider.dart';
 import 'package:grapewine_music_app/Providers/date_provider.dart';
 import 'package:grapewine_music_app/Providers/gender_provider.dart';
@@ -15,6 +16,7 @@ import 'package:grapewine_music_app/Providers/musicPlayer_provider.dart';
 import 'package:grapewine_music_app/Providers/newFinds_provider.dart';
 import 'package:grapewine_music_app/Providers/newReleases_provider.dart';
 import 'package:grapewine_music_app/Providers/password_provider.dart';
+import 'package:grapewine_music_app/Providers/search_provider.dart';
 import 'package:grapewine_music_app/Providers/signup_provider.dart';
 import 'package:provider/provider.dart';
 import 'Colors/colors.dart';
@@ -46,6 +48,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => MusicPlayerProvider()),
         ChangeNotifierProvider(create: (context) => NewReleasesProvider()),
         ChangeNotifierProvider(create: (context) => NewFindsProvider()),
+        ChangeNotifierProvider(create: (context) => AccessTokenProvider()),
+        ChangeNotifierProvider(create: (context) => SearchProvider()),
+
       ],
       child: MaterialApp(
         title: 'GrapeWine Demo',
@@ -58,9 +63,9 @@ class MyApp extends StatelessWidget {
         ),
         // initialRoute: '/splash',
         // routes: routes,
-        home: TheMusicPages(),
+        // home: TheMusicPages(),
         // home: SplashScreen()
-        // home: DemoPage(),
+        home: DemoPage(),
         // home: SongPlayerScreen(),
       ),
     );

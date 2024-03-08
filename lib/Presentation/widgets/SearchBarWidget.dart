@@ -16,7 +16,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
       // isFullScreen: true,
       viewBackgroundColor: blackColor,
       headerTextStyle: GoogleFonts.redHatDisplay(color: whiteColor),
-      viewLeading: GestureDetector(
+      viewLeading: InkWell(
           onTap: () => Navigator.pop(context),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -25,7 +25,16 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
               color: whiteColor,
             ),
           )),
-      viewTrailing: [Icon(Icons.search, color: Colors.white)],
+      viewTrailing: [
+        InkWell(
+            onTap: () {
+              print('tapped');
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(Icons.search, color: Colors.white),
+            ))
+      ],
       builder: (context, controller) {
         return SearchBar(
           // elevation: MaterialStatePropertyAll(2),
@@ -39,7 +48,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
           onSubmitted: (value) {
             print(value.toString());
           },
-          leading: const Icon(Icons.search, color: Color(0xFF151515)),
+          leading: const Icon(Icons.search_rounded, color: Color(0xFF151515)),
           hintText: 'Search',
           textStyle: const MaterialStatePropertyAll(
               TextStyle(color: Color(0xFF151515))),
