@@ -1,0 +1,131 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:grapewine_music_app/Colors/colors.dart';
+import 'package:grapewine_music_app/Providers/search_provider.dart';
+import 'package:provider/provider.dart';
+
+Widget ArtistWidget(BuildContext context, int index) {
+  var provider = Provider.of<SearchProvider>(context);
+  var imageUrl = provider.searchArtistImages[index].toString();
+  return ListTile(
+    title: Text(
+      provider.searchArtistNames[index],
+      style: GoogleFonts.redHatDisplay(color: whiteColor),
+    ),
+    subtitle: Text(
+      'Artist',
+      style: GoogleFonts.redHatDisplay(color: greyColor),
+    ),
+    leading: Container(
+      height: 60,
+      width: 60,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(40),
+        image: DecorationImage(
+            image: imageUrl.isNotEmpty
+                ? NetworkImage(imageUrl.toString()) as ImageProvider<Object>
+                : const AssetImage('assets/icons8-user-96.png'),
+            fit: BoxFit.cover),
+      ),
+    ),
+    trailing: const Icon(Icons.arrow_forward_ios_rounded),
+  );
+}
+
+Widget TrackWidget(BuildContext context, int index) {
+  String formattedText(String text) {
+    int commaIndex = text.indexOf(',');
+
+    if (commaIndex != -1) {
+      return text.substring(1, commaIndex).trim();
+    } else {
+      return text;
+    }
+  }
+
+  var provider = Provider.of<SearchProvider>(context);
+  var imageUrl = provider.searchTrackImages[index].toString();
+  return ListTile(
+    title: Text(
+      provider.searchTrackNames[index],
+      style: GoogleFonts.redHatDisplay(color: whiteColor),
+    ),
+    subtitle: Text(
+      'Track • ${formattedText(provider.searchTrackArtists[index])}',
+      style: GoogleFonts.redHatDisplay(color: greyColor),
+    ),
+    leading: Container(
+      height: 60,
+      width: 60,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(3),
+        image: DecorationImage(
+            image: imageUrl.isNotEmpty
+                ? NetworkImage(imageUrl.toString()) as ImageProvider<Object>
+                : const AssetImage('assets/icons8-user-96.png'),
+            fit: BoxFit.cover),
+      ),
+    ),
+    trailing: const Icon(Icons.arrow_forward_ios_rounded),
+  );
+}
+
+Widget AlbumWidget(BuildContext context, int index) {
+  String formattedText(String text) {
+    int commaIndex = text.indexOf(',');
+
+    if (commaIndex != -1) {
+      return text.substring(1, commaIndex).trim();
+    } else {
+      return text;
+    }
+  }
+
+  var provider = Provider.of<SearchProvider>(context);
+  var imageUrl = provider.searchAlbumImages[index].toString();
+  return ListTile(
+    title: Text(
+      provider.searchAlbumNames[index],
+      style: GoogleFonts.redHatDisplay(color: whiteColor),
+    ),
+    subtitle: Text(
+      'Album • ${formattedText(provider.searchAlbumArtists[index])}',
+      style: GoogleFonts.redHatDisplay(color: greyColor),
+    ),
+    leading: Container(
+      height: 60,
+      width: 60,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(3),
+        image: DecorationImage(
+          image: imageUrl.isNotEmpty
+              ? NetworkImage(imageUrl.toString()) as ImageProvider<Object>
+              : const AssetImage('assets/icons8-album-96.png'),
+          fit: BoxFit.cover,
+        ),
+      ),
+    ),
+    trailing: const Icon(Icons.arrow_forward_ios_rounded),
+  );
+}
+
+Widget SearchResultsWidget(BuildContext context, int index) {
+  // Check if index is within valid range
+  if (index < 0 || index > 14) {
+    return SizedBox(); // Return an empty widget
+  }
+
+  // All tracks, artists, albums widgets
+  int internalIndex;
+
+  if (index <= 4) {
+    internalIndex = index;
+    return TrackWidget(context, internalIndex);
+  } else if (index > 4 && index <= 9) {
+    internalIndex = index - 5;
+    return ArtistWidget(context, internalIndex);
+  } else {
+    internalIndex = index - 10;
+    return AlbumWidget(context, internalIndex);
+  }
+}

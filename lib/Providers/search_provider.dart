@@ -37,6 +37,13 @@ class SearchProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  List<String> _searchTrackArtists=[];
+  List<String> get searchTrackArtists=>_searchTrackArtists;
+  void setTrackArtists(List<String> newTrackArtists){
+    _searchTrackArtists=newTrackArtists;
+    notifyListeners();
+  }
+
   //albums
   List<String> _searchAlbumNames = [];
   List<String> get searchAlbumNames => _searchAlbumNames;
@@ -49,6 +56,13 @@ class SearchProvider with ChangeNotifier {
   List<String> get searchAlbumImages => _searchAlbumImages;
   void getAlbumImages(List<String> newAlbumImages) {
     _searchAlbumImages = newAlbumImages;
+    notifyListeners();
+  }
+
+  List<String> _searchAlbumArtists=[];
+  List<String> get searchAlbumArtists=>_searchAlbumArtists;
+  void setAlbumArtists(List<String> newAlbumArtists){
+    _searchAlbumArtists=newAlbumArtists;
     notifyListeners();
   }
 }
@@ -68,7 +82,6 @@ Future<void> searchFor(BuildContext context, String query) async {
     var searchPage = await searchResults.getPage(5).then((value) {
       return value.expand((e) => e.items!).toList();
     });
-    List<dynamic> albums = searchPage.sublist(0, 5);
 
     // print(albums);
     // print(artistss);
@@ -114,6 +127,7 @@ Future<void> searchFor(BuildContext context, String query) async {
 
     List<String> searchTrackNames = [];
     List<String> searchTrackImages = [];
+    List<String> searchTrackArtists = [];
 
     for (var track in tracks) {
       searchTrackNames.add(track.name!);
@@ -125,9 +139,12 @@ Future<void> searchFor(BuildContext context, String query) async {
         // case where there are no images
         searchTrackImages.add('');
       }
+      searchTrackArtists.add(track.artists!.map((e) => e.name!.toString()).toString());
     }
     searchProvider.getTrackNames(searchTrackNames);
     searchProvider.getTrackImages(searchTrackImages);
+    searchProvider.setTrackArtists(searchTrackArtists);
+    // print(searchTrackArtists);
 
     //<------------------------------- ALBUMS -------------------------------------->
     // Extract albums and its details from search results
@@ -139,7 +156,7 @@ Future<void> searchFor(BuildContext context, String query) async {
 
     List<String> searchAlbumNames = [];
     List<String> searchAlbumImages = [];
-
+List<String> searchAlbumArtists=[];
     for (var album in albumss) {
       searchAlbumNames.add(album.name!);
 
@@ -150,13 +167,14 @@ Future<void> searchFor(BuildContext context, String query) async {
         // case where there are no images
         searchAlbumImages.add('');
       }
+      searchAlbumArtists.add(album.artists!.map((e) => e.name).toString());
     }
     searchProvider.getAlbumNames(searchAlbumNames);
     searchProvider.getAlbumImages(searchAlbumImages);
-
+    searchProvider.setAlbumArtists(searchAlbumArtists);
+    // print(searchProvider.searchAlbumArtists);
     // print(searchProvider.searchAlbumNames);
     // print(searchProvider.searchAlbumImages);
-
   } catch (e) {
     print(e);
   }
