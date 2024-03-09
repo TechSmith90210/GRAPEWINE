@@ -14,12 +14,12 @@ class TheMusicPages extends StatelessWidget {
     return Consumer<NavigatorProvider>(
       builder: (context, navigatorProvider, child) {
         return Scaffold(
-          body: [
+          body:const [
             HomeScreen(),
             SearchScreen(),
             LikedSongsScreen(),
           ][navigatorProvider.selectedIndex],
-          bottomNavigationBar: BottomNavBarWidget(),
+          bottomNavigationBar:const BottomNavBarWidget(),
         );
       },
     );

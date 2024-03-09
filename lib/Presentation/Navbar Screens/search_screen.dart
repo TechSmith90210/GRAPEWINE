@@ -2,17 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Presentation/widgets/AppBarWidget.dart';
 import 'package:grapewine_music_app/Presentation/widgets/SearchBarWidget.dart';
+import 'package:grapewine_music_app/Presentation/widgets/SearchSongWidget.dart';
 import '../../Colors/colors.dart';
 import '../widgets/TrendingBubbleWidget.dart';
 
-class SearchScreen extends StatefulWidget {
+class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
 
-  @override
-  State<SearchScreen> createState() => _SearchScreenState();
-}
-
-class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     List<String> artistNames = [
@@ -38,7 +34,8 @@ class _SearchScreenState extends State<SearchScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                SearchBarWidget(),
+               const SearchBarWidget(),
+                // SearchSongWidget(),
                 const SizedBox(
                   height: 35,
                 ),
@@ -62,7 +59,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     );
                   }).toList(),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
                 Text(
@@ -72,7 +69,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       fontSize: 17,
                       fontWeight: FontWeight.w700),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 ListView.builder(

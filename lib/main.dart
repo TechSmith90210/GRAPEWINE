@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:grapewine_music_app/Presentation/Screens/Routes/routes.dart';
 import 'package:grapewine_music_app/Presentation/Screens/demo.dart';
+import 'package:grapewine_music_app/Presentation/Screens/search_screen2.dart';
 import 'package:grapewine_music_app/Presentation/Screens/song_player_screen.dart';
 import 'package:grapewine_music_app/Presentation/Screens/splash_screen.dart';
 import 'package:grapewine_music_app/Presentation/Screens/the_music_pages.dart';
@@ -50,7 +51,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => NewFindsProvider()),
         ChangeNotifierProvider(create: (context) => AccessTokenProvider()),
         ChangeNotifierProvider(create: (context) => SearchProvider()),
-
       ],
       child: MaterialApp(
         title: 'GrapeWine Demo',
@@ -63,9 +63,10 @@ class MyApp extends StatelessWidget {
         ),
         // initialRoute: '/splash',
         // routes: routes,
-        // home: TheMusicPages(),
+        home: const TheMusicPages(),
+        // home: SearchPage2(),
         // home: SplashScreen()
-        home: DemoPage(),
+        // home: DemoPage(),
         // home: SongPlayerScreen(),
       ),
     );

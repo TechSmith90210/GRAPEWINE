@@ -1,88 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
+import 'package:grapewine_music_app/Presentation/Screens/search_screen2.dart';
 
 class SearchBarWidget extends StatefulWidget {
-  const SearchBarWidget({super.key});
+  const SearchBarWidget({Key? key}) : super(key: key);
 
   @override
   State<SearchBarWidget> createState() => _SearchBarWidgetState();
 }
 
 class _SearchBarWidgetState extends State<SearchBarWidget> {
+  TextEditingController searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    return SearchAnchor(
-      // isFullScreen: true,
-      viewBackgroundColor: blackColor,
-      headerTextStyle: GoogleFonts.redHatDisplay(color: whiteColor),
-      viewLeading: InkWell(
-          onTap: () => Navigator.pop(context),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Icon(
-              Icons.arrow_back,
-              color: whiteColor,
+    return Container(
+      decoration: BoxDecoration(
+        color: blackColor,
+        borderRadius: BorderRadius.circular(5),
+        border: Border.all(
+          color: greyColor,
+          width: 0.3,
+        ),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 14.0),
+      child: Row(
+        children: [
+          Icon(Icons.search_rounded, color: whiteColor),
+          SizedBox(width: 8.0),
+          Expanded(
+            child: TextField(
+              controller: searchController,
+              readOnly: true,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                hintText: 'Search',
+                hintStyle: GoogleFonts.redHatDisplay(
+                  fontWeight: FontWeight.w700,
+                  color: greyColor,
+                  fontSize: 15,
+                ),
+              ),
+              cursorColor: purpleColor,
+              style: GoogleFonts.redHatDisplay(
+                fontWeight: FontWeight.w700,
+                color: whiteColor,
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SearchPage2()),
+                );
+              },
             ),
-          )),
-      viewTrailing: [
-        InkWell(
-            onTap: () {
-              print('tapped');
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(Icons.search, color: Colors.white),
-            ))
-      ],
-      builder: (context, controller) {
-        return SearchBar(
-          // elevation: MaterialStatePropertyAll(2),
-          // overlayColor: MaterialStatePropertyAll(Color(0xFFE2DFD2)),
-          // shadowColor: MaterialStatePropertyAll(Color(0xFF979797)),
-          controller: controller,
-          padding: const MaterialStatePropertyAll<EdgeInsets>(
-              EdgeInsets.symmetric(horizontal: 14.0)),
-          onTap: () => controller.openView(),
-          onChanged: (_) => controller.closeView(controller.text),
-          onSubmitted: (value) {
-            print(value.toString());
-          },
-          leading: const Icon(Icons.search_rounded, color: Color(0xFF151515)),
-          hintText: 'Search',
-          textStyle: const MaterialStatePropertyAll(
-              TextStyle(color: Color(0xFF151515))),
-          backgroundColor: MaterialStatePropertyAll(whiteColor),
-        );
-      },
-      suggestionsBuilder: (context, controller) {
-        return List<ListTile>.generate(15, (index) {
-          final String item = 'item $index';
-          return ListTile(
-            leading: Container(
-              height: 50,
-              width: 50,
-              decoration: BoxDecoration(
-                  color: Colors.blueAccent,
-                  borderRadius: BorderRadius.circular(3)),
-            ),
-            title: Text(
-              'Blue Lips',
-              style: GoogleFonts.redHatDisplay(color: whiteColor),
-            ),
-            subtitle: Text(
-              'Album • Schoolboy Q',
-              style: GoogleFonts.redHatDisplay(color: greyColor),
-            ),
-            trailing: Icon(Icons.arrow_forward_ios_rounded),
-            onTap: () {
-              setState(() {
-                controller.closeView(item);
-              });
-            },
-          );
-        });
-      },
+          ),
+        ],
+      ),
     );
   }
 }

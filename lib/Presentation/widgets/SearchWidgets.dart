@@ -48,6 +48,7 @@ Widget TrackWidget(BuildContext context, int index) {
   var provider = Provider.of<SearchProvider>(context);
   var imageUrl = provider.searchTrackImages[index].toString();
   return ListTile(
+    onTap: () {},
     title: Text(
       provider.searchTrackNames[index],
       style: GoogleFonts.redHatDisplay(

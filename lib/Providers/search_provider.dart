@@ -7,6 +7,21 @@ import '../Data/Api/MusicApisss.dart';
 import 'accessToken_provider.dart';
 
 class SearchProvider with ChangeNotifier {
+  //Search Page Initials
+  bool _isClicked = false;
+  bool get isClicked => _isClicked;
+  void setClick() {
+    _isClicked = !_isClicked;
+    notifyListeners();
+  }
+
+  String _query='';
+  String get query=>_query;
+  void setQuery(String newQuery){
+    _query=newQuery;
+    notifyListeners();
+  }
+
   //artists
   List<String> _searchArtistNames = [];
   List<String> get searchArtistNames => _searchArtistNames;
@@ -37,10 +52,10 @@ class SearchProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  List<String> _searchTrackArtists=[];
-  List<String> get searchTrackArtists=>_searchTrackArtists;
-  void setTrackArtists(List<String> newTrackArtists){
-    _searchTrackArtists=newTrackArtists;
+  List<String> _searchTrackArtists = [];
+  List<String> get searchTrackArtists => _searchTrackArtists;
+  void setTrackArtists(List<String> newTrackArtists) {
+    _searchTrackArtists = newTrackArtists;
     notifyListeners();
   }
 
@@ -59,10 +74,10 @@ class SearchProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  List<String> _searchAlbumArtists=[];
-  List<String> get searchAlbumArtists=>_searchAlbumArtists;
-  void setAlbumArtists(List<String> newAlbumArtists){
-    _searchAlbumArtists=newAlbumArtists;
+  List<String> _searchAlbumArtists = [];
+  List<String> get searchAlbumArtists => _searchAlbumArtists;
+  void setAlbumArtists(List<String> newAlbumArtists) {
+    _searchAlbumArtists = newAlbumArtists;
     notifyListeners();
   }
 }
@@ -75,52 +90,53 @@ Future<void> searchFor(BuildContext context, String query) async {
 
   try {
     var searchResults = await spotify.search.get(query, types: [
-      spot.SearchType.artist,
+      // spot.SearchType.artist,
       spot.SearchType.track,
-      spot.SearchType.album
+      // spot.SearchType.album
     ]);
-    var searchPage = await searchResults.getPage(5).then((value) {
+    var searchPage = await searchResults.getPage(30).then((value) {
       return value.expand((e) => e.items!).toList();
     });
-
+    // print(searchPage);
     // print(albums);
     // print(artistss);
     // print(trackss);
     // print(searchPage);
 
-    //<------------------------------- ARTISTS -------------------------------------->
-    // Extract artists and its details from the search results
-    List<dynamic> artistss = searchPage.sublist(5, 10);
-    List<spot.Artist> artists = artistss
-        .map((item) => item as spot.Artist)
-        .whereType<spot.Artist>()
-        .toList();
-
-    List<String> searchArtistImages = [];
-    List<String> searchArtistNames = [];
-
     var searchProvider = Provider.of<SearchProvider>(context, listen: false);
 
-    for (var artist in artists) {
-      searchArtistNames.add(artist.name!);
-
-      if (artist.images != null && artist.images!.isNotEmpty) {
-        // Use the first image if available
-        searchArtistImages.add(artist.images![0].url.toString());
-      } else {
-        // case where there are no images
-        searchArtistImages.add('');
-      }
-    }
-    searchProvider.setArtistNames(searchArtistNames);
-    searchProvider.setArtistImages(searchArtistImages);
+    //<------------------------------- ARTISTS -------------------------------------->
+    // Extract artists and its details from the search results
+    // List<dynamic> artistss = searchPage.sublist(5, 10);
+    // List<spot.Artist> artists = artistss
+    //     .map((item) => item as spot.Artist)
+    //     .whereType<spot.Artist>()
+    //     .toList();
+    //
+    // List<String> searchArtistImages = [];
+    // List<String> searchArtistNames = [];
+    //
+    //
+    // for (var artist in artists) {
+    //   searchArtistNames.add(artist.name!);
+    //
+    //   if (artist.images != null && artist.images!.isNotEmpty) {
+    //     // Use the first image if available
+    //     searchArtistImages.add(artist.images![0].url.toString());
+    //   } else {
+    //     // case where there are no images
+    //     searchArtistImages.add('');
+    //   }
+    // }
+    // searchProvider.setArtistNames(searchArtistNames);
+    // searchProvider.setArtistImages(searchArtistImages);
 
     // print(searchProvider.searchArtistImages);
 
     //<------------------------------- TRACKS -------------------------------------->
     //Extract tracks and its details from search results
-    List<dynamic> trackss = searchPage.sublist(10, 15);
-    List<spot.Track> tracks = trackss
+    // List<dynamic> trackss = searchPage.sublist(10, 15);
+    List<spot.Track> tracks = searchPage
         .map((item) => item as spot.Track)
         .whereType<spot.Track>()
         .toList();
@@ -139,7 +155,8 @@ Future<void> searchFor(BuildContext context, String query) async {
         // case where there are no images
         searchTrackImages.add('');
       }
-      searchTrackArtists.add(track.artists!.map((e) => e.name!.toString()).toString());
+      searchTrackArtists
+          .add(track.artists!.map((e) => e.name!.toString()).toString());
     }
     searchProvider.getTrackNames(searchTrackNames);
     searchProvider.getTrackImages(searchTrackImages);
@@ -148,30 +165,30 @@ Future<void> searchFor(BuildContext context, String query) async {
 
     //<------------------------------- ALBUMS -------------------------------------->
     // Extract albums and its details from search results
-    List<dynamic> albumsss = searchPage.sublist(0, 5);
-    List<spot.AlbumSimple> albumss = albumsss
-        .map((item) => item as spot.AlbumSimple)
-        .whereType<spot.AlbumSimple>()
-        .toList();
-
-    List<String> searchAlbumNames = [];
-    List<String> searchAlbumImages = [];
-List<String> searchAlbumArtists=[];
-    for (var album in albumss) {
-      searchAlbumNames.add(album.name!);
-
-      if (album.images != null && album.images!.isNotEmpty) {
-        // Use the first image if available
-        searchAlbumImages.add(album.images![0].url.toString());
-      } else {
-        // case where there are no images
-        searchAlbumImages.add('');
-      }
-      searchAlbumArtists.add(album.artists!.map((e) => e.name).toString());
-    }
-    searchProvider.getAlbumNames(searchAlbumNames);
-    searchProvider.getAlbumImages(searchAlbumImages);
-    searchProvider.setAlbumArtists(searchAlbumArtists);
+    // List<dynamic> albumsss = searchPage.sublist(0, 5);
+    // List<spot.AlbumSimple> albumss = albumsss
+    //     .map((item) => item as spot.AlbumSimple)
+    //     .whereType<spot.AlbumSimple>()
+    //     .toList();
+    //
+    // List<String> searchAlbumNames = [];
+    // List<String> searchAlbumImages = [];
+    // List<String> searchAlbumArtists = [];
+    // for (var album in albumss) {
+    //   searchAlbumNames.add(album.name!);
+    //
+    //   if (album.images != null && album.images!.isNotEmpty) {
+    //     // Use the first image if available
+    //     searchAlbumImages.add(album.images![0].url.toString());
+    //   } else {
+    //     // case where there are no images
+    //     searchAlbumImages.add('');
+    //   }
+    //   searchAlbumArtists.add(album.artists!.map((e) => e.name).toString());
+    // }
+    // searchProvider.getAlbumNames(searchAlbumNames);
+    // searchProvider.getAlbumImages(searchAlbumImages);
+    // searchProvider.setAlbumArtists(searchAlbumArtists);
     // print(searchProvider.searchAlbumArtists);
     // print(searchProvider.searchAlbumNames);
     // print(searchProvider.searchAlbumImages);

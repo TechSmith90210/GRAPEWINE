@@ -15,7 +15,7 @@ class _DemoPageState extends State<DemoPage> {
 
   @override
   void initState() {
-    fetchDataFuture = searchforData(context, 'young thug');
+    fetchDataFuture = searchforData(context, 'Beyon');
     super.initState();
   }
 
@@ -31,7 +31,7 @@ class _DemoPageState extends State<DemoPage> {
               if (snapshot.connectionState == ConnectionState.done) {
                 return Expanded(
                   child: ListView.builder(
-                    itemCount: 15,
+                    itemCount: 30,
                     itemBuilder: (context, index) {
                       // var imageUrl =
                       //     provider.searchArtistImages[index].toString();
@@ -47,7 +47,7 @@ class _DemoPageState extends State<DemoPage> {
                         );
                       } else if (snapshot.connectionState ==
                           ConnectionState.done) {
-                        return SearchResultsWidget(context, index);
+                        return TrackWidget(context, index);
                       }
                       return null;
                     },
