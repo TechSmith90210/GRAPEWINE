@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
+import 'package:grapewine_music_app/Presentation/Screens/song_player_screen.dart';
 import 'package:grapewine_music_app/Providers/search_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -48,7 +49,28 @@ Widget TrackWidget(BuildContext context, int index) {
   var provider = Provider.of<SearchProvider>(context);
   var imageUrl = provider.searchTrackImages[index].toString();
   return ListTile(
-    onTap: () {},
+    onTap: () {
+      provider.setSongName(provider.searchTrackNames[index]);
+      provider.setSongArtist(provider.searchTrackArtists[index]);
+      // print('${provider.selectedSongName} ${provider.selectedSongArtist} song');
+      provider.setSongDetails(
+          '${provider.selectedSongName} ${provider.selectedSongArtist} song audio');
+      print(provider.selectedSongDetails);
+      String songCover = imageUrl;
+      if (songCover.isNotEmpty) {
+        songCover = imageUrl;
+      } else {
+        songCover = 'https://assets.audiomack.com/default-song-image.png';
+      }
+      provider.setSongImage(songCover);
+
+      //navigate to the song player screen with the song details
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SongPlayerScreen(),
+          ));
+    },
     title: Text(
       provider.searchTrackNames[index],
       style: GoogleFonts.redHatDisplay(
@@ -67,11 +89,18 @@ Widget TrackWidget(BuildContext context, int index) {
         image: DecorationImage(
             image: imageUrl.isNotEmpty
                 ? NetworkImage(imageUrl.toString()) as ImageProvider<Object>
-                : const AssetImage('assets/icons8-user-96.png'),
+                : NetworkImage(
+                        'https://assets.audiomack.com/default-song-image.png')
+                    as ImageProvider<Object>,
             fit: BoxFit.cover),
       ),
     ),
     trailing: const Icon(Icons.arrow_forward_ios_rounded),
+    // iconColor: greyColor,
+    splashColor: blackColor,
+    hoverColor: blackColor,
+    focusColor: blackColor,
+    // dense: true,
   );
 }
 

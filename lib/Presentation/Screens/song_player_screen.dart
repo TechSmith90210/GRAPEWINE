@@ -3,8 +3,10 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/CustomStrings.dart';
+import 'package:grapewine_music_app/Presentation/Screens/the_music_pages.dart';
 import 'package:grapewine_music_app/Presentation/widgets/ArtistChipsWidget.dart';
 import 'package:grapewine_music_app/Providers/musicPlayer_provider.dart';
+import 'package:grapewine_music_app/Providers/search_provider.dart';
 import 'package:interactive_slider/interactive_slider.dart';
 import 'package:provider/provider.dart';
 import 'package:spotify/spotify.dart';
@@ -23,27 +25,36 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
   final player = AudioPlayer();
   Duration? duration;
   Uri? audioUrl;
+  Future<void> fetchSong(String theSongName) async {
+    var provider = Provider.of<SearchProvider>(context, listen: false);
+    var songName = provider.selectedSongDetails;
+    if (songName != null) {
+      final yt = YoutubeExplode();
+      final video = (await yt.search.search(songName)).first;
+      final videoId = video.id.value;
+      duration = video.duration;
+      setState(() {});
+      var manifest = await yt.videos.streamsClient.getManifest(videoId);
+      audioUrl = manifest.audioOnly.first.url;
+      player.play(UrlSource(audioUrl.toString()));
+    }
+  }
 
   @override
   void initState() {
-    final credentials = SpotifyApiCredentials(
-        CustomStrings.clientId, CustomStrings.clientSecret);
-    final spotify = SpotifyApi(credentials);
-    final musicTrackId = '11BbPUv7NlzlcbY7AmHHKy?si=71a57e5a016d4234';
-    spotify.tracks.get(musicTrackId).then((track) async {
-      String? songName = track.name;
-      if (songName != null) {
-        final yt = YoutubeExplode();
-        final video = (await yt.search.search(songName)).first;
-        final videoId = video.id.value;
-        duration = video.duration;
-        setState(() {});
-        var manifest = await yt.videos.streamsClient.getManifest(videoId);
-        audioUrl = manifest.audioOnly.first.url;
-        // player.play(UrlSource(audioUrl.toString()));
-      }
-    });
     super.initState();
+    Future.delayed(Duration.zero, () {
+      var provider = Provider.of<SearchProvider>(context, listen: false);
+      var songName = provider.selectedSongDetails;
+
+      fetchSong(songName); // get the song details
+    });
+    // final credentials = SpotifyApiCredentials(
+    //     CustomStrings.clientId, CustomStrings.clientSecret);
+    // final spotify = SpotifyApi(credentials);
+    // final musicTrackId = '11BbPUv7NlzlcbY7AmHHKy?si=71a57e5a016d4234';
+    // spotify.tracks.get(musicTrackId).then((track) async {
+    //   String? songName = track.name;
   }
 
   @override
@@ -55,14 +66,18 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
   @override
   Widget build(BuildContext context) {
     var musicPlayerProvider = Provider.of<MusicPlayerProvider>(context);
+    var provider = Provider.of<SearchProvider>(context);
+    String songname = provider.selectedSongName;
+    String songArtist = provider.selectedSongArtist;
+    String songCover = provider.selectedSongImage;
     return Scaffold(
-      backgroundColor: darkblueBubbleColor,
+      backgroundColor: eerieblackColor,
       body: SafeArea(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Column(
-              // crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
                   height: 40,
@@ -75,21 +90,28 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
                       fontWeight: FontWeight.w400),
                 ),
                 Text(
-                  'At The Party',
+                  songname,
                   style: GoogleFonts.redHatDisplay(
                       color: yellowColor,
                       fontSize: 16,
                       fontWeight: FontWeight.w700),
                 ),
-                Icon(Icons.keyboard_arrow_down_sharp,
-                    size: 55, color: darkgreyColor),
+                IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TheMusicPages(),
+                          ));
+                    },
+                    icon: Icon(Icons.keyboard_arrow_down_sharp,
+                        size: 55, color: darkgreyColor)),
                 Container(
                   height: 300,
                   width: 300,
                   decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: NetworkImage(
-                            'https://i.scdn.co/image/ab67616d0000b273581f1908ffdfef41ca3ce7f4'),
+                        image: NetworkImage(songCover),
                         fit: BoxFit.cover,
                       ),
                       borderRadius: BorderRadius.circular(11)),
@@ -98,7 +120,7 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
                   height: 15,
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     IconButton(
@@ -118,14 +140,14 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
                     Column(
                       children: [
                         Text(
-                          'At The Party',
+                          songname,
                           style: GoogleFonts.redHatDisplay(
                               color: whiteColor,
                               fontSize: 28,
                               fontWeight: FontWeight.w800),
                         ),
                         Text(
-                          'Kid Cudi, Pharell Williams, Travis Scott',
+                          songArtist,
                           style: GoogleFonts.redHatDisplay(
                               color: darkgreyColor,
                               fontSize: 13,
@@ -206,8 +228,8 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
                       },
                       icon: Icon(
                         musicPlayerProvider.isPlayed
-                            ? Icons.pause
-                            : Icons.play_arrow_rounded,
+                            ? Icons.play_arrow_rounded
+                            : Icons.pause,
                         size: 65,
                       ),
                       color: whiteColor,

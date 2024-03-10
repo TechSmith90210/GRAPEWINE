@@ -7,6 +7,35 @@ import '../Data/Api/MusicApisss.dart';
 import 'accessToken_provider.dart';
 
 class SearchProvider with ChangeNotifier {
+  //selected song details
+  String _selectedSongName = '';
+  String get selectedSongName => _selectedSongName;
+  void setSongName(String newSongName) {
+    _selectedSongName = newSongName;
+    notifyListeners();
+  }
+
+  String _selectedSongArtist = '';
+  String get selectedSongArtist => _selectedSongArtist;
+  void setSongArtist(String newArtist) {
+    _selectedSongArtist = newArtist;
+    notifyListeners();
+  }
+
+  String _selectedSongDetails = '';
+  String get selectedSongDetails => _selectedSongDetails;
+  void setSongDetails(String newSongDetails) {
+    _selectedSongDetails = newSongDetails;
+    notifyListeners();
+  }
+
+  String _selectedSongImage = '';
+  String get selectedSongImage => _selectedSongImage;
+  void setSongImage(String newSongImage) {
+    _selectedSongImage = newSongImage;
+    notifyListeners();
+  }
+
   //Search Page Initials
   bool _isClicked = false;
   bool get isClicked => _isClicked;
@@ -15,10 +44,10 @@ class SearchProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  String _query='';
-  String get query=>_query;
-  void setQuery(String newQuery){
-    _query=newQuery;
+  String _query = '';
+  String get query => _query;
+  void setQuery(String newQuery) {
+    _query = newQuery;
     notifyListeners();
   }
 

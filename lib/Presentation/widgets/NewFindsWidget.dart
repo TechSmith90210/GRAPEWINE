@@ -31,8 +31,8 @@ class _NewFindsWidgetState extends State<NewFindsWidget> {
         alignment: Alignment.bottomCenter,
         children: [
           Container(
-            width: 150,
-            height: 150,
+            width: 160,
+            height: 160,
             decoration: BoxDecoration(
                 image: DecorationImage(
                     image: NetworkImage(
