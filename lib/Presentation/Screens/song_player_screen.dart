@@ -8,10 +8,12 @@ import 'package:grapewine_music_app/Presentation/widgets/ArtistChipsWidget.dart'
 import 'package:grapewine_music_app/Providers/musicPlayer_provider.dart';
 import 'package:grapewine_music_app/Providers/search_provider.dart';
 import 'package:interactive_slider/interactive_slider.dart';
+import 'package:marquee/marquee.dart';
+import 'package:marquee_text/marquee_direction.dart';
 import 'package:provider/provider.dart';
 import 'package:spotify/spotify.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
-
+import 'package:marquee_text/marquee_text.dart';
 import '../../Colors/colors.dart';
 
 class SongPlayerScreen extends StatefulWidget {
@@ -59,7 +61,12 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
 
   @override
   void dispose() {
+    player.pause();
     player.dispose();
+    // var provider = Provider.of<MusicPlayerProvider>(context)
+    // if (provider.isPlayed == true) {
+    //   provider.playSong();
+    // }
     super.dispose();
   }
 
@@ -139,20 +146,66 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
                     ),
                     Column(
                       children: [
-                        Text(
-                          songname,
-                          style: GoogleFonts.redHatDisplay(
-                              color: whiteColor,
-                              fontSize: 28,
-                              fontWeight: FontWeight.w800),
+                        // Text(
+                        //   songname,
+                        //   style: GoogleFonts.redHatDisplay(
+                        //       color: whiteColor,
+                        //       fontSize: 28,
+                        //       fontWeight: FontWeight.w800),
+                        // ),
+                        Container(
+                          width: 220,
+                          height: 50,
+                          child: Marquee(
+                            text: songname,
+                            style: GoogleFonts.redHatDisplay(
+                                color: whiteColor,
+                                fontSize: 22,
+                                fontWeight: FontWeight.w700),
+                            scrollAxis: Axis.horizontal,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            blankSpace: 10.0,
+                            velocity: 50.0,
+                            // startPadding: 10.0,
+                            accelerationDuration: Duration(seconds: 2),
+                            accelerationCurve: Curves.linear,
+                            decelerationDuration: Duration(milliseconds: 0),
+                            decelerationCurve: Curves.easeOut,
+                            pauseAfterRound: Duration(seconds: 7),
+                            startAfter: Duration(seconds: 7),
+                          ),
                         ),
-                        Text(
-                          songArtist,
-                          style: GoogleFonts.redHatDisplay(
-                              color: darkgreyColor,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500),
+
+                        Container(
+                          width: 220,
+                          height: 50,
+                          child: Marquee(
+                            text: songArtist,
+                            style: GoogleFonts.redHatDisplay(
+                                color: darkgreyColor,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500),
+                            scrollAxis: Axis.horizontal,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            blankSpace: 10.0,
+                            velocity: 50.0,
+                            // startPadding: 10.0,
+                            accelerationDuration: Duration(seconds: 1),
+                            accelerationCurve: Curves.linear,
+                            // decelerationDuration: Duration(milliseconds: 500),
+                            decelerationCurve: Curves.easeOut,
+                            textDirection: TextDirection.ltr,
+                            pauseAfterRound: Duration(seconds: 10),
+                            startAfter: Duration(seconds: 7),
+                          ),
                         ),
+                        // Text(
+                        //   songArtist,
+                        //   style: GoogleFonts.redHatDisplay(
+                        //       color: darkgreyColor,
+                        //       fontSize: 10,
+                        //       fontWeight: FontWeight.w500),
+                        // ),
                       ],
                     ),
                     SizedBox(
@@ -229,7 +282,7 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
                       icon: Icon(
                         musicPlayerProvider.isPlayed
                             ? Icons.play_arrow_rounded
-                            : Icons.pause,
+                            : Icons.pause_rounded,
                         size: 65,
                       ),
                       color: whiteColor,

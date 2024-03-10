@@ -23,7 +23,7 @@ class BottomNavBarWidget extends StatelessWidget {
             return GoogleFonts.redHatDisplay(
               fontWeight: FontWeight.w700,
               color: whiteColor,
-              fontSize: 15,
+              fontSize: 13,
             );
           } else {
             return GoogleFonts.redHatDisplay(
