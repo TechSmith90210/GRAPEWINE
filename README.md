@@ -1,4 +1,4 @@
-#grapewine_music_app
+#Grapewine_music_app
 
 Grapewine - A Music App
 
