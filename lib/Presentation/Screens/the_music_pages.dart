@@ -26,8 +26,7 @@ class TheMusicPages extends StatelessWidget {
                   LikedSongsScreen(),
                 ][navigatorProvider.selectedIndex],
               ),
-              const Positioned(
-                  left: 12, right: 12, bottom: 8, child: MiniPlayerWidget()),
+              const MiniPlayerWidget()
             ],
           ),
           bottomNavigationBar: const BottomNavBarWidget(),
