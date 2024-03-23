@@ -8,4 +8,11 @@ class NavigatorProvider with ChangeNotifier {
     _selectedIndex = index;
     notifyListeners();
   }
+
+  bool _isExpanded = false;
+  bool get isExpanded => _isExpanded;
+  void setExpanded() {
+    _isExpanded = !_isExpanded;
+    notifyListeners();
+  }
 }

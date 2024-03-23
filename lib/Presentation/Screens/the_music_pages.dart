@@ -10,28 +10,32 @@ import '../../Providers/navigator_provider.dart';
 import '../Navbar Screens/home_screen.dart';
 
 class TheMusicPages extends StatelessWidget {
-  const TheMusicPages({super.key});
+  const TheMusicPages({Key? key});
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<NavigatorProvider>(
-      builder: (context, navigatorProvider, child) {
-        return Scaffold(
-          body: Stack(
+    return Scaffold(
+      backgroundColor: eerieblackColor,
+      body: Consumer<NavigatorProvider>(
+        builder: (context, navigatorProvider, child) {
+          return Stack(
             children: [
               Positioned.fill(
-                child: const [
-                  HomeScreen(),
-                  SearchScreen(),
-                  LikedSongsScreen(),
-                ][navigatorProvider.selectedIndex],
+                child: IndexedStack(
+                  index: navigatorProvider.selectedIndex,
+                  children: [
+                    HomeScreen(),
+                    SearchScreen(),
+                    LikedSongsScreen(),
+                  ],
+                ),
               ),
-              const MiniPlayerWidget()
+              if (navigatorProvider.isExpanded) MiniPlayerWidget(),
             ],
-          ),
-          bottomNavigationBar: const BottomNavBarWidget(),
-        );
-      },
+          );
+        },
+      ),
+      bottomNavigationBar: BottomNavBarWidget(),
     );
   }
 }

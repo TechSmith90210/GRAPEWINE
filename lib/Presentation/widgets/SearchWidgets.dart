@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
 import 'package:grapewine_music_app/Presentation/Screens/song_player_screen.dart';
+import 'package:grapewine_music_app/Presentation/Screens/the_music_pages.dart';
+import 'package:grapewine_music_app/Presentation/Screens/song_player2_screen.dart';
+import 'package:grapewine_music_app/Providers/musicPlayer_provider.dart';
+import 'package:grapewine_music_app/Providers/navigator_provider.dart';
 import 'package:grapewine_music_app/Providers/search_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -64,11 +68,16 @@ Widget TrackWidget(BuildContext context, int index) {
       }
       provider.setSongImage(songCover);
 
-      //navigate to the song player screen with the song details
+      var playerProvider =
+          Provider.of<NavigatorProvider>(context, listen: false);
+      //navigate to the musicpages and expand the miniplayer with the song details and wait for 3 seconds and then start playing the song
+      // Navigator.pop(context);
+      playerProvider.setExpanded();
+
       Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => SongPlayerScreen(),
+            builder: (context) => TheMusicPages(),
           ));
     },
     title: Text(

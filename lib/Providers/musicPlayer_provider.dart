@@ -1,5 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:grapewine_music_app/CustomStrings.dart';
+import 'package:grapewine_music_app/Presentation/Screens/the_music_pages.dart';
+import 'package:grapewine_music_app/Presentation/widgets/ArtistChipsWidget.dart';
+import 'package:grapewine_music_app/Providers/musicPlayer_provider.dart';
+import 'package:grapewine_music_app/Providers/navigator_provider.dart';
+import 'package:grapewine_music_app/Providers/search_provider.dart';
+import 'package:interactive_slider/interactive_slider.dart';
+import 'package:marquee/marquee.dart';
+import 'package:marquee_text/marquee_direction.dart';
+import 'package:provider/provider.dart';
+import 'package:spotify/spotify.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
+import 'package:marquee_text/marquee_text.dart';
+import '../../Colors/colors.dart';
 
+NavigatorProvider _navigatorProvider=NavigatorProvider();
 class MusicPlayerProvider with ChangeNotifier {
   bool _isLyrics = false;
   bool get isLyrics => _isLyrics;
@@ -41,8 +60,27 @@ class MusicPlayerProvider with ChangeNotifier {
   double _value = 2.0;
   double get value => _value;
 
-  void setVolume(double newVolume){
-    _value=newVolume;
+  void setVolume(double newVolume) {
+    _value = newVolume;
     notifyListeners();
   }
+
+  final player = AudioPlayer();
+  Duration? duration;
+  Uri? audioUrl;
+  Future<Duration?> fetchSong(String theSongName, BuildContext context) async {
+    var provider = Provider.of<SearchProvider>(context, listen: false);
+    var songName = provider.selectedSongDetails;
+    if (songName != null) {
+      final yt = YoutubeExplode();
+      final video = (await yt.search.search(songName)).first;
+      final videoId = video.id.value;
+      var manifest = await yt.videos.streamsClient.getManifest(videoId);
+      audioUrl = manifest.audioOnly.first.url;
+      player.play(UrlSource(audioUrl.toString()));
+      return video.duration;
+    }
+    return null;
+  }
+
 }
