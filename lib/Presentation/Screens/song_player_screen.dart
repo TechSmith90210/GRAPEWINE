@@ -48,8 +48,9 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
     Future.delayed(Duration.zero, () {
       var provider = Provider.of<SearchProvider>(context, listen: false);
       var songName = provider.selectedSongDetails;
-
-      fetchSong(songName); // get the song details
+      if (songName != null) {
+        fetchSong(songName); // get the song details
+      }
     });
     // final credentials = SpotifyApiCredentials(
     //     CustomStrings.clientId, CustomStrings.clientSecret);
@@ -162,29 +163,30 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
                             height: 50,
                             child: songname != null && songname.isNotEmpty
                                 ? Marquee(
-                              text: songname!,
-                              style: GoogleFonts.redHatDisplay(
-                                  color: whiteColor,
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w700),
-                              scrollAxis: Axis.horizontal,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              blankSpace: 10.0,
-                              velocity: 50.0,
-                              // startPadding: 10.0,
-                              accelerationDuration: Duration(seconds: 2),
-                              accelerationCurve: Curves.linear,
-                              decelerationDuration: Duration(milliseconds: 0),
-                              decelerationCurve: Curves.easeOut,
-                              pauseAfterRound: Duration(seconds: 7),
-                              startAfter: Duration(seconds: 7),
-                            )
+                                    text: songname!,
+                                    style: GoogleFonts.redHatDisplay(
+                                        color: whiteColor,
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w700),
+                                    scrollAxis: Axis.horizontal,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    blankSpace: 10.0,
+                                    velocity: 50.0,
+                                    // startPadding: 10.0,
+                                    accelerationDuration: Duration(seconds: 2),
+                                    accelerationCurve: Curves.linear,
+                                    decelerationDuration:
+                                        Duration(milliseconds: 0),
+                                    decelerationCurve: Curves.easeOut,
+                                    pauseAfterRound: Duration(seconds: 7),
+                                    startAfter: Duration(seconds: 7),
+                                  )
                                 : Text(
-                              "No Song Selected",
-                              style: TextStyle(color: Colors.white),
-                            ),
+                                    "No Song Selected",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                           ),
-
 
                           Container(
                             width: 220,

@@ -1,6 +1,8 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Presentation/Screens/song_player2_screen.dart';
+import 'package:grapewine_music_app/Providers/musicPlayer_provider.dart';
 import 'package:grapewine_music_app/Providers/navigator_provider.dart';
 import 'package:grapewine_music_app/Providers/search_provider.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +20,6 @@ class _MiniPlayerWidgetState extends State<MiniPlayerWidget> {
   static double _minPlayerHeight = 70;
   final ValueNotifier<double> playerExpandProgress =
       ValueNotifier(_minPlayerHeight);
-  MiniplayerController miniplayerController = MiniplayerController();
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +29,10 @@ class _MiniPlayerWidgetState extends State<MiniPlayerWidget> {
     String? image = searchProvider.selectedSongImage;
     String? songName = searchProvider.selectedSongName;
     String? songArtist = searchProvider.selectedSongArtist;
+
+    MiniplayerController miniplayerController =
+        Provider.of<MiniplayerController>(context);
+
     return GestureDetector(
       onTap: () {
         if (navigationProvider.isExpanded) {
@@ -107,7 +112,7 @@ class _MiniPlayerWidgetState extends State<MiniPlayerWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    truncateText(songName ?? 'Apollo XXI', 30),
+                    truncateText(songName ?? 'No Song Playing', 25),
                     style: GoogleFonts.redHatDisplay(
                       color: whiteColor,
                       fontWeight: FontWeight.w600,
@@ -124,13 +129,27 @@ class _MiniPlayerWidgetState extends State<MiniPlayerWidget> {
               ),
             ],
           ),
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.play_arrow_rounded,
-              color: whiteColor,
-              size: 45,
-            ),
+          Consumer<MusicPlayerProvider>(
+            builder: (context, provider, child) {
+              return IconButton(
+                onPressed: () async {
+                  provider.playSong();
+                  if (provider.player.state == PlayerState.playing) {
+                    await provider.player.pause();
+                  } else {
+                    await provider.player.resume();
+                  }
+                  setState(() {});
+                },
+                icon: Icon(
+                  provider.isPlayed
+                      ? Icons.play_arrow_rounded
+                      : Icons.pause_rounded,
+                  color: whiteColor,
+                  size: 45,
+                ),
+              );
+            },
           )
         ],
       ),

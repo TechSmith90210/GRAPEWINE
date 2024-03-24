@@ -19,6 +19,7 @@ import 'package:grapewine_music_app/Providers/newReleases_provider.dart';
 import 'package:grapewine_music_app/Providers/password_provider.dart';
 import 'package:grapewine_music_app/Providers/search_provider.dart';
 import 'package:grapewine_music_app/Providers/signup_provider.dart';
+import 'package:miniplayer/miniplayer.dart';
 import 'package:provider/provider.dart';
 import 'Colors/colors.dart';
 import 'Providers/navigator_provider.dart';
@@ -52,6 +53,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => NewFindsProvider()),
         ChangeNotifierProvider(create: (context) => AccessTokenProvider()),
         ChangeNotifierProvider(create: (context) => SearchProvider()),
+        ChangeNotifierProvider(create: (context) => MiniplayerController()),
+
       ],
       child: MaterialApp(
         title: 'GrapeWine Demo',

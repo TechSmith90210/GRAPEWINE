@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -18,7 +19,8 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:marquee_text/marquee_text.dart';
 import '../../Colors/colors.dart';
 
-NavigatorProvider _navigatorProvider=NavigatorProvider();
+final NavigatorProvider _navigatorProvider = NavigatorProvider();
+
 class MusicPlayerProvider with ChangeNotifier {
   bool _isLyrics = false;
   bool get isLyrics => _isLyrics;
@@ -40,7 +42,18 @@ class MusicPlayerProvider with ChangeNotifier {
   bool get isPlayed => _isPlayed;
 
   void playSong() {
-    _isPlayed = !_isPlayed;
+    if (_isPlayed) {
+      stopSong();
+    } else {
+      _isPlayed = true;
+    }
+    notifyListeners();
+  }
+
+  void stopSong() {
+    if (_isPlayed) {
+      _isPlayed = false;
+    }
     notifyListeners();
   }
 
@@ -65,22 +78,53 @@ class MusicPlayerProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  final player = AudioPlayer();
-  Duration? duration;
+  late AudioPlayer _player = AudioPlayer();
+  AudioPlayer get player => _player;
+
+  Duration? _duration = Duration.zero;
+  Duration? get duration => _duration;
+
+  bool _isInitialized = false;
+  bool get isInitialized => _isInitialized;
+  void setInitialization() {
+    _isInitialized = !_isInitialized;
+  }
+
+  void updateDuration(Duration? newDuration) {
+    _duration = newDuration;
+    notifyListeners();
+  }
+
   Uri? audioUrl;
-  Future<Duration?> fetchSong(String theSongName, BuildContext context) async {
-    var provider = Provider.of<SearchProvider>(context, listen: false);
-    var songName = provider.selectedSongDetails;
-    if (songName != null) {
-      final yt = YoutubeExplode();
-      final video = (await yt.search.search(songName)).first;
-      final videoId = video.id.value;
-      var manifest = await yt.videos.streamsClient.getManifest(videoId);
-      audioUrl = manifest.audioOnly.first.url;
-      player.play(UrlSource(audioUrl.toString()));
-      return video.duration;
+  Future<Duration?> fetchSong(
+      String theSongName, SearchProvider provider) async {
+    final yt = YoutubeExplode();
+    try {
+      //stop player if its playing rn
+      if (_player.state == PlayerState.playing) {
+        await _player.stop();
+      }
+      var songName = provider.selectedSongDetails;
+      if (songName != null) {
+        final video = (await yt.search.search(songName)).first;
+        final videoId = video.id.value;
+        var manifest = await yt.videos.streamsClient.getManifest(videoId);
+        audioUrl = manifest.audioOnly.first.url;
+
+        if (_player != null) {
+          await _player.dispose();
+        }
+
+        _player = AudioPlayer();
+
+        player.play(UrlSource(audioUrl.toString()));
+        return video.duration;
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error fetching song: $e');
+      }
     }
     return null;
   }
-
 }

@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
@@ -72,8 +73,19 @@ Widget TrackWidget(BuildContext context, int index) {
           Provider.of<NavigatorProvider>(context, listen: false);
       //navigate to the musicpages and expand the miniplayer with the song details and wait for 3 seconds and then start playing the song
       // Navigator.pop(context);
-      playerProvider.setExpanded();
-
+      var musicPlayerProvider =
+          Provider.of<MusicPlayerProvider>(context, listen: false);
+      if (!playerProvider.isExpanded) {
+        playerProvider.setExpanded();
+      }
+      if (musicPlayerProvider.isInitialized) {
+        if (musicPlayerProvider.player.state == PlayerState.playing) {
+          musicPlayerProvider.player.stop();
+          musicPlayerProvider
+              .fetchSong(provider.selectedSongName, provider)
+              .then((value) => musicPlayerProvider.updateDuration(value));
+        }
+      }
       Navigator.push(
           context,
           MaterialPageRoute(
