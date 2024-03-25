@@ -1,6 +1,8 @@
+// import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
+// import 'package:audioplayers/audioplayers.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_volume_controller/flutter_volume_controller.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/CustomStrings.dart';
 import 'package:grapewine_music_app/Presentation/Screens/the_music_pages.dart';
@@ -15,6 +17,7 @@ import 'package:spotify/spotify.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:marquee_text/marquee_text.dart';
 import '../../Colors/colors.dart';
+import 'package:just_audio/just_audio.dart';
 
 class SongPlayerScreen extends StatefulWidget {
   const SongPlayerScreen({super.key});
@@ -29,16 +32,20 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
   Uri? audioUrl;
   Future<void> fetchSong(String theSongName) async {
     var provider = Provider.of<SearchProvider>(context, listen: false);
+    var musicProvider = Provider.of<MusicPlayerProvider>(context);
     var songName = provider.selectedSongDetails;
+
     if (songName != null) {
       final yt = YoutubeExplode();
       final video = (await yt.search.search(songName)).first;
       final videoId = video.id.value;
       duration = video.duration;
-      setState(() {});
+      // setState(() {});
+      musicProvider.updateDuration(duration);
       var manifest = await yt.videos.streamsClient.getManifest(videoId);
       audioUrl = manifest.audioOnly.first.url;
-      player.play(UrlSource(audioUrl.toString()));
+      musicProvider.player.setUrl(audioUrl.toString());
+      await musicProvider.player.play();
     }
   }
 
@@ -101,10 +108,10 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
                         fontWeight: FontWeight.w400),
                   ),
                   Text(
-                    songname ?? 'No Song Playing',
+                    songname.isNotEmpty ? songname : 'No Song Playing',
                     style: GoogleFonts.redHatDisplay(
                         color: yellowColor,
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.w700),
                   ),
                   IconButton(
@@ -122,8 +129,10 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
                     width: 300,
                     decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: NetworkImage(songCover ??
-                              'https://play-lh.googleusercontent.com/tpok7cXkBGfq75J1xF9Lc5e7ydTix7bKN0Ehy87VP2555f8Lnmoj1KJNUlQ7-4lIYg4'),
+                          image: NetworkImage(songCover != null &&
+                                  songCover.isNotEmpty
+                              ? songCover
+                              : 'https://play-lh.googleusercontent.com/tpok7cXkBGfq75J1xF9Lc5e7ydTix7bKN0Ehy87VP2555f8Lnmoj1KJNUlQ7-4lIYg4'),
                           fit: BoxFit.cover,
                         ),
                         borderRadius: BorderRadius.circular(11)),
@@ -160,7 +169,7 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
                           // ),
                           Container(
                             width: 220,
-                            height: 50,
+                            height: 35,
                             child: songname != null && songname.isNotEmpty
                                 ? Marquee(
                                     text: songname!,
@@ -190,26 +199,32 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
 
                           Container(
                             width: 220,
-                            height: 50,
-                            child: Marquee(
-                              text: songArtist,
-                              style: GoogleFonts.redHatDisplay(
-                                  color: darkgreyColor,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500),
-                              scrollAxis: Axis.horizontal,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              blankSpace: 10.0,
-                              velocity: 50.0,
-                              // startPadding: 10.0,
-                              accelerationDuration: Duration(seconds: 1),
-                              accelerationCurve: Curves.linear,
-                              // decelerationDuration: Duration(milliseconds: 500),
-                              decelerationCurve: Curves.easeOut,
-                              textDirection: TextDirection.ltr,
-                              pauseAfterRound: Duration(seconds: 10),
-                              startAfter: Duration(seconds: 7),
-                            ),
+                            height: 30,
+                            child: songArtist != null && songArtist.isNotEmpty
+                                ? Marquee(
+                                    text: songArtist,
+                                    style: GoogleFonts.redHatDisplay(
+                                        color: darkgreyColor,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500),
+                                    scrollAxis: Axis.horizontal,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    blankSpace: 10.0,
+                                    velocity: 50.0,
+                                    // startPadding: 10.0,
+                                    accelerationDuration: Duration(seconds: 1),
+                                    accelerationCurve: Curves.linear,
+                                    // decelerationDuration: Duration(milliseconds: 500),
+                                    decelerationCurve: Curves.easeOut,
+                                    textDirection: TextDirection.ltr,
+                                    pauseAfterRound: Duration(seconds: 10),
+                                    startAfter: Duration(seconds: 7),
+                                  )
+                                : Text(
+                                    "No Artist",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                           ),
                           // Text(
                           //   songArtist,
@@ -245,7 +260,7 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
                   Container(
                     width: 330,
                     child: StreamBuilder(
-                        stream: player.onPositionChanged,
+                        stream: player.positionStream,
                         builder: (context, data) {
                           return ProgressBar(
                             progress: data.data ?? const Duration(seconds: 0),
@@ -284,10 +299,10 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
                       IconButton(
                         onPressed: () async {
                           musicPlayerProvider.playSong();
-                          if (player.state == PlayerState.playing) {
+                          if (player.playing) {
                             await player.pause();
                           } else {
-                            await player.resume();
+                            await player.play();
                           }
                           setState(() {});
                         },
@@ -304,7 +319,7 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
                       ),
                       IconButton(
                         onPressed: () {
-                          player.state = PlayerState.completed;
+                          // player.completed;
                         },
                         icon: Icon(
                           Icons.fast_forward_rounded,
@@ -314,23 +329,24 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
                       ),
                     ],
                   ),
-                  Container(
-                    width: 360,
-                    child: InteractiveSlider(
-                      startIcon: const Icon(Icons.volume_down),
-                      endIcon: const Icon(Icons.volume_up),
-                      brightness: Brightness.light,
-                      initialProgress: 0.0,
-                      iconSize: 30,
-                      unfocusedHeight: 10,
-                      focusedHeight: 30,
-                      min: 1.0,
-                      max: 15.0,
-                      onChanged: (value) {
-                        musicPlayerProvider.setVolume(value);
-                      },
-                    ),
-                  ),
+                  // Consumer<MusicPlayerProvider>(
+                  //   builder: (context, provider, child) {
+                  //     return Container(
+                  //       width: 360,
+                  //       child: InteractiveSlider(
+                  //         startIcon: const Icon(Icons.volume_down),
+                  //         endIcon: const Icon(Icons.volume_up),
+                  //         brightness: Brightness.light,
+                  //         initialProgress: 0.0,
+                  //         iconSize: 30,
+                  //         unfocusedHeight: 10,
+                  //         focusedHeight: 30,
+                  //         min: 0.0,
+                  //         max: 10.0,
+                  //       ),
+                  //     );
+                  //   },
+                  // ),
                   // SizedBox(
                   //   height: 5,
                   // ),

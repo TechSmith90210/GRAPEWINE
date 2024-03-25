@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
-import 'package:audioplayers/audioplayers.dart';
+// import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/CustomStrings.dart';
@@ -18,10 +18,18 @@ import 'package:spotify/spotify.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:marquee_text/marquee_text.dart';
 import '../../Colors/colors.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 
 final NavigatorProvider _navigatorProvider = NavigatorProvider();
 
 class MusicPlayerProvider with ChangeNotifier {
+  bool _firstSongRun = false;
+  bool get firstSongRun => _firstSongRun;
+  void setFirstSongRun() {
+    _firstSongRun = true;
+  }
+
   bool _isLyrics = false;
   bool get isLyrics => _isLyrics;
 
@@ -80,6 +88,10 @@ class MusicPlayerProvider with ChangeNotifier {
 
   late AudioPlayer _player = AudioPlayer();
   AudioPlayer get player => _player;
+  void getNewPlayer() {
+    _player = AudioPlayer();
+    notifyListeners();
+  }
 
   Duration? _duration = Duration.zero;
   Duration? get duration => _duration;
@@ -101,7 +113,7 @@ class MusicPlayerProvider with ChangeNotifier {
     final yt = YoutubeExplode();
     try {
       //stop player if its playing rn
-      if (_player.state == PlayerState.playing) {
+      if (_player.playing) {
         await _player.stop();
       }
       var songName = provider.selectedSongDetails;
@@ -116,8 +128,23 @@ class MusicPlayerProvider with ChangeNotifier {
         }
 
         _player = AudioPlayer();
+        try {
+          _player.setUrl(audioUrl.toString());
+          _player.play();
+        } on PlayerInterruptedException catch (e) {
+          // Handle the interruption gracefully
+          print('Audio playback interrupted: $e');
+          // You may want to pause or stop the player here
+          await _player.pause();
+          // You can also show a message to the user indicating the interruption
+          // or implement logic to resume playback after the interruption ends
+        } catch (e) {
+          // Handle other exceptions if needed
+          print('Error during audio playback: $e');
+        }
 
-        player.play(UrlSource(audioUrl.toString()));
+        notifyListeners();
+        // player.play(UrlSource(audioUrl.toString()));
         return video.duration;
       }
     } catch (e) {

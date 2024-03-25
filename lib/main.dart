@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Presentation/Screens/Routes/routes.dart';
 import 'package:grapewine_music_app/Presentation/Screens/demo.dart';
 import 'package:grapewine_music_app/Presentation/Screens/search_screen2.dart';
@@ -19,6 +21,7 @@ import 'package:grapewine_music_app/Providers/newReleases_provider.dart';
 import 'package:grapewine_music_app/Providers/password_provider.dart';
 import 'package:grapewine_music_app/Providers/search_provider.dart';
 import 'package:grapewine_music_app/Providers/signup_provider.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:miniplayer/miniplayer.dart';
 import 'package:provider/provider.dart';
 import 'Colors/colors.dart';
@@ -26,6 +29,11 @@ import 'Providers/navigator_provider.dart';
 
 Future<void> main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+  // await JustAudioBackground.init(
+  //   androidNotificationChannelId: 'com.ryanheise.bg_demo.channel.audio',
+  //   androidNotificationChannelName: 'Audio playback',
+  //   androidNotificationOngoing: true,
+  // );
   runApp(const MyApp());
 }
 
@@ -36,6 +44,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => NavigatorProvider()),
@@ -54,7 +63,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => AccessTokenProvider()),
         ChangeNotifierProvider(create: (context) => SearchProvider()),
         ChangeNotifierProvider(create: (context) => MiniplayerController()),
-
       ],
       child: MaterialApp(
         title: 'GrapeWine Demo',
@@ -63,7 +71,7 @@ class MyApp extends StatelessWidget {
           // useMaterial3: true,
           scaffoldBackgroundColor: backgroundColor,
           colorSchemeSeed: whiteColor,
-          fontFamily: 'Red Hat Display',
+          fontFamily: GoogleFonts.redHatDisplay().fontFamily,
         ),
         // initialRoute: '/splash',
         // routes: routes,

@@ -15,6 +15,14 @@ class SearchProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  //selected song album name
+  String _selectedSongAlbum = '';
+  String get selectedSongAlbum => _selectedSongAlbum;
+  void setSongAlbumName(String newAlbumName) {
+    _selectedSongAlbum = newAlbumName;
+    notifyListeners();
+  }
+
   String _selectedSongArtist = '';
   String get selectedSongArtist => _selectedSongArtist;
   void setSongArtist(String newArtist) {
@@ -173,6 +181,7 @@ Future<void> searchFor(BuildContext context, String query) async {
     List<String> searchTrackNames = [];
     List<String> searchTrackImages = [];
     List<String> searchTrackArtists = [];
+    List<String> searchTrackAlbumNames = [];
 
     for (var track in tracks) {
       searchTrackNames.add(track.name!);
@@ -186,10 +195,12 @@ Future<void> searchFor(BuildContext context, String query) async {
       }
       searchTrackArtists
           .add(track.artists!.map((e) => e.name!.toString()).toString());
+      // searchTrackAlbumNames.add(track.album!.name.toString());
     }
     searchProvider.getTrackNames(searchTrackNames);
     searchProvider.getTrackImages(searchTrackImages);
     searchProvider.setTrackArtists(searchTrackArtists);
+    // print(searchProvider._searchAlbumNames);
     // print(searchTrackArtists);
 
     //<------------------------------- ALBUMS -------------------------------------->

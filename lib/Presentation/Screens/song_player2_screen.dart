@@ -1,5 +1,6 @@
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
-import 'package:audioplayers/audioplayers.dart';
+// import 'package:audioplayers/audioplayers.dart';
+// import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Providers/musicPlayer_provider.dart';
@@ -12,6 +13,8 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import '../../Colors/colors.dart';
 import '../../Providers/search_provider.dart';
 import 'the_music_pages.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 
 class SongPlayer2Screen extends StatefulWidget {
   const SongPlayer2Screen({super.key});
@@ -24,23 +27,30 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
   Duration? duration;
   Uri? audioUrl;
   @override
-  Future<void> fetchSong(String theSongName) async {
-    var provider = Provider.of<SearchProvider>(context, listen: false);
-    var musicProvider = Provider.of<MusicPlayerProvider>(context);
-    var songName = provider.selectedSongDetails;
-
-    if (songName != null) {
-      final yt = YoutubeExplode();
-      final video = (await yt.search.search(songName)).first;
-      final videoId = video.id.value;
-      duration = video.duration;
-      // setState(() {});
-      musicProvider.updateDuration(duration);
-      var manifest = await yt.videos.streamsClient.getManifest(videoId);
-      audioUrl = manifest.audioOnly.first.url;
-      musicProvider.player.play(UrlSource(audioUrl.toString()));
-    }
-  }
+  // Future<void> fetchSong(String theSongName) async {
+  //   var provider = Provider.of<SearchProvider>(context, listen: false);
+  //   var musicProvider = Provider.of<MusicPlayerProvider>(context);
+  //   var songName = provider.selectedSongDetails;
+  //
+  //   if (musicProvider.player.playing) {
+  //     await musicProvider.player.stop();
+  //   }
+  //   if (songName != null) {
+  //     final yt = YoutubeExplode();
+  //     final video = (await yt.search.search(songName)).first;
+  //     final videoId = video.id.value;
+  //     duration = video.duration;
+  //     // setState(() {});
+  //     musicProvider.updateDuration(duration);
+  //     var manifest = await yt.videos.streamsClient.getManifest(videoId);
+  //     audioUrl = manifest.audioOnly.first.url;
+  //     // _player = AudioPlayer();
+  //     musicProvider.getNewPlayer();
+  //
+  //     musicProvider.player.setUrl(audioUrl.toString());
+  //     musicProvider.player.play();
+  //   }
+  // }
 
   // Future<void> _initializeState() async {
   //   // super.initState();
@@ -92,13 +102,21 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
     var searchProvider = Provider.of<SearchProvider>(context, listen: false);
     var musicPlayerProvider =
         Provider.of<MusicPlayerProvider>(context, listen: false);
-    if (!musicPlayerProvider.isInitialized &&
-        musicPlayerProvider.player.state == PlayerState.stopped) {
-      if (!musicPlayerProvider.isInitialized) {
-        musicPlayerProvider.setInitialization();
-        fetchSong(searchProvider.selectedSongName);
-      }
+    // If the player is not initialized and no song is playing
+    if (!musicPlayerProvider.firstSongRun &&
+        !musicPlayerProvider.isInitialized &&
+        !musicPlayerProvider.player.playing) {
+      musicPlayerProvider.setFirstSongRun();
+      musicPlayerProvider.setInitialization();
+      musicPlayerProvider.fetchSong(
+          searchProvider.selectedSongName, searchProvider);
     }
+    // //if musicplayer is initialized but song is not playing
+    // if (musicPlayerProvider.isInitialized &&
+    //     !musicPlayerProvider.player.playing) {
+    //   musicPlayerProvider.fetchSong(
+    //       searchProvider.selectedSongName, searchProvider);
+    // }
   }
 
   // @override
@@ -128,6 +146,9 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  const SizedBox(
+                    height: 30,
+                  ),
                   Text(
                     'Now Playing',
                     style: GoogleFonts.redHatDisplay(
@@ -203,7 +224,7 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
                                 builder: (context, provider, child) {
                                   return Container(
                                     width: 220,
-                                    height: 35,
+                                    height: 30,
                                     child: provider.selectedSongName.length >=
                                             30
                                         ? Marquee(
@@ -321,31 +342,38 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
                     builder: (context, provider, child) {
                       return Container(
                         width: 330,
-                        child: StreamBuilder(
-                            stream: provider.player.onPositionChanged,
-                            builder: (context, data) {
-                              return ProgressBar(
-                                progress:
-                                    data.data ?? const Duration(seconds: 0),
-                                total:
-                                    provider.duration ?? Duration(seconds: 0),
-                                progressBarColor: whiteColor,
-                                thumbColor: whiteColor,
-                                baseBarColor: backgroundColor,
-                                bufferedBarColor: greyColor,
-                                thumbGlowColor: purpleColor,
-                                thumbGlowRadius: 0,
-                                timeLabelPadding: 5,
-                                timeLabelTextStyle: GoogleFonts.redHatDisplay(
-                                  color: greyColor,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                onSeek: (duration) {
-                                  provider.player.seek(duration);
-                                  print('player seeked to $duration');
-                                },
-                              );
-                            }),
+                        child: StreamBuilder<Duration?>(
+                          stream: provider.player.durationStream,
+                          builder: (context, snapshot) {
+                            final duration = snapshot.data ?? Duration.zero;
+                            return StreamBuilder<Duration>(
+                              stream: provider.player.positionStream,
+                              builder: (context, positionSnapshot) {
+                                final position =
+                                    positionSnapshot.data ?? Duration.zero;
+                                return ProgressBar(
+                                  progress: position,
+                                  total: duration,
+                                  progressBarColor: whiteColor,
+                                  thumbColor: whiteColor,
+                                  baseBarColor: backgroundColor,
+                                  bufferedBarColor: greyColor,
+                                  thumbGlowColor: purpleColor,
+                                  thumbGlowRadius: 0,
+                                  timeLabelPadding: 5,
+                                  timeLabelTextStyle: GoogleFonts.redHatDisplay(
+                                    color: greyColor,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  onSeek: (duration) {
+                                    provider.player.seek(duration);
+                                    print('player seeked to $duration');
+                                  },
+                                );
+                              },
+                            );
+                          },
+                        ),
                       );
                     },
                   ),
@@ -356,13 +384,13 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
                           IconButton(
                             onPressed: () async {
                               var currentPosition =
-                                  await provider.player.getCurrentPosition();
+                                  await provider.player.position;
                               var rewindedPostion =
                                   currentPosition! - Duration(seconds: 5);
                               await provider.player.seek(rewindedPostion);
                             },
                             icon: Icon(
-                              Icons.fast_rewind_rounded,
+                              Icons.skip_previous_rounded,
                               size: 55,
                             ),
                             color: whiteColor,
@@ -373,11 +401,10 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
                           IconButton(
                             onPressed: () async {
                               provider.playSong();
-                              if (provider.player.state ==
-                                  PlayerState.playing) {
+                              if (provider.player.playing) {
                                 await provider.player.pause();
                               } else {
-                                await provider.player.resume();
+                                await provider.player.play();
                               }
                               // setState(() {});
                             },
@@ -396,14 +423,14 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
                             builder: (context, provider, child) {
                               return IconButton(
                                 onPressed: () async {
-                                  var currentPosition = await provider.player
-                                      .getCurrentPosition();
+                                  var currentPosition =
+                                      await provider.player.position;
                                   var rewindedPostion =
                                       currentPosition! + Duration(seconds: 5);
                                   await provider.player.seek(rewindedPostion);
                                 },
                                 icon: Icon(
-                                  Icons.fast_forward_rounded,
+                                  Icons.skip_next_rounded,
                                   size: 55,
                                 ),
                                 color: whiteColor,

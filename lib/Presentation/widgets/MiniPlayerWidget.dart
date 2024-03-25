@@ -45,6 +45,8 @@ class _MiniPlayerWidgetState extends State<MiniPlayerWidget> {
       child: Container(
         width: MediaQuery.of(context).size.width,
         child: Miniplayer(
+          // Curves.easeInOutCubicEmphasized = fast
+          curve: Curves.linearToEaseOut,
           controller: miniplayerController,
           valueNotifier: playerExpandProgress,
           minHeight: _minPlayerHeight,
@@ -55,9 +57,9 @@ class _MiniPlayerWidgetState extends State<MiniPlayerWidget> {
                   searchProvider, image, songArtist, songName);
             }
             if (navigationProvider.isExpanded == true) {
-              return SongPlayer2Screen();
+              return const SongPlayer2Screen();
             } else {
-              return Center(
+              return const Center(
                 child: Text('No Song Selected'),
               );
             }
@@ -134,10 +136,10 @@ class _MiniPlayerWidgetState extends State<MiniPlayerWidget> {
               return IconButton(
                 onPressed: () async {
                   provider.playSong();
-                  if (provider.player.state == PlayerState.playing) {
+                  if (provider.player.playing) {
                     await provider.player.pause();
                   } else {
-                    await provider.player.resume();
+                    await provider.player.play();
                   }
                   setState(() {});
                 },

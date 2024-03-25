@@ -54,13 +54,15 @@ Widget TrackWidget(BuildContext context, int index) {
   var provider = Provider.of<SearchProvider>(context);
   var imageUrl = provider.searchTrackImages[index].toString();
   return ListTile(
-    onTap: () {
+    onTap: () async {
       provider.setSongName(provider.searchTrackNames[index]);
       provider.setSongArtist(provider.searchTrackArtists[index]);
+      // provider.setSongAlbumName(provider.selectedSongAlbum[index]);
       // print('${provider.selectedSongName} ${provider.selectedSongArtist} song');
       provider.setSongDetails(
           '${provider.selectedSongName} ${provider.selectedSongArtist} song audio');
       print(provider.selectedSongDetails);
+      // print(provider.selectedSongAlbum);
       String songCover = imageUrl;
       if (songCover.isNotEmpty) {
         songCover = imageUrl;
@@ -79,13 +81,22 @@ Widget TrackWidget(BuildContext context, int index) {
         playerProvider.setExpanded();
       }
       if (musicPlayerProvider.isInitialized) {
-        if (musicPlayerProvider.player.state == PlayerState.playing) {
+        if (musicPlayerProvider.player.playing &&
+            musicPlayerProvider.player != null) {
           musicPlayerProvider.player.stop();
           musicPlayerProvider
               .fetchSong(provider.selectedSongName, provider)
               .then((value) => musicPlayerProvider.updateDuration(value));
+        } else if (!musicPlayerProvider.player.playing &&
+            musicPlayerProvider.player != null) {
+          await musicPlayerProvider
+              .fetchSong(provider.selectedSongName, provider)
+              .then((value) => musicPlayerProvider.updateDuration(value));
+          musicPlayerProvider.player.play();
+          musicPlayerProvider.playSong();
         }
       }
+
       Navigator.push(
           context,
           MaterialPageRoute(
