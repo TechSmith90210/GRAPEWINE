@@ -1,20 +1,12 @@
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
-// import 'package:audioplayers/audioplayers.dart';
-// import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Providers/musicPlayer_provider.dart';
-import 'package:grapewine_music_app/Providers/navigator_provider.dart';
 import 'package:marquee/marquee.dart';
 import 'package:miniplayer/miniplayer.dart';
 import 'package:provider/provider.dart';
-import 'package:youtube_explode_dart/youtube_explode_dart.dart';
-
 import '../../Colors/colors.dart';
 import '../../Providers/search_provider.dart';
-import 'the_music_pages.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:just_audio_background/just_audio_background.dart';
 
 class SongPlayer2Screen extends StatefulWidget {
   const SongPlayer2Screen({super.key});
@@ -24,78 +16,6 @@ class SongPlayer2Screen extends StatefulWidget {
 }
 
 class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
-  Duration? duration;
-  Uri? audioUrl;
-  @override
-  // Future<void> fetchSong(String theSongName) async {
-  //   var provider = Provider.of<SearchProvider>(context, listen: false);
-  //   var musicProvider = Provider.of<MusicPlayerProvider>(context);
-  //   var songName = provider.selectedSongDetails;
-  //
-  //   if (musicProvider.player.playing) {
-  //     await musicProvider.player.stop();
-  //   }
-  //   if (songName != null) {
-  //     final yt = YoutubeExplode();
-  //     final video = (await yt.search.search(songName)).first;
-  //     final videoId = video.id.value;
-  //     duration = video.duration;
-  //     // setState(() {});
-  //     musicProvider.updateDuration(duration);
-  //     var manifest = await yt.videos.streamsClient.getManifest(videoId);
-  //     audioUrl = manifest.audioOnly.first.url;
-  //     // _player = AudioPlayer();
-  //     musicProvider.getNewPlayer();
-  //
-  //     musicProvider.player.setUrl(audioUrl.toString());
-  //     musicProvider.player.play();
-  //   }
-  // }
-
-  // Future<void> _initializeState() async {
-  //   // super.initState();
-  //   Future.delayed(Duration.zero, () async {
-  //     var provider = Provider.of<SearchProvider>(context, listen: false);
-  //     var musicPlayerProvider =
-  //         Provider.of<MusicPlayerProvider>(context, listen: false);
-  //     var songName = provider.selectedSongDetails;
-  //     if (songName != null) {
-  //       if (musicPlayerProvider.player.state == PlayerState.playing) {
-  //         await musicPlayerProvider.player.stop();
-  //         await musicPlayerProvider
-  //             .fetchSong(songName, provider)
-  //             .then((newDuration) {
-  //           musicPlayerProvider.updateDuration(newDuration);
-  //         });
-  //       } else {
-  //         await musicPlayerProvider
-  //             .fetchSong(songName, provider)
-  //             .then((newDuration) {
-  //           musicPlayerProvider.updateDuration(newDuration);
-  //         });
-  //       }
-  //     }
-  //   });
-  // }
-
-  //
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   // Future.delayed(Duration.zero, () {
-  //   //   var provider = Provider.of<SearchProvider>(context, listen: false);
-  //   //   var songName = provider.selectedSongDetails;
-  //   //   if (songName != null) {
-  //   //     fetchSong(songName);
-  //   //   // get the song details
-  //   //   }
-  //   // });
-  // }
-  // @override
-  // void initState() {
-  //   super.initState();
-  // }
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -111,30 +31,12 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
       musicPlayerProvider.fetchSong(
           searchProvider.selectedSongName, searchProvider);
     }
-    // //if musicplayer is initialized but song is not playing
-    // if (musicPlayerProvider.isInitialized &&
-    //     !musicPlayerProvider.player.playing) {
-    //   musicPlayerProvider.fetchSong(
-    //       searchProvider.selectedSongName, searchProvider);
-    // }
   }
-
-  // @override
-  // void dispose() {
-  //   var musicPlayerProvider =
-  //       Provider.of<MusicPlayerProvider>(context, listen: false);
-  //   // musicPlayerProvider.player.dispose();
-  //   if (musicPlayerProvider.isInitialized) {
-  //     musicPlayerProvider.setInitialization();
-  //   }
-  //   super.dispose();
-  // }
 
   @override
   Widget build(BuildContext context) {
     MiniplayerController miniplayerController =
         Provider.of<MiniplayerController>(context);
-    // _initializeState();
     return Scaffold(
       backgroundColor: blackColor,
       body: SingleChildScrollView(
@@ -213,13 +115,6 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
                           ),
                           Column(
                             children: [
-                              // Text(
-                              //   songname,
-                              //   style: GoogleFonts.redHatDisplay(
-                              //       color: whiteColor,
-                              //       fontSize: 28,
-                              //       fontWeight: FontWeight.w800),
-                              // ),
                               Consumer<SearchProvider>(
                                 builder: (context, provider, child) {
                                   return Container(
@@ -301,13 +196,6 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
                                             ));
                                 },
                               ),
-                              // Text(
-                              //   songArtist,
-                              //   style: GoogleFonts.redHatDisplay(
-                              //       color: darkgreyColor,
-                              //       fontSize: 10,
-                              //       fontWeight: FontWeight.w500),
-                              // ),
                             ],
                           ),
                           SizedBox(
