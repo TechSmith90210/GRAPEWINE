@@ -12,9 +12,10 @@ class NewReleasesWidget extends StatefulWidget {
   State<NewReleasesWidget> createState() => _NewReleasesWidgetState();
 }
 
-class _NewReleasesWidgetState extends State<NewReleasesWidget> {
+class _NewReleasesWidgetState extends State<NewReleasesWidget> with AutomaticKeepAliveClientMixin<NewReleasesWidget> {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     var provider = Provider.of<NewReleasesProvider>(context);
 
     return Padding(
@@ -64,4 +65,6 @@ class _NewReleasesWidgetState extends State<NewReleasesWidget> {
       ),
     );
   }
+  @override
+  bool get wantKeepAlive => true;
 }

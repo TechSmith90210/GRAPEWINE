@@ -46,13 +46,21 @@ android {
         applicationId "com.example.grapewine.grapewine_music_app"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        multiDexEnabled true
     }
 
     buildTypes {
+        debug {
+            // Custom debug configuration settings
+            applicationIdSuffix ".debug" // Adds ".debug" to your applicationId for debug builds
+            debuggable true              // Enable debugging features
+            minifyEnabled false          // Disable code shrinking for debug builds
+            signingConfig signingConfigs.debug // Use debug signing configuration
+        }
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
@@ -65,4 +73,9 @@ flutter {
     source '../..'
 }
 
-dependencies {}
+dependencies {
+    implementation 'androidx.multidex:multidex:2.0.1' // Ensure this is added
+    implementation platform('com.google.firebase:firebase-bom:33.2.0')
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.google.firebase:firebase-auth:23.0.0' // Use the latest version
+}

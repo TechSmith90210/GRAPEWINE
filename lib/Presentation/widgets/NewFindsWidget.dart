@@ -13,16 +13,19 @@ class NewFindsWidget extends StatefulWidget {
   State<NewFindsWidget> createState() => _NewFindsWidgetState();
 }
 
-class _NewFindsWidgetState extends State<NewFindsWidget> {
+class _NewFindsWidgetState extends State<NewFindsWidget>
+    with AutomaticKeepAliveClientMixin<NewFindsWidget> {
   String truncateText(String text, int maxLength) {
     if (text.length > maxLength) {
-      return text.substring(0, maxLength) + '...';
+      return '${text.substring(0, maxLength)}...';
     }
     return text;
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     var provider = Provider.of<NewFindsProvider>(context);
     return Padding(
       padding: const EdgeInsets.only(left: 13, right: 5, top: 10, bottom: 5),
@@ -74,4 +77,7 @@ class _NewFindsWidgetState extends State<NewFindsWidget> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

@@ -16,7 +16,8 @@ class PreviouslyPlayedCircleWidget extends StatefulWidget {
 }
 
 class _PreviouslyPlayedCircleWidgetState
-    extends State<PreviouslyPlayedCircleWidget> {
+    extends State<PreviouslyPlayedCircleWidget>
+    with AutomaticKeepAliveClientMixin<PreviouslyPlayedCircleWidget> {
   late Future<void> fetchDataFuture;
 
   @override
@@ -35,12 +36,16 @@ class _PreviouslyPlayedCircleWidgetState
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return FutureBuilder(
         future: fetchDataFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // Loading state
-            return Center(child: CircularProgressIndicator(color: purpleColor,));
+            return Center(
+                child: CircularProgressIndicator(
+              color: purpleColor,
+            ));
           } else if (snapshot.hasError) {
             // Error state
             return Center(child: Text('Error: ${snapshot.error}'));
@@ -102,4 +107,7 @@ class _PreviouslyPlayedCircleWidgetState
           }
         });
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
