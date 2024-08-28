@@ -1,3 +1,4 @@
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Presentation/Screens/song_player2_screen.dart';
@@ -7,6 +8,7 @@ import 'package:grapewine_music_app/Providers/search_provider.dart';
 import 'package:provider/provider.dart';
 import '../../Colors/colors.dart';
 import 'package:miniplayer/miniplayer.dart';
+
 
 class MiniPlayerWidget extends StatefulWidget {
   const MiniPlayerWidget({Key? key}) : super(key: key);
@@ -19,6 +21,10 @@ class _MiniPlayerWidgetState extends State<MiniPlayerWidget> {
   static double _minPlayerHeight = 70;
   final ValueNotifier<double> playerExpandProgress =
       ValueNotifier(_minPlayerHeight);
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +141,7 @@ class _MiniPlayerWidgetState extends State<MiniPlayerWidget> {
               return IconButton(
                 onPressed: () async {
                   provider.playSong();
-                  if (provider.player.playing) {
+                  if (provider.player.isPlaying.value == true) {
                     await provider.player.pause();
                   } else {
                     await provider.player.play();

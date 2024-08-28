@@ -65,6 +65,10 @@ dependencies:
   flutter_local_notifications: ^8.2.0
   just_audio_background: ^0.0.1-beta.11
   just_audio: ^0.9.36
+  audio_service: ^0.18.15
+  get_it: ^7.7.0
+  assets_audio_player: ^3.1.1
+
 
 
 dev_dependencies:

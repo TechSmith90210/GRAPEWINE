@@ -1,31 +1,14 @@
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
-// import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:grapewine_music_app/CustomStrings.dart';
-import 'package:grapewine_music_app/Presentation/Screens/the_music_pages.dart';
-import 'package:grapewine_music_app/Presentation/widgets/ArtistChipsWidget.dart';
-import 'package:grapewine_music_app/Providers/musicPlayer_provider.dart';
-import 'package:grapewine_music_app/Providers/navigator_provider.dart';
 import 'package:grapewine_music_app/Providers/search_provider.dart';
-import 'package:interactive_slider/interactive_slider.dart';
-import 'package:marquee/marquee.dart';
-import 'package:marquee_text/marquee_direction.dart';
 import 'package:provider/provider.dart';
-import 'package:spotify/spotify.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
-import 'package:marquee_text/marquee_text.dart';
-import '../../Colors/colors.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:just_audio_background/just_audio_background.dart';
-
-final NavigatorProvider _navigatorProvider = NavigatorProvider();
 
 class MusicPlayerProvider with ChangeNotifier {
   bool _firstSongRun = false;
   bool get firstSongRun => _firstSongRun;
+
   void setFirstSongRun() {
     _firstSongRun = true;
   }
@@ -66,12 +49,9 @@ class MusicPlayerProvider with ChangeNotifier {
   }
 
   List<String> _artistImages = [
-    // Cudi
-    'https://i.scdn.co/image/ab6761610000e5eb876faa285687786c3d314ae0',
-    //pharell
-    'https://i.scdn.co/image/ab6761610000e5ebf0789cd783c20985ec3deb4e',
-    //travis
-    'https://i.scdn.co/image/ab6761610000e5eb19c2790744c792d05570bb71',
+    'https://i.scdn.co/image/ab6761610000e5eb876faa285687786c3d314ae0', // Cudi
+    'https://i.scdn.co/image/ab6761610000e5ebf0789cd783c20985ec3deb4e', // Pharrell
+    'https://i.scdn.co/image/ab6761610000e5eb19c2790744c792d05570bb71', // Travis
   ];
   List<String> get artistImages => _artistImages;
 
@@ -83,13 +63,15 @@ class MusicPlayerProvider with ChangeNotifier {
 
   void setVolume(double newVolume) {
     _value = newVolume;
+    _player.setVolume(newVolume); // Adjust the volume of the player
     notifyListeners();
   }
 
-  late AudioPlayer _player = AudioPlayer();
-  AudioPlayer get player => _player;
+  late AssetsAudioPlayer _player = AssetsAudioPlayer();
+  AssetsAudioPlayer get player => _player;
+
   void getNewPlayer() {
-    _player = AudioPlayer();
+    _player = AssetsAudioPlayer();
     notifyListeners();
   }
 
@@ -98,6 +80,7 @@ class MusicPlayerProvider with ChangeNotifier {
 
   bool _isInitialized = false;
   bool get isInitialized => _isInitialized;
+
   void setInitialization() {
     _isInitialized = !_isInitialized;
   }
@@ -108,14 +91,15 @@ class MusicPlayerProvider with ChangeNotifier {
   }
 
   Uri? audioUrl;
-  Future<Duration?> fetchSong(
-      String theSongName, SearchProvider provider) async {
+
+  Future<Duration?> fetchSong(String theSongName, SearchProvider provider) async {
     final yt = YoutubeExplode();
     try {
-      //stop player if its playing rn
-      if (_player.playing) {
+      // Stop player if it's currently playing
+      if (_player.isPlaying.value == true) {
         await _player.stop();
       }
+
       var songName = provider.selectedSongDetails;
       if (songName != null) {
         final video = (await yt.search.search(songName)).first;
@@ -123,28 +107,30 @@ class MusicPlayerProvider with ChangeNotifier {
         var manifest = await yt.videos.streamsClient.getManifest(videoId);
         audioUrl = manifest.audioOnly.first.url;
 
+        // Dispose of previous player instance if necessary
         if (_player != null) {
           await _player.dispose();
         }
 
-        _player = AudioPlayer();
+        // Reinitialize the player
+        _player = AssetsAudioPlayer();
+
         try {
-          _player.setUrl(audioUrl.toString());
-          _player.play();
-        } on PlayerInterruptedException catch (e) {
-          // Handle the interruption gracefully
-          print('Audio playback interrupted: $e');
-          // You may want to pause or stop the player here
-          await _player.pause();
-          // You can also show a message to the user indicating the interruption
-          // or implement logic to resume playback after the interruption ends
-        } catch (e) {
-          // Handle other exceptions if needed
+          await _player.open(
+            Audio.network(audioUrl.toString()),
+            showNotification: true,
+            autoStart: true, // Automatically start playback
+            respectSilentMode: true, // Handle silent mode
+            playInBackground: PlayInBackground.enabled,
+            notificationSettings: NotificationSettings(
+              stopEnabled: true,
+            ),
+          );
+        } on AssetsAudioPlayerError catch (e) {
           print('Error during audio playback: $e');
         }
 
         notifyListeners();
-        // player.play(UrlSource(audioUrl.toString()));
         return video.duration;
       }
     } catch (e) {

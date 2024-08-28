@@ -1,3 +1,4 @@
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -25,7 +26,7 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
     // If the player is not initialized and no song is playing
     if (!musicPlayerProvider.firstSongRun &&
         !musicPlayerProvider.isInitialized &&
-        !musicPlayerProvider.player.playing) {
+        !musicPlayerProvider.player.isPlaying.value == true) {
       musicPlayerProvider.setFirstSongRun();
       musicPlayerProvider.setInitialization();
       musicPlayerProvider.fetchSong(
@@ -230,15 +231,20 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
                     builder: (context, provider, child) {
                       return Container(
                         width: 330,
-                        child: StreamBuilder<Duration?>(
-                          stream: provider.player.durationStream,
+                        child: StreamBuilder<Playing?>(
+                          // Correctly access the current playing stream
+                          stream: provider.player.current,
                           builder: (context, snapshot) {
-                            final duration = snapshot.data ?? Duration.zero;
+                            final playing = snapshot.data;
+                            // Safely access the duration of the audio, defaulting to Duration.zero if not available
+                            final duration = playing?.audio.duration ?? Duration.zero;
+
                             return StreamBuilder<Duration>(
-                              stream: provider.player.positionStream,
+                              // Correctly access the current position stream
+                              stream: provider.player.currentPosition,
                               builder: (context, positionSnapshot) {
-                                final position =
-                                    positionSnapshot.data ?? Duration.zero;
+                                final position = positionSnapshot.data ?? Duration.zero;
+
                                 return ProgressBar(
                                   progress: position,
                                   total: duration,
@@ -253,9 +259,9 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
                                     color: greyColor,
                                     fontWeight: FontWeight.w600,
                                   ),
-                                  onSeek: (duration) {
-                                    provider.player.seek(duration);
-                                    print('player seeked to $duration');
+                                  onSeek: (newPosition) {
+                                    provider.player.seek(newPosition);
+                                    print('Player seeked to $newPosition');
                                   },
                                 );
                               },
@@ -271,12 +277,30 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
                         children: [
                           IconButton(
                             onPressed: () async {
-                              var currentPosition =
-                                  await provider.player.position;
-                              var rewindedPostion =
-                                  currentPosition! - Duration(seconds: 5);
-                              await provider.player.seek(rewindedPostion);
+                              try {
+                                // Ensure the player is playing or paused before seeking
+                                if (provider.player.isPlaying.value || provider.player.isPlaying.value == false) {
+                                  var currentPosition = provider.player.currentPosition.value;
+
+                                  // Safely handle the currentPosition and subtract 5 seconds
+                                  var rewindedPosition = (currentPosition != null)
+                                      ? currentPosition - const Duration(seconds: 5)
+                                      : Duration.zero;
+
+                                  // Ensure rewindedPosition does not go below zero
+                                  if (rewindedPosition < Duration.zero) {
+                                    rewindedPosition = Duration.zero;
+                                  }
+
+                                  // Seek to the new position
+                                  await provider.player.seek(rewindedPosition);
+                                }
+                              } catch (e) {
+                                // Handle any errors during the seek operation
+                                print('Error seeking position: $e');
+                              }
                             },
+
                             icon: Icon(
                               Icons.skip_previous_rounded,
                               size: 55,
@@ -289,7 +313,7 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
                           IconButton(
                             onPressed: () async {
                               provider.playSong();
-                              if (provider.player.playing) {
+                              if (provider.player.isPlaying.value == true) {
                                 await provider.player.pause();
                               } else {
                                 await provider.player.play();
@@ -311,12 +335,33 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
                             builder: (context, provider, child) {
                               return IconButton(
                                 onPressed: () async {
-                                  var currentPosition =
-                                      await provider.player.position;
-                                  var rewindedPostion =
-                                      currentPosition! + Duration(seconds: 5);
-                                  await provider.player.seek(rewindedPostion);
+                                  try {
+                                    // Ensure the player is either playing or paused before seeking
+                                    if (provider.player.isPlaying.value || provider.player.isPlaying.value ==false) {
+                                      var currentPosition = provider.player.currentPosition.value;
+
+                                      // Safely handle the currentPosition and add 5 seconds
+                                      var fastForwardPosition = (currentPosition != null)
+                                          ? currentPosition + const Duration(seconds: 5)
+                                          : Duration.zero;
+
+                                      // Get the total duration of the audio to avoid seeking beyond it
+                                      var totalDuration = provider.player.current.value?.audio.duration ?? Duration.zero;
+
+                                      // Ensure fastForwardPosition does not exceed the total duration
+                                      if (fastForwardPosition > totalDuration) {
+                                        fastForwardPosition = totalDuration;
+                                      }
+
+                                      // Seek to the new position
+                                      await provider.player.seek(fastForwardPosition);
+                                    }
+                                  } catch (e) {
+                                    // Handle any errors during the seek operation
+                                    print('Error seeking position: $e');
+                                  }
                                 },
+
                                 icon: Icon(
                                   Icons.skip_next_rounded,
                                   size: 55,

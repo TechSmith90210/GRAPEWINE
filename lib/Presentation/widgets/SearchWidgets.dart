@@ -78,13 +78,13 @@ Widget TrackWidget(BuildContext context, int index) {
         playerProvider.setExpanded();
       }
       if (musicPlayerProvider.isInitialized) {
-        if (musicPlayerProvider.player.playing &&
+        if (musicPlayerProvider.player.isPlaying.value == true &&
             musicPlayerProvider.player != null) {
           musicPlayerProvider.player.stop();
           musicPlayerProvider
               .fetchSong(provider.selectedSongName, provider)
               .then((value) => musicPlayerProvider.updateDuration(value));
-        } else if (!musicPlayerProvider.player.playing &&
+        } else if (!musicPlayerProvider.player.isPlaying.value == true &&
             musicPlayerProvider.player != null) {
           await musicPlayerProvider
               .fetchSong(provider.selectedSongName, provider)

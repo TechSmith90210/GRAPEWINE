@@ -44,8 +44,8 @@ class _SongPlayerScreenState extends State<SongPlayerScreen> {
       musicProvider.updateDuration(duration);
       var manifest = await yt.videos.streamsClient.getManifest(videoId);
       audioUrl = manifest.audioOnly.first.url;
-      musicProvider.player.setUrl(audioUrl.toString());
-      await musicProvider.player.play();
+      // musicProvider.player.setUrl(audioUrl.toString());
+      // await musicProvider.player.play();
     }
   }
 
