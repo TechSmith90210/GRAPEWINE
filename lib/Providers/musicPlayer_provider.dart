@@ -92,7 +92,8 @@ class MusicPlayerProvider with ChangeNotifier {
 
   Uri? audioUrl;
 
-  Future<Duration?> fetchSong(String theSongName, SearchProvider provider) async {
+  Future<Duration?> fetchSong(
+      String theSongName, SearchProvider provider) async {
     final yt = YoutubeExplode();
     try {
       // Stop player if it's currently playing
@@ -117,12 +118,19 @@ class MusicPlayerProvider with ChangeNotifier {
 
         try {
           await _player.open(
-            Audio.network(audioUrl.toString()),
+            Audio.network(audioUrl.toString(),
+                metas: Metas(
+                    title: provider.selectedSongName,
+                    artist: provider.selectedSongArtist,
+                    album: provider.selectedSongAlbum,
+                    image: MetasImage(
+                        path: provider.selectedSongImage,
+                        type: ImageType.network))),
             showNotification: true,
             autoStart: true, // Automatically start playback
             respectSilentMode: true, // Handle silent mode
             playInBackground: PlayInBackground.enabled,
-            notificationSettings: NotificationSettings(
+            notificationSettings: const NotificationSettings(
               stopEnabled: true,
             ),
           );
