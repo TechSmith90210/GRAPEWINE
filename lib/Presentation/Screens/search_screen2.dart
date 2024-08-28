@@ -21,11 +21,26 @@ class _SearchPage2State extends State<SearchPage2> {
   TextEditingController searchController = TextEditingController();
   bool isClicked = false;
   String query = '';
+  late FocusNode _focusNode;
+  bool _isTextFieldFocused = false;
 
   @override
   void initState() {
     fetchData(context);
+
     super.initState();
+    _focusNode = FocusNode();
+    _focusNode.addListener(() {
+      setState(() {
+        _isTextFieldFocused = _focusNode.hasFocus;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -47,6 +62,7 @@ class _SearchPage2State extends State<SearchPage2> {
             padding: const EdgeInsets.only(left: 8),
             child: TextField(
               // keyboardAppearance: Brightness.dark,
+              focusNode: _focusNode,
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: 'Search Song',
@@ -75,17 +91,19 @@ class _SearchPage2State extends State<SearchPage2> {
           ),
         ),
         actions: [
-          IconButton(
-              onPressed: () {
-                setState(() {});
-                query = searchController.text;
-                if (query.isEmpty) {
-                  isClicked = !isClicked;
-                } else {
-                  isClicked = true;
-                }
-              },
-              icon: const Icon(Icons.search_rounded))
+          if (_isTextFieldFocused)
+            IconButton(
+                onPressed: () {
+                  setState(() {});
+                  query = searchController.text;
+                  if (query.isEmpty) {
+                    isClicked = !isClicked;
+                    query = "songs";
+                  } else {
+                    isClicked = true;
+                  }
+                },
+                icon: const Icon(Icons.search_rounded))
         ],
       ),
       body: Column(
