@@ -7,6 +7,7 @@ import '../../Providers/musicPlayer_provider.dart';
 import '../../Providers/navigator_provider.dart';
 import '../../Providers/search_provider.dart';
 import '../../Colors/colors.dart';
+import '../../models/song_model.dart';
 import '../widgets/AppBarWidget.dart';
 
 class LikedSongsScreen extends StatefulWidget {
@@ -52,48 +53,7 @@ class _LikedSongsScreenState extends State<LikedSongsScreen> {
 
                 return ListTile(
                   onTap: () async {
-                    var searchProvider =
-                        Provider.of<SearchProvider>(context, listen: false);
-                    var navigatorProvider =
-                        Provider.of<NavigatorProvider>(context, listen: false);
-                    var musicPlayerProvider = Provider.of<MusicPlayerProvider>(
-                        context,
-                        listen: false);
-
-                    searchProvider.setSongName(song.songName);
-                    searchProvider.setSongArtist(song.artists);
-                    searchProvider.setSongDetails(
-                        '${searchProvider.selectedSongName} ${searchProvider.selectedSongArtist} song audio');
-                    print(searchProvider.selectedSongDetails);
-
-                    // Set the song cover image with default if necessary
-                    String songCover = song.imageUrl.isNotEmpty
-                        ? song.imageUrl
-                        : 'https://assets.audiomack.com/default-song-image.png';
-                    searchProvider.setSongImage(songCover);
-
-                    if (!navigatorProvider.isExpanded) {
-                      navigatorProvider.setExpanded();
-                    }
-
-                    if (musicPlayerProvider.isInitialized) {
-                      if (musicPlayerProvider.player.isPlaying.value) {
-                        await musicPlayerProvider.player.stop();
-                        await musicPlayerProvider
-                            .fetchSong(
-                                searchProvider.selectedSongName, searchProvider)
-                            .then((value) =>
-                                musicPlayerProvider.updateDuration(value));
-                      } else {
-                        await musicPlayerProvider
-                            .fetchSong(
-                                searchProvider.selectedSongName, searchProvider)
-                            .then((value) =>
-                                musicPlayerProvider.updateDuration(value));
-                        musicPlayerProvider.player.play();
-                        musicPlayerProvider.playSong();
-                      }
-                    }
+                    handleSongTap(context: context, song: Song(imageUrl: song.imageUrl, songName: song.songName, artists: song.artists));
                   },
                   leading: Container(
                     height: 60,
@@ -142,5 +102,47 @@ class _LikedSongsScreenState extends State<LikedSongsScreen> {
         ],
       ),
     );
+  }
+}
+
+void handleSongTap({
+  required BuildContext context,
+  required Song song,
+}) async {
+  var searchProvider = Provider.of<SearchProvider>(context, listen: false);
+  var navigatorProvider =
+      Provider.of<NavigatorProvider>(context, listen: false);
+  var musicPlayerProvider =
+      Provider.of<MusicPlayerProvider>(context, listen: false);
+
+  searchProvider.setSongName(song.songName);
+  searchProvider.setSongArtist(song.artists);
+  searchProvider.setSongDetails(
+      '${searchProvider.selectedSongName} ${searchProvider.selectedSongArtist} song audio');
+  print(searchProvider.selectedSongDetails);
+
+  // Set the song cover image with default if necessary
+  String songCover = song.imageUrl.isNotEmpty
+      ? song.imageUrl
+      : 'https://assets.audiomack.com/default-song-image.png';
+  searchProvider.setSongImage(songCover);
+
+  if (!navigatorProvider.isExpanded) {
+    navigatorProvider.setExpanded();
+  }
+
+  if (musicPlayerProvider.isInitialized) {
+    if (musicPlayerProvider.player.isPlaying.value) {
+      await musicPlayerProvider.player.stop();
+      await musicPlayerProvider
+          .fetchSong(searchProvider.selectedSongName, searchProvider)
+          .then((value) => musicPlayerProvider.updateDuration(value));
+    } else {
+      await musicPlayerProvider
+          .fetchSong(searchProvider.selectedSongName, searchProvider)
+          .then((value) => musicPlayerProvider.updateDuration(value));
+      musicPlayerProvider.player.play();
+      musicPlayerProvider.playSong();
+    }
   }
 }

@@ -40,8 +40,7 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
   Widget build(BuildContext context) {
     MiniplayerController miniplayerController =
         Provider.of<MiniplayerController>(context);
-    var likedProvider = Provider.of<LikedProvider>(context);
-    var musicPlayerProvider = Provider.of<MusicPlayerProvider>(context);
+
     var searchProvider = Provider.of<SearchProvider>(context);
     return Scaffold(
       backgroundColor: blackColor,
@@ -217,11 +216,10 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
                                 onPressed: () {
                                   if (provider.isLiked(song)) {
                                     provider.removeSongFromLiked(song);
-                                 print(provider.likedSongs);
+                                    // print(provider.likedSongs);
                                   } else {
                                     provider.addSongToLiked(song);
-                                    print(provider.likedSongs);
-
+                                    // print(provider.likedSongs);
                                   }
                                 },
                                 icon: Icon(

@@ -7,6 +7,9 @@ import 'package:grapewine_music_app/Providers/navigator_provider.dart';
 import 'package:grapewine_music_app/Providers/search_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../../models/song_model.dart';
+import '../Navbar Screens/liked_songs_screen.dart';
+
 Widget ArtistWidget(BuildContext context, int index) {
   var provider = Provider.of<SearchProvider>(context);
   var imageUrl = provider.searchArtistImages[index].toString();
@@ -52,47 +55,12 @@ Widget TrackWidget(BuildContext context, int index) {
   var imageUrl = provider.searchTrackImages[index].toString();
   return ListTile(
     onTap: () async {
-      provider.setSongName(provider.searchTrackNames[index]);
-      provider.setSongArtist(provider.searchTrackArtists[index]);
-      // provider.setSongAlbumName(provider.selectedSongAlbum[index]);
-      // print('${provider.selectedSongName} ${provider.selectedSongArtist} song');
-      provider.setSongDetails(
-          '${provider.selectedSongName} ${provider.selectedSongArtist} song audio');
-      print(provider.selectedSongDetails);
-      // print(provider.selectedSongAlbum);
-      String songCover = imageUrl;
-      if (songCover.isNotEmpty) {
-        songCover = imageUrl;
-      } else {
-        songCover = 'https://assets.audiomack.com/default-song-image.png';
-      }
-      provider.setSongImage(songCover);
-
-      var playerProvider =
-          Provider.of<NavigatorProvider>(context, listen: false);
-      //navigate to the musicpages and expand the miniplayer with the song details and wait for 3 seconds and then start playing the song
-      // Navigator.pop(context);
-      var musicPlayerProvider =
-          Provider.of<MusicPlayerProvider>(context, listen: false);
-      if (!playerProvider.isExpanded) {
-        playerProvider.setExpanded();
-      }
-      if (musicPlayerProvider.isInitialized) {
-        if (musicPlayerProvider.player.isPlaying.value == true &&
-            musicPlayerProvider.player != null) {
-          musicPlayerProvider.player.stop();
-          musicPlayerProvider
-              .fetchSong(provider.selectedSongName, provider)
-              .then((value) => musicPlayerProvider.updateDuration(value));
-        } else if (!musicPlayerProvider.player.isPlaying.value == true &&
-            musicPlayerProvider.player != null) {
-          await musicPlayerProvider
-              .fetchSong(provider.selectedSongName, provider)
-              .then((value) => musicPlayerProvider.updateDuration(value));
-          musicPlayerProvider.player.play();
-          musicPlayerProvider.playSong();
-        }
-      }
+      handleSongTap(
+          context: context,
+          song: Song(
+              imageUrl: imageUrl,
+              songName: provider.searchTrackNames[index],
+              artists: provider.searchTrackArtists[index]));
 
       Navigator.push(
           context,
