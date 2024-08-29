@@ -5,6 +5,9 @@ import 'package:grapewine_music_app/Providers/search_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
+import '../Presentation/Screens/the_music_pages.dart';
+import 'navigator_provider.dart';
+
 class MusicPlayerProvider with ChangeNotifier {
   bool _firstSongRun = false;
   bool get firstSongRun => _firstSongRun;
@@ -18,14 +21,6 @@ class MusicPlayerProvider with ChangeNotifier {
 
   void showLyrics() {
     _isLyrics = !_isLyrics;
-    notifyListeners();
-  }
-
-  bool _isLiked = false;
-  bool get isLiked => _isLiked;
-
-  void likeSong() {
-    _isLiked = !_isLiked;
     notifyListeners();
   }
 
@@ -148,4 +143,6 @@ class MusicPlayerProvider with ChangeNotifier {
     }
     return null;
   }
+
+
 }

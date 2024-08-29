@@ -118,7 +118,7 @@ Widget TrackWidget(BuildContext context, int index) {
         image: DecorationImage(
             image: imageUrl.isNotEmpty
                 ? NetworkImage(imageUrl.toString()) as ImageProvider<Object>
-                : NetworkImage(
+                : const NetworkImage(
                         'https://assets.audiomack.com/default-song-image.png')
                     as ImageProvider<Object>,
             fit: BoxFit.cover),

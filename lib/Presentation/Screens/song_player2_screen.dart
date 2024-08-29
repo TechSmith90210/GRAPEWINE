@@ -2,7 +2,9 @@ import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:grapewine_music_app/Providers/like_provider.dart';
 import 'package:grapewine_music_app/Providers/musicPlayer_provider.dart';
+import 'package:grapewine_music_app/models/song_model.dart';
 import 'package:marquee/marquee.dart';
 import 'package:miniplayer/miniplayer.dart';
 import 'package:provider/provider.dart';
@@ -38,6 +40,9 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
   Widget build(BuildContext context) {
     MiniplayerController miniplayerController =
         Provider.of<MiniplayerController>(context);
+    var likedProvider = Provider.of<LikedProvider>(context);
+    var musicPlayerProvider = Provider.of<MusicPlayerProvider>(context);
+    var searchProvider = Provider.of<SearchProvider>(context);
     return Scaffold(
       backgroundColor: blackColor,
       body: SingleChildScrollView(
@@ -156,10 +161,9 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
                                   );
                                 },
                               ),
-
                               Consumer<SearchProvider>(
                                 builder: (context, provider, child) {
-                                  return Container(
+                                  return SizedBox(
                                       width: 220,
                                       height: 30,
                                       child: provider
@@ -179,14 +183,15 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
                                               velocity: 50.0,
                                               // startPadding: 10.0,
                                               accelerationDuration:
-                                                  Duration(seconds: 1),
+                                                  const Duration(seconds: 1),
                                               accelerationCurve: Curves.linear,
                                               // decelerationDuration: Duration(milliseconds: 500),
                                               decelerationCurve: Curves.easeOut,
                                               textDirection: TextDirection.ltr,
                                               pauseAfterRound:
-                                                  Duration(seconds: 10),
-                                              startAfter: Duration(seconds: 7),
+                                                  const Duration(seconds: 10),
+                                              startAfter:
+                                                  const Duration(seconds: 7),
                                             )
                                           : Text(
                                               provider.selectedSongArtist,
@@ -199,20 +204,31 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 25,
                           ),
-                          Consumer<MusicPlayerProvider>(
+                          Consumer<LikedProvider>(
                             builder: (context, provider, child) {
+                              Song song = Song(
+                                  imageUrl: searchProvider.selectedSongImage,
+                                  songName: searchProvider.selectedSongName,
+                                  artists: searchProvider.selectedSongArtist);
                               return IconButton(
                                 onPressed: () {
-                                  provider.likeSong();
+                                  if (provider.isLiked(song)) {
+                                    provider.removeSongFromLiked(song);
+                                 print(provider.likedSongs);
+                                  } else {
+                                    provider.addSongToLiked(song);
+                                    print(provider.likedSongs);
+
+                                  }
                                 },
                                 icon: Icon(
-                                    provider.isLiked
+                                    provider.isLiked(song)
                                         ? Icons.favorite_rounded
                                         : Icons.favorite_border_rounded,
-                                    color: provider.isLiked
+                                    color: provider.isLiked(song)
                                         ? purpleColor
                                         : whiteColor,
                                     size: 30),
@@ -224,12 +240,12 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
                       );
                     },
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                   Consumer<MusicPlayerProvider>(
                     builder: (context, provider, child) {
-                      return Container(
+                      return SizedBox(
                         width: 330,
                         child: StreamBuilder<Playing?>(
                           // Correctly access the current playing stream
@@ -237,13 +253,15 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
                           builder: (context, snapshot) {
                             final playing = snapshot.data;
                             // Safely access the duration of the audio, defaulting to Duration.zero if not available
-                            final duration = playing?.audio.duration ?? Duration.zero;
+                            final duration =
+                                playing?.audio.duration ?? Duration.zero;
 
                             return StreamBuilder<Duration>(
                               // Correctly access the current position stream
                               stream: provider.player.currentPosition,
                               builder: (context, positionSnapshot) {
-                                final position = positionSnapshot.data ?? Duration.zero;
+                                final position =
+                                    positionSnapshot.data ?? Duration.zero;
 
                                 return ProgressBar(
                                   progress: position,
@@ -279,13 +297,17 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
                             onPressed: () async {
                               try {
                                 // Ensure the player is playing or paused before seeking
-                                if (provider.player.isPlaying.value || provider.player.isPlaying.value == false) {
-                                  var currentPosition = provider.player.currentPosition.value;
+                                if (provider.player.isPlaying.value ||
+                                    provider.player.isPlaying.value == false) {
+                                  var currentPosition =
+                                      provider.player.currentPosition.value;
 
                                   // Safely handle the currentPosition and subtract 5 seconds
-                                  var rewindedPosition = (currentPosition != null)
-                                      ? currentPosition - const Duration(seconds: 5)
-                                      : Duration.zero;
+                                  var rewindedPosition =
+                                      (currentPosition != null)
+                                          ? currentPosition -
+                                              const Duration(seconds: 5)
+                                          : Duration.zero;
 
                                   // Ensure rewindedPosition does not go below zero
                                   if (rewindedPosition < Duration.zero) {
@@ -300,7 +322,6 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
                                 print('Error seeking position: $e');
                               }
                             },
-
                             icon: Icon(
                               Icons.skip_previous_rounded,
                               size: 55,
@@ -337,16 +358,23 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
                                 onPressed: () async {
                                   try {
                                     // Ensure the player is either playing or paused before seeking
-                                    if (provider.player.isPlaying.value || provider.player.isPlaying.value ==false) {
-                                      var currentPosition = provider.player.currentPosition.value;
+                                    if (provider.player.isPlaying.value ||
+                                        provider.player.isPlaying.value ==
+                                            false) {
+                                      var currentPosition =
+                                          provider.player.currentPosition.value;
 
                                       // Safely handle the currentPosition and add 5 seconds
-                                      var fastForwardPosition = (currentPosition != null)
-                                          ? currentPosition + const Duration(seconds: 5)
-                                          : Duration.zero;
+                                      var fastForwardPosition =
+                                          (currentPosition != null)
+                                              ? currentPosition +
+                                                  const Duration(seconds: 5)
+                                              : Duration.zero;
 
                                       // Get the total duration of the audio to avoid seeking beyond it
-                                      var totalDuration = provider.player.current.value?.audio.duration ?? Duration.zero;
+                                      var totalDuration = provider.player
+                                              .current.value?.audio.duration ??
+                                          Duration.zero;
 
                                       // Ensure fastForwardPosition does not exceed the total duration
                                       if (fastForwardPosition > totalDuration) {
@@ -354,14 +382,14 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
                                       }
 
                                       // Seek to the new position
-                                      await provider.player.seek(fastForwardPosition);
+                                      await provider.player
+                                          .seek(fastForwardPosition);
                                     }
                                   } catch (e) {
                                     // Handle any errors during the seek operation
                                     print('Error seeking position: $e');
                                   }
                                 },
-
                                 icon: Icon(
                                   Icons.skip_next_rounded,
                                   size: 55,
