@@ -79,6 +79,7 @@ Widget TrackWidget(BuildContext context, int index) {
           color: greyColor, fontWeight: FontWeight.w500),
     ),
     leading: Container(
+
       height: 60,
       width: 60,
       decoration: BoxDecoration(
