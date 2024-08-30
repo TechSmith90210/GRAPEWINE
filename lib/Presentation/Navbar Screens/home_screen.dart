@@ -2,94 +2,138 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
 import 'package:grapewine_music_app/Presentation/widgets/AppBarWidget.dart';
-import 'package:grapewine_music_app/Presentation/widgets/NewFindsWidget.dart';
 import 'package:grapewine_music_app/Presentation/widgets/NewReleasesWidget.dart';
 import 'package:grapewine_music_app/Presentation/widgets/PreviouslyPlayedCircleWidget.dart';
+import '../../Data/Api/MusicApisss.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late Future<void> _fetchAccessTokenFuture;
+  bool _isDataFetched = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (!_isDataFetched) {
+      _fetchAccessTokenFuture = _fetchAccessToken();
+    }
+  }
+
+  Future<void> _fetchAccessToken() async {
+    await fetchData(context); // This will initialize the access token
+    setState(() {
+      _isDataFetched = true; // Mark the data as fetched
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: const AppBarWidget(title: 'HOME'),
-        body: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Container(
-            // color: redColor,
-            // margin: const EdgeInsets.only(left: 16, right: 16),
-            alignment: Alignment.center,
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 10,
+      appBar: const AppBarWidget(title: 'HOME'),
+      body: _isDataFetched
+          ? SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Container(
+                alignment: Alignment.center,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 12, right: 12),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Recently Played',
+                            style: GoogleFonts.redHatDisplay(
+                              color: greenColor,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                'View All',
+                                style: GoogleFonts.redHatDisplay(
+                                  color: whiteColor,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              Icon(
+                                Icons.arrow_right,
+                                color: whiteColor,
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 130,
+                      child: ListView.builder(
+                        itemCount: 6,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return PreviouslyPlayedCircleWidget(index: index);
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 12, right: 12),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'New Releases',
+                            style: GoogleFonts.redHatDisplay(
+                              color: greenColor,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                'View All',
+                                style: GoogleFonts.redHatDisplay(
+                                  color: whiteColor,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              Icon(
+                                Icons.arrow_right,
+                                color: whiteColor,
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 250,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 6,
+                        itemBuilder: (context, index) {
+                          return NewReleasesWidget(index: index);
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-                Text(
-                  'Previously Played',
-                  style: GoogleFonts.redHatDisplay(
-                    color: greenColor,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 17,
-                  ),
-                ),
-                SizedBox(
-                  height: 130,
-                  child: ListView.builder(
-                    itemCount: 6,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      return PreviouslyPlayedCircleWidget(
-                        index: index,
-                      );
-                    },
-                  ),
-                ),
-                Text(
-                  'New Releases',
-                  style: GoogleFonts.redHatDisplay(
-                    color: greenColor,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 17,
-                  ),
-                ),
-                SizedBox(
-                  height: 180,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 6,
-                    itemBuilder: (context, index) {
-                      return NewReleasesWidget(
-                        index: index,
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  'New Finds for You',
-                  style: GoogleFonts.redHatDisplay(
-                    color: greenColor,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 17,
-                  ),
-                ),
-                SizedBox(
-                  height: 180,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 6,
-                    itemBuilder: (context, index) {
-                      return NewFindsWidget(
-                        index: index,
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ));
+              ),
+            )
+          : Center(child: CircularProgressIndicator(color: purpleColor)),
+    );
   }
 }

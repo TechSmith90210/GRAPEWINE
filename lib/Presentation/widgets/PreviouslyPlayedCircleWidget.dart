@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../Colors/colors.dart';
-import '../../Data/Api/MusicApisss.dart';
 import '../../Providers/albumInfo_provider.dart';
 
 class PreviouslyPlayedCircleWidget extends StatefulWidget {
@@ -23,8 +22,8 @@ class _PreviouslyPlayedCircleWidgetState
   @override
   void initState() {
     super.initState();
-
-    fetchDataFuture = fetchData(context);
+    // Initialize the fetchDataFuture to avoid unnecessary API calls
+    fetchDataFuture = Future.value(); // No actual async fetch needed here
   }
 
   String truncateText(String text, int maxLength) {
@@ -37,6 +36,8 @@ class _PreviouslyPlayedCircleWidgetState
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    var albumInfoProvider = Provider.of<AlbumInfoProvider>(context, listen: false);
+
     return FutureBuilder(
         future: fetchDataFuture,
         builder: (context, snapshot) {
@@ -44,30 +45,23 @@ class _PreviouslyPlayedCircleWidgetState
             // Loading state
             return Center(
                 child: CircularProgressIndicator(
-              color: purpleColor,
-            ));
+                  color: purpleColor,
+                ));
           } else if (snapshot.hasError) {
             // Error state
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
             // Success state
-            var albumInfoProvider =
-                Provider.of<AlbumInfoProvider>(context, listen: false);
             return Column(
               children: [
                 Padding(
-                  // padding:
-                  //     const EdgeInsets.only(left: 13, right: 15, top: 15, bottom: 25),
-                  padding: const EdgeInsets.only(
-                      left: 13, right: 15, top: 10, bottom: 5),
+                  padding: const EdgeInsets.only(left: 13, right: 15, top: 10, bottom: 5),
                   child: Container(
                     height: 60,
                     width: 94,
                     decoration: ShapeDecoration(
                         image: DecorationImage(
-                            image: NetworkImage(albumInfoProvider
-                                .albumCoversProviders[widget.index]
-                                .toString()),
+                            image: NetworkImage(albumInfoProvider.albumCoversProviders[widget.index].toString()),
                             fit: BoxFit.cover),
                         shape: RoundedRectangleBorder(
                             side: BorderSide(
@@ -78,11 +72,9 @@ class _PreviouslyPlayedCircleWidgetState
                             borderRadius: BorderRadius.circular(47))),
                   ),
                 ),
-                // SizedBox(height: 10,),
                 Text(
                   truncateText(
-                      albumInfoProvider.albumNamesProviders[widget.index]
-                          .toString(),
+                      albumInfoProvider.albumNamesProviders[widget.index].toString(),
                       15),
                   style: GoogleFonts.redHatDisplay(
                     fontSize: 14,
@@ -93,8 +85,7 @@ class _PreviouslyPlayedCircleWidgetState
                 ),
                 Text(
                   truncateText(
-                      albumInfoProvider.artistNamesProviders[widget.index]
-                          .toString(),
+                      albumInfoProvider.artistNamesProviders[widget.index].toString(),
                       15),
                   style: GoogleFonts.redHatDisplay(
                     fontSize: 12,

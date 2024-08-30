@@ -9,6 +9,12 @@ import 'package:provider/provider.dart';
 import '../../Colors/colors.dart';
 import 'package:miniplayer/miniplayer.dart';
 
+String truncateText(String text, int maxLength) {
+  if (text != null && text.length > maxLength) {
+    return text.substring(0, maxLength) + '...';
+  }
+  return text!;
+}
 
 class MiniPlayerWidget extends StatefulWidget {
   const MiniPlayerWidget({Key? key}) : super(key: key);
@@ -74,12 +80,7 @@ class _MiniPlayerWidgetState extends State<MiniPlayerWidget> {
     );
   }
 
-  String truncateText(String text, int maxLength) {
-    if (text != null && text.length > maxLength) {
-      return text.substring(0, maxLength) + '...';
-    }
-    return text!;
-  }
+
 
   Widget _buildCollapsedWidget(SearchProvider searchProvider, String? image,
       String? songArtist, String? songName) {

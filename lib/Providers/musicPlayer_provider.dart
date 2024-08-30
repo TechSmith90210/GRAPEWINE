@@ -1,12 +1,7 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:grapewine_music_app/Providers/search_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
-
-import '../Presentation/Screens/the_music_pages.dart';
-import 'navigator_provider.dart';
 
 class MusicPlayerProvider with ChangeNotifier {
   bool _firstSongRun = false;
@@ -43,7 +38,7 @@ class MusicPlayerProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  List<String> _artistImages = [
+  final List<String> _artistImages = [
     'https://i.scdn.co/image/ab6761610000e5eb876faa285687786c3d314ae0', // Cudi
     'https://i.scdn.co/image/ab6761610000e5ebf0789cd783c20985ec3deb4e', // Pharrell
     'https://i.scdn.co/image/ab6761610000e5eb19c2790744c792d05570bb71', // Travis
@@ -143,6 +138,4 @@ class MusicPlayerProvider with ChangeNotifier {
     }
     return null;
   }
-
-
 }

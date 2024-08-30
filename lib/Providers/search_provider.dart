@@ -119,9 +119,9 @@ class SearchProvider with ChangeNotifier {
 
 Future<void> searchFor(BuildContext context, String query) async {
   var provider = Provider.of<AccessTokenProvider>(context, listen: false);
-  String accessToken = provider.accessToken;
+  String? accessToken = provider.accessToken;
 
-  var spotify = spot.SpotifyApi.withAccessToken(accessToken);
+  var spotify = spot.SpotifyApi.withAccessToken(accessToken!);
 
   try {
     var searchResults = await spotify.search.get(query, types: [

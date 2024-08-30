@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'package:grapewine_music_app/Data/Api/fetchNewReleases.dart';
 import 'package:http/http.dart' as http;
 import '../../models/album_model.dart';
-import 'MusicApisss.dart';
 
 class AlbumInfo {
   List<String> artistNames = [];
@@ -11,42 +9,40 @@ class AlbumInfo {
 
   Future<void> fetchAlbumInfo(String accessToken, List<String> albumIds) async {
     // logic to get the three lists of album data (artist names, album names, album covers)
-    for (final i in albumIds) {
-      // print(i);
-      final albumurl = Uri.parse('https://api.spotify.com/v1/albums/$i');
+    for (final albumId in albumIds) {
+      final albumUrl = Uri.parse('https://api.spotify.com/v1/albums/$albumId');
       final response = await http.get(
-        albumurl,
+        albumUrl,
         headers: {'Authorization': 'Bearer $accessToken'},
       );
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
-        // print(data);
+        final fetchedAlbum = Album.fromJson(data);
 
-        fetchedAlbum = Album.fromJson(data);
+        // Extract and store data
+        String artistName = fetchedAlbum.artistNames.isNotEmpty
+            ? fetchedAlbum.artistNames[0]
+            : 'Unknown Artist'; // Handling empty artistNames
+        artistNames.add(artistName);
+
+        // Album Names
+        String albumName = fetchedAlbum.albumName ?? 'Unknown Album'; // Handling null albumName
+        albumNames.add(albumName);
+
+        // Album Cover Art
+        String albumCoverUrl = fetchedAlbum.albumCoverUrl.isNotEmpty
+            ? fetchedAlbum.albumCoverUrl[0]
+            : 'Unknown Cover'; // Handling empty albumCoverUrl
+        albumCovers.add(albumCoverUrl);
+
+        // Uncomment if you need to print the fetched data
         // print(fetchedAlbum?.albumCoverUrl[0].toString());
-        String? artistName = fetchedAlbum?.artistNames[0].toString();
         // print(artistName);
-        //print it
-        artistNames.add(artistName!);
-
-        //album Names
-        String? albumName = fetchedAlbum?.albumName.toString();
-        albumNames.add(albumName!);
-
-        //album Cover Art
-        String? albumCoverUrl = fetchedAlbum?.albumCoverUrl[0].toString();
-        albumCovers.add(albumCoverUrl!);
-
-        // FetchNewReleases fetchNewReleases=FetchNewReleases();
-        // fetchNewReleases.fetchNewReleases(accessToken,context);
-        // for (final j in artistNames) {
-        //   print(j);
-        // }
-        // print(albumCovers.toString());
+        // print(albumName);
+        // print(albumCoverUrl);
       } else {
-        print(
-            'Failed to fetch public data. Status code: ${response.statusCode}');
+        print('Failed to fetch album data. Status code: ${response.statusCode}');
         print('Response body: ${response.body}');
       }
     }
@@ -61,5 +57,8 @@ class AlbumInfo {
 }
 
 void main() async {
-  // fetchData();
+  // Example usage
+  // var albumInfo = AlbumInfo();
+  // await albumInfo.fetchAlbumInfo('your_access_token', ['album_id1', 'album_id2']);
+  // albumInfo.getListsData();
 }
