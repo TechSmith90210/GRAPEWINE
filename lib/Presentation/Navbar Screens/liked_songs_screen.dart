@@ -33,72 +33,76 @@ class _LikedSongsScreenState extends State<LikedSongsScreen> {
               itemBuilder: (context, index) {
                 final song = likedProvider.likedSongs[index];
 
-                return ListTile(
-                  tileColor: blackColor.withOpacity(0.2),
-                  onTap: () async {
-                    handleSongTap(
-                      context: context,
-                      song: Song(
-                        imageUrl: song.imageUrl,
-                        songName: song.songName,
-                        artists: song.artists,
-                      ),
-                    );
-                  },
-                  leading: Container(
-                    height: 55,
-                    width: 55,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(
-                          song.imageUrl.isNotEmpty
-                              ? song.imageUrl
-                              : 'https://assets.audiomack.com/default-song-image.png',
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 3),
+                  child: ListTile(
+                    tileColor: blackColor.withOpacity(0.2),
+                    onTap: () async {
+                      handleSongTap(
+                        context: context,
+                        song: Song(
+                          imageUrl: song.imageUrl,
+                          songName: song.songName,
+                          artists: song.artists,
                         ),
-                        fit: BoxFit.cover,
-                      ),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-                  title: Text(
-                    truncateText(song.songName, 25),
-                    style: GoogleFonts.redHatDisplay(
-                      color: whiteColor,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 14,
-                    ),
-                  ),
-                  subtitle: Text(
-                    truncateText(song.artists, 23),
-                    style: GoogleFonts.redHatDisplay(
-                      color: darkgreyColor,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 12,
-                    ),
-                  ),
-                  trailing: SizedBox(
-                    width: 120, // Adjust width as needed
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          song.duration != null
-                              ? '${song.duration!.inMinutes}:${(song.duration!.inSeconds % 60).toString().padLeft(2, '0')}'
-                              : '0:00',
-                          style: GoogleFonts.redHatDisplay(
-                            color: whiteColor,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 12,
+                      );
+                    },
+                    leading: Container(
+                      height: 55,
+                      width: 55,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(
+                            song.imageUrl.isNotEmpty
+                                ? song.imageUrl
+                                : 'https://assets.audiomack.com/default-song-image.png',
                           ),
+                          fit: BoxFit.cover,
                         ),
-                        IconButton(
-                          onPressed: () {
-                            // Handle more actions here
-                          },
-                          icon: const Icon(Icons.more_horiz),
-                          color: whiteColor,
-                        ),
-                      ],
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                    title: Text(
+                      song.songName,
+                      style: GoogleFonts.redHatDisplay(
+                        color: whiteColor,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                      ),
+                    ),
+                    subtitle: Text(
+                      softWrap: false,
+                      truncateText(song.artists, 23),
+                      style: GoogleFonts.redHatDisplay(
+                        color: darkgreyColor,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                      ),
+                    ),
+                    trailing: SizedBox(
+                      width: 120, // Adjust width as needed
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            song.duration != null
+                                ? '${song.duration!.inMinutes}:${(song.duration!.inSeconds % 60).toString().padLeft(2, '0')}'
+                                : '0:00',
+                            style: GoogleFonts.redHatDisplay(
+                              color: whiteColor,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 12,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              // Handle more actions here
+                            },
+                            icon: const Icon(Icons.more_horiz),
+                            color: whiteColor,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
