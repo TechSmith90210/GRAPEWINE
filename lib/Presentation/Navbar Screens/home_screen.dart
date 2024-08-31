@@ -5,6 +5,7 @@ import 'package:grapewine_music_app/Presentation/widgets/AppBarWidget.dart';
 import 'package:grapewine_music_app/Presentation/widgets/NewReleasesWidget.dart';
 import 'package:grapewine_music_app/Presentation/widgets/PreviouslyPlayedCircleWidget.dart';
 import '../../Data/Api/MusicApisss.dart';
+import '../widgets/SongsumightlikeWidget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -87,6 +88,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                       ),
                     ),
+                    SizedBox(
+                      height: 10,
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(left: 12, right: 12),
                       child: Row(
@@ -120,13 +124,48 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: 250,
+                      height: 180,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: 6,
                         itemBuilder: (context, index) {
                           return NewReleasesWidget(index: index);
                         },
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 12, right: 12),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Songs You Might Like',
+                            style: GoogleFonts.redHatDisplay(
+                              color: greenColor,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                'View All',
+                                style: GoogleFonts.redHatDisplay(
+                                  color: whiteColor,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              Icon(
+                                Icons.arrow_right,
+                                color: whiteColor,
+                              )
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   ],
