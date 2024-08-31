@@ -11,13 +11,12 @@ class NewFindsProvider with ChangeNotifier {
 
   //album names
   List<String> _albumNames = [
-    "Because the Internet",
-    "Alone at Prom (deluxe)",
-    "Eternal Atake (Deluxe) - LUV vs. The World 2",
-    "My Bloody America",
-    "All is Yellow",
-    "Die Lit",
-    "DOA"
+    "3005",
+    "Poison Ivy",
+    "Myron",
+    "Skull & Bones 322",
+    "Say Ya Grace",
+    "Love Hurts",
   ];
 
   List<String> get albumNames => _albumNames;
@@ -44,8 +43,6 @@ class NewFindsProvider with ChangeNotifier {
     "https://i.scdn.co/image/ab67616d0000b2733011c33da8122f277da3b0e5",
     //Die Lit
     "https://i.scdn.co/image/ab67616d0000b273a1e867d40e7bb29ced5c0194",
-    //Doa
-    "https://i.scdn.co/image/ab67616d0000b2731c615ec4f5dd17806a802162"
   ];
   List<String> get albumCovers => _albumCovers;
   updateCovers(List<String> newAlbumCovers) {
@@ -61,7 +58,6 @@ class NewFindsProvider with ChangeNotifier {
     "City Morgue, Zillakami & Sosmula",
     "Lyrical Lemonade",
     "Playboi Carti",
-    "ericdoa",
   ];
   List<String> get albumArtists => _albumArtists;
   updateArtistNames(List<String> newAlbumArtists) {

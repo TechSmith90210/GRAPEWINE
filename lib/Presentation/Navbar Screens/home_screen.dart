@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
 import 'package:grapewine_music_app/Presentation/widgets/AppBarWidget.dart';
 import 'package:grapewine_music_app/Presentation/widgets/NewReleasesWidget.dart';
-import 'package:grapewine_music_app/Presentation/widgets/PreviouslyPlayedCircleWidget.dart';
+import 'package:grapewine_music_app/Presentation/widgets/RecentlyPlayedWidget.dart';
 import '../../Data/Api/MusicApisss.dart';
 import '../widgets/SongsumightlikeWidget.dart';
 
@@ -45,9 +45,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 10),
                     Padding(
-                      padding: const EdgeInsets.only(left: 12, right: 12),
+                      padding: const EdgeInsets.only(left: 12, right: 12,top: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -55,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             'Recently Played',
                             style: GoogleFonts.redHatDisplay(
                               color: greenColor,
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.w900,
                               fontSize: 14,
                             ),
                           ),
@@ -79,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: 130,
+                      height: 90,
                       child: ListView.builder(
                         itemCount: 6,
                         scrollDirection: Axis.horizontal,
@@ -100,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             'New Releases',
                             style: GoogleFonts.redHatDisplay(
                               color: greenColor,
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.w900,
                               fontSize: 14,
                             ),
                           ),
@@ -133,7 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Padding(
@@ -145,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             'Songs You Might Like',
                             style: GoogleFonts.redHatDisplay(
                               color: greenColor,
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.w900,
                               fontSize: 14,
                             ),
                           ),
@@ -168,6 +167,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ),
+                    const SongsYouMightLikeSection(),
+                    const SizedBox(
+                      height: 100,
+                    )
                   ],
                 ),
               ),

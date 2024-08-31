@@ -68,6 +68,8 @@ dependencies:
   audio_service: ^0.18.15
   get_it: ^7.7.0
   assets_audio_player: ^3.1.1
+  google_nav_bar: ^5.0.6
+
 
 
 

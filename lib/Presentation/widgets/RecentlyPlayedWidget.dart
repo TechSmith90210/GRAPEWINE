@@ -57,7 +57,7 @@ class _PreviouslyPlayedCircleWidgetState
                 Padding(
                   padding: const EdgeInsets.only(left: 13, right: 15, top: 10, bottom: 5),
                   child: Container(
-                    height: 60,
+                    height: 50,
                     width: 94,
                     decoration: ShapeDecoration(
                         image: DecorationImage(
@@ -77,22 +77,22 @@ class _PreviouslyPlayedCircleWidgetState
                       albumInfoProvider.albumNamesProviders[widget.index].toString(),
                       15),
                   style: GoogleFonts.redHatDisplay(
-                    fontSize: 14,
-                    color: redColor,
-                    fontWeight: FontWeight.w800,
+                    fontSize: 11,
+                    color: whiteColor,
+                    fontWeight: FontWeight.w400,
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
-                Text(
-                  truncateText(
-                      albumInfoProvider.artistNamesProviders[widget.index].toString(),
-                      15),
-                  style: GoogleFonts.redHatDisplay(
-                    fontSize: 12,
-                    color: darkgreyColor,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
+                // Text(
+                //   truncateText(
+                //       albumInfoProvider.artistNamesProviders[widget.index].toString(),
+                //       15),
+                //   style: GoogleFonts.redHatDisplay(
+                //     fontSize: 10,
+                //     color: darkgreyColor,
+                //     fontWeight: FontWeight.w300,
+                //   ),
+                // ),
               ],
             );
           }

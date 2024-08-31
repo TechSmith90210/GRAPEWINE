@@ -24,25 +24,24 @@ class BottomNavBarWidget extends StatelessWidget {
                 return GoogleFonts.redHatDisplay(
                   fontWeight: FontWeight.w700,
                   color: whiteColor,
-                  // fontSize: 12,
+                  fontSize: 12,
                 );
               } else {
                 return GoogleFonts.redHatDisplay(
                   fontWeight: FontWeight.w500,
                   color: greyColor,
-                  // fontSize: 12,
+                  fontSize: 12,
                 );
               }
             }),
             elevation: 0,
             iconTheme: MaterialStateProperty.all(
               IconThemeData(
-                  // size: 35,
                   color: greyColor),
             ),
           ),
           child: NavigationBar(
-            // height: kBottomNavigationBarHeight,
+
             selectedIndex: navigatorProvider.selectedIndex,
             destinations: [
               NavigationDestination(
@@ -59,12 +58,12 @@ class BottomNavBarWidget extends StatelessWidget {
                 label: 'Search',
               ),
               NavigationDestination(
-                icon: Icon(Icons.favorite_border_rounded),
+                icon: Icon(Icons.library_music_outlined),
                 selectedIcon: Icon(
-                  Icons.favorite_rounded,
+                  Icons.library_music,
                   color: whiteColor,
                 ),
-                label: 'Liked Songs',
+                label: 'Library',
               ),
             ],
             onDestinationSelected: (int value) {

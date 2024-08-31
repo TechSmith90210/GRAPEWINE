@@ -27,10 +27,6 @@ class _MiniPlayerWidgetState extends State<MiniPlayerWidget> {
   final ValueNotifier<double> playerExpandProgress =
       ValueNotifier(_minPlayerHeight);
 
-
-
-
-
   @override
   Widget build(BuildContext context) {
     var navigationProvider =
@@ -79,8 +75,6 @@ class _MiniPlayerWidgetState extends State<MiniPlayerWidget> {
     );
   }
 
-
-
   Widget _buildCollapsedWidget(SearchProvider searchProvider, String? image,
       String? songArtist, String? songName) {
     return Container(
@@ -121,17 +115,17 @@ class _MiniPlayerWidgetState extends State<MiniPlayerWidget> {
                   Text(
                     truncateText(songName ?? 'No Song Playing', 25),
                     style: GoogleFonts.redHatDisplay(
-                      color: whiteColor,
-                      fontWeight: FontWeight.w600,
-                    ),
+                        color: whiteColor,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14),
                   ),
-                  // Text(
-                  //   truncateText(songArtist ?? 'Steve Lacy', 30),
-                  //   style: GoogleFonts.redHatDisplay(
-                  //     color: greyColor,
-                  //     fontWeight: FontWeight.w600,
-                  //   ),
-                  // ),
+                  Text(
+                    truncateText(songArtist ?? 'Steve Lacy', 30),
+                    style: GoogleFonts.redHatDisplay(
+                        color: greyColor,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12),
+                  ),
                 ],
               ),
             ],
@@ -153,7 +147,7 @@ class _MiniPlayerWidgetState extends State<MiniPlayerWidget> {
                       ? Icons.play_arrow_rounded
                       : Icons.pause_rounded,
                   color: whiteColor,
-                  size: 45,
+                  size: 35,
                 ),
               );
             },
