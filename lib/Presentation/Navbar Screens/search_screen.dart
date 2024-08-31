@@ -34,67 +34,8 @@ class SearchScreen extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-               const SearchBarWidget(),
+                const SearchBarWidget(),
                 // SearchSongWidget(),
-                const SizedBox(
-                  height: 35,
-                ),
-                Text(
-                  'Trending Searches',
-                  style: GoogleFonts.redHatDisplay(
-                      color: greenColor,
-                      fontSize: 17,
-                      fontWeight: FontWeight.w700),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Wrap(
-                  spacing: 7.0, // space between each bubble
-                  runSpacing: 7.0, //space below bubbles
-                  alignment: WrapAlignment.spaceBetween,
-                  children: artistNames.map((name) {
-                    return TrendingBubbleWidget(
-                      artistName: name,
-                    );
-                  }).toList(),
-                ),
-                const SizedBox(
-                  height: 30,
-                ),
-                Text(
-                  'Genres',
-                  style: GoogleFonts.redHatDisplay(
-                      color: greenColor,
-                      fontSize: 17,
-                      fontWeight: FontWeight.w700),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                ListView.builder(
-                  itemCount: 4,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: EdgeInsets.only(bottom: 10),
-                      height: 70,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          color: blueBubbleColor,
-                          borderRadius: BorderRadius.circular(11)),
-                      child: Center(
-                        child: Text(
-                          'Hip Hop',
-                          style: GoogleFonts.redHatDisplay(
-                              color: whiteColor,
-                              fontSize: 19,
-                              fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                    );
-                  },
-                )
               ],
             ),
           ),

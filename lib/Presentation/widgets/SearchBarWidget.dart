@@ -17,8 +17,8 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: blackColor,
-        borderRadius: BorderRadius.circular(5),
+        color: blackColor ,
+        borderRadius: BorderRadius.circular(10),
         border: Border.all(
           color: greyColor,
           width: 0.3,

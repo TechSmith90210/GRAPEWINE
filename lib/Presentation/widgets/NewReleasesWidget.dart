@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
 import 'package:grapewine_music_app/Presentation/Navbar%20Screens/liked_songs_screen.dart';
-import 'package:grapewine_music_app/Providers/musicPlayer_provider.dart';
 import 'package:grapewine_music_app/Providers/newReleases_provider.dart';
-import 'package:grapewine_music_app/Providers/search_provider.dart';
 import 'package:grapewine_music_app/models/song_model.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_bounceable/flutter_bounceable.dart';
 
 import 'MiniPlayerWidget.dart';
 
@@ -39,7 +38,7 @@ class _NewReleasesWidgetState extends State<NewReleasesWidget>
           );
         }
 
-        return InkWell(
+        return Bounceable(
           onTap: () {
             Song song = Song(
                 imageUrl: provider.albumCovers[widget.index].toString(),

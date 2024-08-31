@@ -69,6 +69,8 @@ dependencies:
   get_it: ^7.7.0
   assets_audio_player: ^3.1.1
   google_nav_bar: ^5.0.6
+  flutter_bounceable: ^1.1.0
+
 
 
 

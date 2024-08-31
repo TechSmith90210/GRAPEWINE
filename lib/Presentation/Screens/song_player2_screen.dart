@@ -211,7 +211,9 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen> {
                               Song song = Song(
                                   imageUrl: searchProvider.selectedSongImage,
                                   songName: searchProvider.selectedSongName,
-                                  artists: searchProvider.selectedSongArtist);
+                                  artists: searchProvider.selectedSongArtist,
+                                  duration: Provider.of<MusicPlayerProvider>(context).player.current.value!.audio.duration
+                              );
                               return IconButton(
                                 onPressed: () {
                                   if (provider.isLiked(song)) {
