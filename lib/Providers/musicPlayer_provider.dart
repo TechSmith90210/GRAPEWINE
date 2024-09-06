@@ -1,6 +1,7 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/foundation.dart';
 import 'package:grapewine_music_app/Providers/search_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class MusicPlayerProvider with ChangeNotifier {
@@ -9,6 +10,7 @@ class MusicPlayerProvider with ChangeNotifier {
 
   void setFirstSongRun() {
     _firstSongRun = true;
+    notifyListeners();
   }
 
   bool _isLyrics = false;
@@ -22,18 +24,13 @@ class MusicPlayerProvider with ChangeNotifier {
   bool _isPlayed = false;
   bool get isPlayed => _isPlayed;
 
-  void playSong() {
-    if (_isPlayed) {
-      stopSong();
-    } else {
-      _isPlayed = true;
-    }
-    notifyListeners();
-  }
-
-  void stopSong() {
+  void togglePlayPause() {
     if (_isPlayed) {
       _isPlayed = false;
+      _player.pause(); // Pause the player
+    } else {
+      _isPlayed = true;
+      _player.play(); // Start playing the player
     }
     notifyListeners();
   }
@@ -73,6 +70,7 @@ class MusicPlayerProvider with ChangeNotifier {
 
   void setInitialization() {
     _isInitialized = !_isInitialized;
+    notifyListeners();
   }
 
   void updateDuration(Duration? newDuration) {
@@ -87,7 +85,7 @@ class MusicPlayerProvider with ChangeNotifier {
     final yt = YoutubeExplode();
     try {
       // Stop player if it's currently playing
-      if (_player.isPlaying.value == true) {
+      if (_player.isPlaying.value) {
         await _player.stop();
       }
 
@@ -108,28 +106,38 @@ class MusicPlayerProvider with ChangeNotifier {
 
         try {
           await _player.open(
-            Audio.network(audioUrl.toString(),
-                metas: Metas(
-                    title: provider.selectedSongName,
-                    artist: provider.selectedSongArtist,
-                    album: provider.selectedSongAlbum,
-                    image: MetasImage(
-                        path: provider.selectedSongImage,
-                        type: ImageType.network))),
-            showNotification: true,
-            autoStart: true, // Automatically start playback
-            respectSilentMode: true, // Handle silent mode
-            playInBackground: PlayInBackground.enabled,
-            notificationSettings: const NotificationSettings(
-              stopEnabled: true,
-            ),
-          );
+              Audio.network(audioUrl.toString(),
+                  metas: Metas(
+                      title: provider.selectedSongName,
+                      artist: provider.selectedSongArtist,
+                      album: provider.selectedSongAlbum,
+                      image: MetasImage(
+                          path: provider.selectedSongImage,
+                          type: ImageType.network))),
+              showNotification: true,
+              respectSilentMode: true,
+              autoStart: true,
+              playInBackground: PlayInBackground.enabled,
+              notificationSettings: NotificationSettings(
+                seekBarEnabled: true,
+                // stopEnabled: true,
+                playPauseEnabled: true,
+                customPlayPauseAction: (player) async {
+                  if (player.isPlaying.value) {
+                    await player.pause();
+                    togglePlayPause(); // Ensure state is updated
+                  } else {
+                    await player.play();
+                    togglePlayPause(); // Ensure state is updated
+                  }
+                },
+              ));
+
+          notifyListeners();
+          return video.duration;
         } on AssetsAudioPlayerError catch (e) {
           print('Error during audio playback: $e');
         }
-
-        notifyListeners();
-        return video.duration;
       }
     } catch (e) {
       if (kDebugMode) {

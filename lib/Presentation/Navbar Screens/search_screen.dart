@@ -24,18 +24,34 @@ class SearchScreen extends StatelessWidget {
     ];
 
     return Scaffold(
-        appBar: AppBarWidget(title: 'SEARCH'),
+        appBar: AppBarWidget(
+          title: 'SEARCH',
+          leading: ImageIcon(
+            const AssetImage("assets/grapewine logo medium.png"),
+            color: purpleColor,
+          ),
+          actions: const [
+            CircleAvatar(
+              backgroundColor: Color(0xffE6E6E6),
+              backgroundImage: AssetImage('assets/professor x pfp.jpg'),
+              radius: 30,
+              // child: Icon(
+              //   Icons.person,
+              //   color: Color(0xffCCCCCC),
+              // ),
+            )
+          ],
+        ),
         body: Container(
-          margin: EdgeInsets.only(left: 16, right: 16),
-          child: SingleChildScrollView(
+          margin: const EdgeInsets.only(left: 16, right: 16),
+          child: const SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Column(
               children: [
-                const SizedBox(
+                SizedBox(
                   height: 20,
                 ),
-                const SearchBarWidget(),
-                // SearchSongWidget(),
+                SearchBarWidget(),
               ],
             ),
           ),

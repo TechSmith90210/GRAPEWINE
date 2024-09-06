@@ -5,9 +5,16 @@ import '../../Colors/colors.dart';
 import '../../config/screen_size.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
-  const AppBarWidget({Key? key, required this.title}) : super(key: key);
+  const AppBarWidget({
+    super.key,
+    required this.title,
+    this.leading,
+    this.actions,
+  });
 
   final String title;
+  final Widget? leading; // Make leading a parameter
+  final List<Widget>? actions; // Make actions a parameter
 
   @override
   Widget build(BuildContext context) {
@@ -15,13 +22,9 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     EdgeInsets margin = calculateMargin(screenHeight, screenWidth);
     return Container(
-      // margin: margin,
-      padding: EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: AppBar(
-        leading: ImageIcon(
-          const AssetImage("assets/grapewine logo medium.png"),
-          color: purpleColor,
-        ),
+        leading: leading,
         centerTitle: true,
         title: Text(
           title,
@@ -31,22 +34,12 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
             fontSize: 20,
           ),
         ),
-        actions: const [
-          CircleAvatar(
-            backgroundColor: Color(0xffE6E6E6),
-            backgroundImage: AssetImage('assets/professor x pfp.jpg'),
-            radius: 30,
-            // child: Icon(
-            //   Icons.person,
-            //   color: Color(0xffCCCCCC),
-            // ),
-          )
-        ],
+        actions: actions,
         backgroundColor: backgroundColor,
       ),
     );
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

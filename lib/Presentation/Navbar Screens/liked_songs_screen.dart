@@ -24,7 +24,17 @@ class _LikedSongsScreenState extends State<LikedSongsScreen> {
     var likedProvider = Provider.of<LikedProvider>(context);
 
     return Scaffold(
-      appBar: AppBarWidget(title: 'LIKED SONGS'),
+      appBar: AppBarWidget(
+          title: 'LIKED SONGS',
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              Icons.arrow_back,
+              color: whiteColor,
+            ),
+          )),
       body: Column(
         children: [
           Expanded(
@@ -147,12 +157,14 @@ void handleSongTap({
       await musicPlayerProvider
           .fetchSong(searchProvider.selectedSongName, searchProvider)
           .then((value) => musicPlayerProvider.updateDuration(value));
+      musicPlayerProvider.togglePlayPause();
+
     } else {
       await musicPlayerProvider
           .fetchSong(searchProvider.selectedSongName, searchProvider)
           .then((value) => musicPlayerProvider.updateDuration(value));
-      musicPlayerProvider.player.play();
-      musicPlayerProvider.playSong();
+      await musicPlayerProvider.player.play();
+      musicPlayerProvider.togglePlayPause();
     }
   }
 }

@@ -36,7 +36,24 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppBarWidget(title: 'HOME'),
+      appBar: AppBarWidget(
+        title: 'HOME',
+        leading: ImageIcon(
+          const AssetImage("assets/grapewine logo medium.png"),
+          color: purpleColor,
+        ),
+        actions: const [
+           CircleAvatar(
+            backgroundColor: Color(0xffE6E6E6),
+            backgroundImage: AssetImage('assets/professor x pfp.jpg'),
+            radius: 30,
+            // child: Icon(
+            //   Icons.person,
+            //   color: Color(0xffCCCCCC),
+            // ),
+          )
+        ],
+      ),
       body: _isDataFetched
           ? SingleChildScrollView(
               scrollDirection: Axis.vertical,
@@ -46,7 +63,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 12, right: 12,top: 10),
+                      padding:
+                          const EdgeInsets.only(left: 12, right: 12, top: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

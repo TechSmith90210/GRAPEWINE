@@ -9,10 +9,10 @@ import '../../Colors/colors.dart';
 import 'package:miniplayer/miniplayer.dart';
 
 String truncateText(String text, int maxLength) {
-  if (text != null && text.length > maxLength) {
+  if (text.isNotEmpty && text.length > maxLength) {
     return text.substring(0, maxLength) + '...';
   }
-  return text!;
+  return text;
 }
 
 class MiniPlayerWidget extends StatefulWidget {
@@ -23,35 +23,44 @@ class MiniPlayerWidget extends StatefulWidget {
 }
 
 class _MiniPlayerWidgetState extends State<MiniPlayerWidget> {
-  static double _minPlayerHeight = 70;
-  final ValueNotifier<double> playerExpandProgress =
-      ValueNotifier(_minPlayerHeight);
+  static const double _minPlayerHeight = 70;
+  final ValueNotifier<double> playerExpandProgress = ValueNotifier(_minPlayerHeight);
 
   @override
   Widget build(BuildContext context) {
-    var navigationProvider =
-        Provider.of<NavigatorProvider>(context, listen: true);
+    var navigationProvider = Provider.of<NavigatorProvider>(context, listen: true);
     var searchProvider = Provider.of<SearchProvider>(context);
+    var musicPlayerProvider = Provider.of<MusicPlayerProvider>(context);
+
     String? image = searchProvider.selectedSongImage;
     String? songName = searchProvider.selectedSongName;
     String? songArtist = searchProvider.selectedSongArtist;
 
-    MiniplayerController miniplayerController =
-        Provider.of<MiniplayerController>(context);
+    MiniplayerController miniplayerController = Provider.of<MiniplayerController>(context);
 
     return GestureDetector(
       onTap: () {
-        if (navigationProvider.isExpanded) {
-          miniplayerController.animateToHeight(state: PanelState.MIN);
+        // Check if the song is loaded
+        if (musicPlayerProvider.player.isPlaying.hasValue && musicPlayerProvider.player.isPlaying.value == true) {
+          if (navigationProvider.isExpanded) {
+            miniplayerController.animateToHeight(state: PanelState.MIN);
+          } else {
+            miniplayerController.animateToHeight(state: PanelState.MAX);
+          }
+          navigationProvider.setExpanded();
         } else {
-          miniplayerController.animateToHeight(state: PanelState.MAX);
+          // Optionally show a loading indicator or a message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Please wait while the song is loading...'),
+              duration: Duration(seconds: 2),
+            ),
+          );
         }
-        navigationProvider.setExpanded();
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
         child: Miniplayer(
-          // Curves.easeInOutCubicEmphasized = fast
           curve: Curves.linearToEaseOut,
           controller: miniplayerController,
           valueNotifier: playerExpandProgress,
@@ -59,14 +68,13 @@ class _MiniPlayerWidgetState extends State<MiniPlayerWidget> {
           maxHeight: MediaQuery.of(context).size.height,
           builder: (height, percentage) {
             if (height <= _minPlayerHeight + 50.0) {
-              return _buildCollapsedWidget(
-                  searchProvider, image, songArtist, songName);
+              return _buildCollapsedWidget(searchProvider, image, songArtist, songName);
             }
-            if (navigationProvider.isExpanded == true) {
+            if (navigationProvider.isExpanded) {
               return const SongPlayer2Screen();
             } else {
-              return const Center(
-                child: Text('No Song Selected'),
+              return  Center(
+                child: Text('No Song Selected',style: TextStyle(color: whiteColor),),
               );
             }
           },
@@ -75,15 +83,13 @@ class _MiniPlayerWidgetState extends State<MiniPlayerWidget> {
     );
   }
 
-  Widget _buildCollapsedWidget(SearchProvider searchProvider, String? image,
-      String? songArtist, String? songName) {
+  Widget _buildCollapsedWidget(SearchProvider searchProvider, String? image, String? songArtist, String? songName) {
     return Container(
-      padding: EdgeInsets.only(left: 17, right: 17),
+      padding: const EdgeInsets.symmetric(horizontal: 17),
       height: 80,
       decoration: BoxDecoration(
         color: blackColor,
-        // borderRadius: BorderRadius.circular(5)
-        border: Border(
+        border:  Border(
           bottom: BorderSide(color: blackColor, width: 0),
           top: BorderSide(color: blackColor, width: 0),
         ),
@@ -100,14 +106,14 @@ class _MiniPlayerWidgetState extends State<MiniPlayerWidget> {
                   image: DecorationImage(
                     image: NetworkImage(
                       image ??
-                          'https://thefader-res.cloudinary.com/private_images/w_760,c_limit,f_auto,q_auto:best/unnamed-25_wgts3q/steve-lacy-solo-album-apollo-xxi.jpg', // Provide default image URL here
+                          'https://thefader-res.cloudinary.com/private_images/w_760,c_limit,f_auto,q_auto:best/unnamed-25_wgts3q/steve-lacy-solo-album-apollo-xxi.jpg',
                     ),
                     fit: BoxFit.cover,
                   ),
                   borderRadius: BorderRadius.circular(3),
                 ),
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,24 +140,23 @@ class _MiniPlayerWidgetState extends State<MiniPlayerWidget> {
             builder: (context, provider, child) {
               return IconButton(
                 onPressed: () async {
-                  provider.playSong();
-                  if (provider.player.isPlaying.value == true) {
+                  if (provider.player.isPlaying.valueOrNull == true) {
                     await provider.player.pause();
                   } else {
                     await provider.player.play();
                   }
-                  setState(() {});
+                  setState(() {}); // Update UI based on the new state
                 },
                 icon: Icon(
-                  provider.isPlayed
-                      ? Icons.play_arrow_rounded
-                      : Icons.pause_rounded,
+                  provider.player.isPlaying.valueOrNull == true
+                      ? Icons.pause_rounded
+                      : Icons.play_arrow_rounded,
                   color: whiteColor,
                   size: 35,
                 ),
               );
             },
-          )
+          ),
         ],
       ),
     );
