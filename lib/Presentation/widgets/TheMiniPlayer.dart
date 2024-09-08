@@ -108,9 +108,9 @@ class _TheMiniPlayerWidgetState extends State<TheMiniPlayerWidget> {
           borderRadius: BorderRadius.circular(4),
         ),
       ),
-      title: Container(
+      title: SizedBox(
         height: 20,
-        width: 60,
+        width: 30,
         child: provider.selectedSongName.length >= 30
             ? Marquee(
                 showFadingOnlyWhenScrolling: true,
@@ -119,7 +119,7 @@ class _TheMiniPlayerWidgetState extends State<TheMiniPlayerWidget> {
                     color: whiteColor, fontSize: 11, fontWeight: FontWeight.w600),
                 scrollAxis: Axis.horizontal,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                blankSpace: 8.0,
+                blankSpace: 40.0,
                 velocity: 50.0,
                 accelerationDuration: const Duration(seconds: 2),
                 accelerationCurve: Curves.linear,
@@ -139,8 +139,8 @@ class _TheMiniPlayerWidgetState extends State<TheMiniPlayerWidget> {
       ),
       subtitle: Container(
         height: 20,
-        width: 60,
-        child: provider.selectedSongArtist.length >= 20
+        width: 30,
+        child: provider.selectedSongArtist.length >= 30
             ? Marquee(
                 showFadingOnlyWhenScrolling: true,
                 text: provider.selectedSongArtist,
@@ -150,7 +150,7 @@ class _TheMiniPlayerWidgetState extends State<TheMiniPlayerWidget> {
                     fontWeight: FontWeight.w600),
                 scrollAxis: Axis.horizontal,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                blankSpace: 8.0,
+                blankSpace:  32.0,
                 velocity: 50.0,
                 accelerationDuration: const Duration(seconds: 2),
                 accelerationCurve: Curves.linear,

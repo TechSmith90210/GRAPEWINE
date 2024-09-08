@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Presentation/Navbar%20Screens/liked_songs_screen.dart';
@@ -20,15 +21,17 @@ class LibraryScreen extends StatelessWidget {
           const AssetImage("assets/grapewine logo medium.png"),
           color: purpleColor,
         ),
-        actions: const [
-          CircleAvatar(
-            backgroundColor: Color(0xffE6E6E6),
-            backgroundImage: AssetImage('assets/professor x pfp.jpg'),
-            radius: 30,
-            // child: Icon(
-            //   Icons.person,
-            //   color: Color(0xffCCCCCC),
-            // ),
+        actions:  [
+          Padding(
+            padding: EdgeInsets.only(right: 7),
+            child: CircleAvatar(
+              backgroundColor: Color(0xffE6E6E6),
+              backgroundImage: NetworkImage('https://i.pinimg.com/736x/3c/fe/f0/3cfef07dbfaea9c6229ec5eb4aa305e0.jpg'),
+              // child: Icon(
+              //   Icons.person,
+              //   color: Color(0xffCCCCCC),
+              // ),
+            ),
           )
         ],
       ),

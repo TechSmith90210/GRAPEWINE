@@ -73,7 +73,9 @@ class _LikedSongsScreenState extends State<LikedSongsScreen> {
                       ),
                     ),
                     title: Text(
-                      song.songName,
+                      softWrap: false,
+                      maxLines: 1,
+                      truncateText(song.songName, 30 ),
                       style: GoogleFonts.redHatDisplay(
                         color: whiteColor,
                         fontWeight: FontWeight.w700,
@@ -82,7 +84,7 @@ class _LikedSongsScreenState extends State<LikedSongsScreen> {
                     ),
                     subtitle: Text(
                       softWrap: false,
-                      truncateText(song.artists, 23),
+                      truncateText(song.artists, 30),
                       style: GoogleFonts.redHatDisplay(
                         color: darkgreyColor,
                         fontWeight: FontWeight.w600,
@@ -147,17 +149,15 @@ void handleSongTap({
       : 'https://assets.audiomack.com/default-song-image.png';
   searchProvider.setSongImage(songCover);
 
-
-    if (musicPlayerProvider.player.isPlaying.value) {
-      await musicPlayerProvider.player.stop();
-      await musicPlayerProvider
-          .fetchSong(searchProvider.selectedSongName, searchProvider)
-          .then((value) => musicPlayerProvider.updateDuration(value));
-
-    } else {
-      await musicPlayerProvider
-          .fetchSong(searchProvider.selectedSongName, searchProvider)
-          .then((value) => musicPlayerProvider.updateDuration(value));
-      await musicPlayerProvider.player.play();
+  if (musicPlayerProvider.player.isPlaying.value) {
+    await musicPlayerProvider.player.stop();
+    await musicPlayerProvider
+        .fetchSong(searchProvider.selectedSongName, searchProvider)
+        .then((value) => musicPlayerProvider.updateDuration(value));
+  } else {
+    await musicPlayerProvider
+        .fetchSong(searchProvider.selectedSongName, searchProvider)
+        .then((value) => musicPlayerProvider.updateDuration(value));
+    await musicPlayerProvider.player.play();
   }
 }

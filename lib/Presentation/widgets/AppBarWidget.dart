@@ -23,6 +23,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
     EdgeInsets margin = calculateMargin(screenHeight, screenWidth);
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8),
+
       child: AppBar(
         leading: leading,
         centerTitle: true,

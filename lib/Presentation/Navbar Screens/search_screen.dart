@@ -4,7 +4,6 @@ import 'package:grapewine_music_app/Presentation/widgets/AppBarWidget.dart';
 import 'package:grapewine_music_app/Presentation/widgets/SearchBarWidget.dart';
 import 'package:grapewine_music_app/Presentation/widgets/SearchSongWidget.dart';
 import '../../Colors/colors.dart';
-import '../widgets/TrendingBubbleWidget.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
@@ -31,14 +30,16 @@ class SearchScreen extends StatelessWidget {
             color: purpleColor,
           ),
           actions: const [
-            CircleAvatar(
-              backgroundColor: Color(0xffE6E6E6),
-              backgroundImage: AssetImage('assets/professor x pfp.jpg'),
-              radius: 30,
-              // child: Icon(
-              //   Icons.person,
-              //   color: Color(0xffCCCCCC),
-              // ),
+            Padding(
+              padding: EdgeInsets.only(right: 7),
+              child: CircleAvatar(
+                backgroundColor: Color(0xffE6E6E6),
+                backgroundImage: NetworkImage('https://i.pinimg.com/736x/3c/fe/f0/3cfef07dbfaea9c6229ec5eb4aa305e0.jpg'),
+                // child: Icon(
+                //   Icons.person,
+                //   color: Color(0xffCCCCCC),
+                // ),
+              ),
             )
           ],
         ),
