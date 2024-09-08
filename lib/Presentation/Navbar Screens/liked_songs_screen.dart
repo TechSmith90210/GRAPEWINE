@@ -147,24 +147,17 @@ void handleSongTap({
       : 'https://assets.audiomack.com/default-song-image.png';
   searchProvider.setSongImage(songCover);
 
-  if (!navigatorProvider.isExpanded) {
-    navigatorProvider.setExpanded();
-  }
 
-  if (musicPlayerProvider.isInitialized) {
     if (musicPlayerProvider.player.isPlaying.value) {
       await musicPlayerProvider.player.stop();
       await musicPlayerProvider
           .fetchSong(searchProvider.selectedSongName, searchProvider)
           .then((value) => musicPlayerProvider.updateDuration(value));
-      musicPlayerProvider.togglePlayPause();
 
     } else {
       await musicPlayerProvider
           .fetchSong(searchProvider.selectedSongName, searchProvider)
           .then((value) => musicPlayerProvider.updateDuration(value));
       await musicPlayerProvider.player.play();
-      musicPlayerProvider.togglePlayPause();
-    }
   }
 }

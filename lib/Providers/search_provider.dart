@@ -6,7 +6,7 @@ import 'accessToken_provider.dart';
 
 class SearchProvider with ChangeNotifier {
   //selected song details
-  String _selectedSongName = '';
+  String _selectedSongName = 'Unknown Song';
   String get selectedSongName => _selectedSongName;
   void setSongName(String newSongName) {
     _selectedSongName = newSongName;
@@ -14,14 +14,14 @@ class SearchProvider with ChangeNotifier {
   }
 
   //selected song album name
-  String _selectedSongAlbum = '';
+  String _selectedSongAlbum = 'Unknown Album';
   String get selectedSongAlbum => _selectedSongAlbum;
   void setSongAlbumName(String newAlbumName) {
     _selectedSongAlbum = newAlbumName;
     notifyListeners();
   }
 
-  String _selectedSongArtist = '';
+  String _selectedSongArtist = 'Unknown Artist';
   String get selectedSongArtist => _selectedSongArtist;
   void setSongArtist(String newArtist) {
     _selectedSongArtist = newArtist;
@@ -35,7 +35,7 @@ class SearchProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  String _selectedSongImage = '';
+  String _selectedSongImage = 'https://assets.audiomack.com/default-song-image.png';
   String get selectedSongImage => _selectedSongImage;
   void setSongImage(String newSongImage) {
     _selectedSongImage = newSongImage;

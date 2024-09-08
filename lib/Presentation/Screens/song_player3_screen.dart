@@ -3,11 +3,14 @@ import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
+import 'package:grapewine_music_app/Providers/like_provider.dart';
+import 'package:grapewine_music_app/Providers/search_provider.dart';
 import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart';
 
 import '../../Providers/musicPlayer_provider.dart';
-import '../widgets/MiniPlayerWidget.dart'; // Add this package to your pubspec.yaml for Marquee
+import '../../models/song_model.dart';
+import '../widgets/MiniPlayerWidget.dart';
 
 class SongPlayer3Screen extends StatefulWidget {
   @override
@@ -15,49 +18,61 @@ class SongPlayer3Screen extends StatefulWidget {
 }
 
 class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
-  bool _isLyrics = false;
   bool _isLiked = false;
-  String _songName = "Sample Song";
-  String _songArtist = "Sample Artist";
-  String _songImage =
-      "https://play-lh.googleusercontent.com/tpok7cXkBGfq75J1xF9Lc5e7ydTix7bKN0Ehy87VP2555f8Lnmoj1KJNUlQ7-4lIYg4";
   Color _whiteColor = Colors.white;
   Color _darkGreyColor = Colors.grey;
   Color _purpleColor = Colors.purple;
-  bool _isPlaying = false;
 
-  Duration _currentPosition = Duration.zero;
-  Duration _duration = Duration(minutes: 3, seconds: 30);
+  Future<void> _initialize() async {
+    var searchProvider = Provider.of<SearchProvider>(context, listen: false);
+    var musicPlayerProvider =
+        Provider.of<MusicPlayerProvider>(context, listen: false);
 
-  void _toggleLyrics() {
-    setState(() {
-      _isLyrics = !_isLyrics;
-    });
+    if (!musicPlayerProvider.firstSongRun &&
+        !musicPlayerProvider.isInitialized &&
+        !musicPlayerProvider.player.isPlaying.value) {
+      musicPlayerProvider.setFirstSongRun();
+      musicPlayerProvider.setInitialization();
+      if (searchProvider.selectedSongName != "Unknown Song") {
+        await musicPlayerProvider.fetchSong(
+            searchProvider.selectedSongName, searchProvider);
+      }
+    }
   }
 
-  void _playPause() {
-    setState(() {
-      _isPlaying = !_isPlaying;
-    });
-  }
+  late Future<void> _initializationFuture;
 
-  void _seek(Duration newPosition) {
-    setState(() {
-      _currentPosition = newPosition;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _initializationFuture = _initialize();
   }
 
   @override
   Widget build(BuildContext context) {
+    var searchProvider = Provider.of<SearchProvider>(context);
+    var musicPlayerProvider = Provider.of<MusicPlayerProvider>(context);
+    var likeProvider = Provider.of<LikedProvider>(context);
+
+    String songName = searchProvider.selectedSongName;
+    String songArtist = searchProvider.selectedSongArtist;
+    String songImageUrl = searchProvider.selectedSongImage;
+
+    Song song = Song(
+        imageUrl: songImageUrl,
+        songName: songName,
+        artists: songArtist,
+        duration:
+            musicPlayerProvider.player.current.valueOrNull?.audio.duration ??
+                Duration.zero);
+
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10),
+      margin: EdgeInsets.symmetric(horizontal: 15),
       child: Column(
         children: [
-          const SizedBox(
-            height: 30,
-          ),
+          const SizedBox(height: 30),
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,19 +85,23 @@ class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
                         fontWeight: FontWeight.w400),
                   ),
                   Text(
-                    truncateText(_songName ?? 'No Song Playing', 50),
+                    truncateText(songName, 50),
                     style: GoogleFonts.redHatDisplay(
                         color: yellowColor,
                         fontSize: 12,
                         fontWeight: FontWeight.w500),
                   ),
                 ],
-              )
+              ),
+              IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.keyboard_arrow_down_rounded,
+                    color: whiteColor,
+                  ))
             ],
           ),
-          SizedBox(
-            height: 15,
-          ),
+          SizedBox(height: 15),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -91,209 +110,200 @@ class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
                 width: 350,
                 decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: NetworkImage(_songImage ??
-                          'https://play-lh.googleusercontent.com/tpok7cXkBGfq75J1xF9Lc5e7ydTix7bKN0Ehy87VP2555f8Lnmoj1KJNUlQ7-4lIYg4'),
+                      image: NetworkImage(songImageUrl),
                       fit: BoxFit.cover,
                     ),
                     borderRadius: BorderRadius.circular(11)),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Expanded(
-                    child: ListTile(
-                      title: _songName.length >= 30
-                          ? Marquee(
-                              showFadingOnlyWhenScrolling: true,
-                              text: _songName,
-                              style: GoogleFonts.redHatDisplay(
-                                  color: _whiteColor,
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w700),
-                              scrollAxis: Axis.horizontal,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              blankSpace: 10.0,
-                              velocity: 50.0,
-                              accelerationDuration: Duration(seconds: 2),
-                              accelerationCurve: Curves.linear,
-                              decelerationDuration: Duration(milliseconds: 0),
-                              decelerationCurve: Curves.easeOut,
-                              pauseAfterRound: Duration(seconds: 7),
-                              startAfter: Duration(seconds: 7),
-                            )
-                          : Text(
-                              _songName,
-                              style: GoogleFonts.redHatDisplay(
-                                  color: _whiteColor,
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w700),
-                            ),
-                      subtitle: _songArtist.length >= 30
-                          ? Marquee(
-                              showFadingOnlyWhenScrolling: true,
-                              text: _songArtist,
-                              style: GoogleFonts.redHatDisplay(
-                                  color: _darkGreyColor,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500),
-                              scrollAxis: Axis.horizontal,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              blankSpace: 10.0,
-                              velocity: 50.0,
-                              accelerationDuration: const Duration(seconds: 1),
-                              accelerationCurve: Curves.linear,
-                              decelerationDuration: Duration(milliseconds: 500),
-                              decelerationCurve: Curves.easeOut,
-                              textDirection: TextDirection.ltr,
-                              pauseAfterRound: const Duration(seconds: 10),
-                              startAfter: const Duration(seconds: 7),
-                            )
-                          : Text(
-                              _songArtist,
-                              style: GoogleFonts.redHatDisplay(
-                                  color: _darkGreyColor,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                      contentPadding: EdgeInsets.all(3),
-                      trailing: IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                            _isLiked
-                                ? Icons.favorite_rounded
-                                : Icons.favorite_border_rounded,
-                            color: _isLiked ? _purpleColor : _whiteColor,
-                            size: 30),
-                        color: _whiteColor,
-                      ),
-                    ),
-                  ),
-                ],
+              ListTile(
+                title: SizedBox(
+                  height: 30,
+                  width: 180,
+                  child: songName.length >= 20
+                      ? Marquee(
+                          showFadingOnlyWhenScrolling: true,
+                          text: songName,
+                          style: GoogleFonts.redHatDisplay(
+                              color: _whiteColor,
+                              fontSize: 22,
+                              fontWeight: FontWeight.w700),
+                          scrollAxis: Axis.horizontal,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          blankSpace: 8.0,
+                          velocity: 50.0,
+                          accelerationDuration: const Duration(seconds: 2),
+                          accelerationCurve: Curves.linear,
+                          decelerationDuration: Duration(milliseconds: 0),
+                          decelerationCurve: Curves.easeOut,
+                          pauseAfterRound: Duration(seconds: 7),
+                          startAfter: Duration(seconds: 7),
+                        )
+                      : Text(
+                          songName,
+                          style: GoogleFonts.redHatDisplay(
+                              color: _whiteColor,
+                              fontSize: 22,
+                              fontWeight: FontWeight.w700),
+                        ),
+                ),
+                subtitle: Container(
+                  height: 20,
+                  width: 140,
+                  child: songArtist.length >= 60
+                      ? Marquee(
+                          showFadingOnlyWhenScrolling: true,
+                          text: songArtist,
+                          style: GoogleFonts.redHatDisplay(
+                              color: _darkGreyColor,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500),
+                          scrollAxis: Axis.horizontal,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          blankSpace: 15.0,
+                          velocity: 50.0,
+                          accelerationDuration: const Duration(seconds: 1),
+                          accelerationCurve: Curves.linear,
+                          decelerationDuration: Duration(milliseconds: 500),
+                          decelerationCurve: Curves.easeOut,
+                          textDirection: TextDirection.ltr,
+                          pauseAfterRound: const Duration(seconds: 10),
+                          startAfter: const Duration(seconds: 7),
+                        )
+                      : Text(
+                          songArtist,
+                          style: GoogleFonts.redHatDisplay(
+                              color: _darkGreyColor,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500),
+                        ),
+                ),
+                contentPadding: EdgeInsets.all(3),
+                trailing: IconButton(
+                  onPressed: () {
+                    likeProvider.toggleLike(song);
+                  },
+                  icon: Icon(
+                      likeProvider.isLiked(song)
+                          ? Icons.favorite_rounded
+                          : Icons.favorite_border_rounded,
+                      color: likeProvider.isLiked(song)
+                          ? _purpleColor
+                          : _whiteColor,
+                      size: 30),
+                  color: _whiteColor,
+                ),
               ),
             ],
           ),
+          const SizedBox(height: 20),
           SizedBox(
-            height: 20,
-          ),
-          Consumer<MusicPlayerProvider>(
-            builder: (context, provider, child) {
-              return SizedBox(
-                width: 330,
-                child: StreamBuilder<Playing?>(
-                  stream: provider.player.current,
-                  builder: (context, snapshot) {
-                    final playing = snapshot.data;
-                    final duration = playing?.audio.duration ?? Duration.zero;
+            width: 330,
+            child: StreamBuilder<Playing?>(
+              stream: musicPlayerProvider.player.current,
+              builder: (context, snapshot) {
+                final playing = snapshot.data;
+                final duration = playing?.audio.duration ?? Duration.zero;
 
-                    return StreamBuilder<Duration>(
-                      stream: provider.player.currentPosition,
-                      builder: (context, positionSnapshot) {
-                        final position = positionSnapshot.data ?? Duration.zero;
+                return StreamBuilder<Duration>(
+                  stream: musicPlayerProvider.player.currentPosition,
+                  builder: (context, positionSnapshot) {
+                    final position = positionSnapshot.data ?? Duration.zero;
 
-                        return ProgressBar(
-                          progress: position,
-                          total: duration,
-                          progressBarColor: whiteColor,
-                          thumbColor: whiteColor,
-                          baseBarColor: backgroundColor,
-                          bufferedBarColor: greyColor,
-                          thumbGlowColor: purpleColor,
-                          thumbGlowRadius: 0,
-                          timeLabelPadding: 5,
-                          timeLabelTextStyle: GoogleFonts.redHatDisplay(
-                            color: greyColor,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          onSeek: (newPosition) {
-                            provider.player.seek(newPosition);
-                            print('Player seeked to $newPosition');
-                          },
-                        );
+                    return ProgressBar(
+                      progress: position,
+                      total: duration,
+                      progressBarColor: whiteColor,
+                      thumbColor: whiteColor,
+                      baseBarColor: backgroundColor,
+                      bufferedBarColor: greyColor,
+                      thumbGlowColor: purpleColor,
+                      thumbGlowRadius: 0,
+                      timeLabelPadding: 5,
+                      timeLabelTextStyle: GoogleFonts.redHatDisplay(
+                        color: greyColor,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      onSeek: (newPosition) {
+                        musicPlayerProvider.player.seek(newPosition);
+                        print('Player seeked to $newPosition');
                       },
                     );
                   },
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
-          Consumer<MusicPlayerProvider>(builder: (context, provider, child) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.lyrics,
-                      color: whiteColor,
-                    )),
-                IconButton(
-                  onPressed: () async {
-                    try {
-                      // Ensure the player is playing or paused before seeking
-                      if (provider.player.isPlaying.value ||
-                          provider.player.isPlaying.value == false) {
-                        var currentPosition =
-                            provider.player.currentPosition.value;
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.lyrics,
+                  color: whiteColor,
+                ),
+              ),
+              IconButton(
+                onPressed: () async {
+                  try {
+                    var currentPosition =
+                        musicPlayerProvider.player.currentPosition.valueOrNull;
 
-                        // Safely handle the currentPosition and subtract 5 seconds
-                        var rewindedPosition = (currentPosition != null)
-                            ? currentPosition - const Duration(seconds: 5)
-                            : Duration.zero;
+                    var rewindedPosition = (currentPosition != null)
+                        ? currentPosition - const Duration(seconds: 5)
+                        : Duration.zero;
 
-                        // Ensure rewindedPosition does not go below zero
-                        if (rewindedPosition < Duration.zero) {
-                          rewindedPosition = Duration.zero;
-                        }
-
-                        // Seek to the new position
-                        await provider.player.seek(rewindedPosition);
-                      }
-                    } catch (e) {
-                      // Handle any errors during the seek operation
-                      print('Error seeking position: $e');
+                    if (rewindedPosition < Duration.zero) {
+                      rewindedPosition = Duration.zero;
                     }
-                  },
-                  icon: Icon(
-                    Icons.skip_previous_rounded,
-                    size: 55,
-                  ),
+
+                    await musicPlayerProvider.player.seek(rewindedPosition);
+                  } catch (e) {
+                    print('Error seeking position: $e');
+                  }
+                },
+                icon: const Icon(
+                  Icons.skip_previous_rounded,
+                  size: 55,
+                ),
+                color: whiteColor,
+              ),
+              IconButton(
+                onPressed: () async {
+                  musicPlayerProvider.togglePlayPause();
+                  if (musicPlayerProvider.player.isPlaying.valueOrNull ==
+                      true) {
+                    await musicPlayerProvider.player.pause();
+                  } else {
+                    await musicPlayerProvider.player.play();
+                  }
+                  setState(() {});
+                },
+                icon: Icon(
+                  musicPlayerProvider.player.isPlaying.valueOrNull == true
+                      ? Icons.pause_rounded
+                      : Icons.play_arrow_rounded,
+                  size: 65,
+                ),
+                color: whiteColor,
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.skip_next_rounded,
+                  size: 55,
+                ),
+                color: whiteColor,
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.queue_music,
                   color: whiteColor,
                 ),
-                IconButton(
-                  onPressed: () async {
-                    provider.togglePlayPause();
-                    if (provider.player.isPlaying.value == true) {
-                      await provider.player.pause();
-                    } else {
-                      await provider.player.play();
-                    }
-                    setState(() {});
-                  },
-                  icon: Icon(
-                    provider.player.isPlaying.value
-                        ? Icons.pause_rounded
-                        : Icons.play_arrow_rounded,
-                    size: 65,
-                  ),
-                  color: whiteColor,
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.skip_next_rounded,
-                    size: 55,
-                  ),
-                  color: whiteColor,
-                ),
-                IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.queue_music,
-                      color: whiteColor,
-                    ))
-              ],
-            );
-          }),
+              ),
+            ],
+          ),
         ],
       ),
     );

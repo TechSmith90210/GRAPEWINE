@@ -2,17 +2,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Presentation/Screens/song_player3_screen.dart';
+import 'package:grapewine_music_app/Providers/musicPlayer_provider.dart';
+import 'package:grapewine_music_app/Providers/search_provider.dart';
+import 'package:provider/provider.dart';
+
 import '../../Colors/colors.dart';
 
 class TheMiniPlayerWidget extends StatefulWidget {
-  const TheMiniPlayerWidget({Key? key}) : super(key: key);
+  const TheMiniPlayerWidget({super.key});
 
   @override
   _TheMiniPlayerWidgetState createState() => _TheMiniPlayerWidgetState();
 }
 
 class _TheMiniPlayerWidgetState extends State<TheMiniPlayerWidget> {
-  final DraggableScrollableController _draggableController = DraggableScrollableController();
+  final DraggableScrollableController _draggableController =
+      DraggableScrollableController();
 
   @override
   void dispose() {
@@ -46,10 +51,11 @@ class _TheMiniPlayerWidgetState extends State<TheMiniPlayerWidget> {
       builder: (context, scrollController) {
         return LayoutBuilder(
           builder: (context, constraints) {
-            bool isExpanded = constraints.maxHeight > MediaQuery.of(context).size.height * 0.2;
+            bool isExpanded = constraints.maxHeight >
+                MediaQuery.of(context).size.height * 0.2;
 
             return Container(
-              decoration:  BoxDecoration(
+              decoration: BoxDecoration(
                 color: Colors.black,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
               ),
@@ -59,7 +65,7 @@ class _TheMiniPlayerWidgetState extends State<TheMiniPlayerWidget> {
                   if (!isExpanded)
                     GestureDetector(
                       onTap: _toggleSheet,
-                      child: _buildMinimizedPlayer(),
+                      child: _buildMinimizedPlayer(context),
                     ),
                   // Expanded player content
                   Expanded(
@@ -83,16 +89,18 @@ class _TheMiniPlayerWidgetState extends State<TheMiniPlayerWidget> {
     );
   }
 
-  Widget _buildMinimizedPlayer() {
+  Widget _buildMinimizedPlayer(BuildContext context) {
+    var provider = Provider.of<SearchProvider>(context);
+    var musicProvider = Provider.of<MusicPlayerProvider>(context);
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
       leading: Container(
         height: 45,
         width: 45,
         decoration: BoxDecoration(
-          image: const DecorationImage(
+          image: DecorationImage(
             image: NetworkImage(
-              'https://play-lh.googleusercontent.com/tpok7cXkBGfq75J1xF9Lc5e7ydTix7bKN0Ehy87VP2555f8Lnmoj1KJNUlQ7-4lIYg4',
+              provider.selectedSongImage,
             ),
             fit: BoxFit.cover,
           ),
@@ -100,7 +108,7 @@ class _TheMiniPlayerWidgetState extends State<TheMiniPlayerWidget> {
         ),
       ),
       title: Text(
-        'Unknown Song',
+        provider.selectedSongName,
         style: GoogleFonts.redHatDisplay(
           color: Colors.white,
           fontWeight: FontWeight.w600,
@@ -108,7 +116,7 @@ class _TheMiniPlayerWidgetState extends State<TheMiniPlayerWidget> {
         ),
       ),
       subtitle: Text(
-        'Unknown Artist',
+        provider.selectedSongArtist,
         style: GoogleFonts.redHatDisplay(
           color: Colors.grey,
           fontWeight: FontWeight.w600,
@@ -119,10 +127,23 @@ class _TheMiniPlayerWidgetState extends State<TheMiniPlayerWidget> {
         onPressed: () {
           // Handle play/pause logic here
         },
-        icon: const Icon(
-          Icons.play_arrow_rounded,
-          color: Colors.white,
-          size: 35,
+        icon: IconButton(
+          onPressed: () async {
+            musicProvider.togglePlayPause();
+            if (musicProvider.player.isPlaying.valueOrNull == true) {
+              await musicProvider.player.pause();
+            } else {
+              await musicProvider.player.play();
+            }
+            setState(() {});
+          },
+          icon: Icon(
+            musicProvider.player.isPlaying.valueOrNull == true
+                ? Icons.pause_rounded
+                : Icons.play_arrow_rounded,
+            size: 30,
+          ),
+          color: whiteColor,
         ),
       ),
     );

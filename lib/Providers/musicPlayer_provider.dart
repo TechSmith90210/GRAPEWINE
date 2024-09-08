@@ -85,9 +85,9 @@ class MusicPlayerProvider with ChangeNotifier {
     final yt = YoutubeExplode();
     try {
       // Stop player if it's currently playing
-      if (_player.isPlaying.value) {
-        await _player.stop();
-      }
+      // if (_player.isPlaying.value) {
+      //   await _player.stop();
+      // }
 
       var songName = provider.selectedSongDetails;
       if (songName != null) {
