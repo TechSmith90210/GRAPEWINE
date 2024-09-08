@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Presentation/Screens/song_player3_screen.dart';
 import 'package:grapewine_music_app/Providers/musicPlayer_provider.dart';
 import 'package:grapewine_music_app/Providers/search_provider.dart';
+import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart';
 
 import '../../Colors/colors.dart';
@@ -107,21 +108,65 @@ class _TheMiniPlayerWidgetState extends State<TheMiniPlayerWidget> {
           borderRadius: BorderRadius.circular(4),
         ),
       ),
-      title: Text(
-        provider.selectedSongName,
-        style: GoogleFonts.redHatDisplay(
-          color: Colors.white,
-          fontWeight: FontWeight.w600,
-          fontSize: 13,
-        ),
+      title: Container(
+        height: 20,
+        width: 60,
+        child: provider.selectedSongName.length >= 30
+            ? Marquee(
+                showFadingOnlyWhenScrolling: true,
+                text: provider.selectedSongName,
+                style: GoogleFonts.redHatDisplay(
+                    color: whiteColor, fontSize: 11, fontWeight: FontWeight.w600),
+                scrollAxis: Axis.horizontal,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                blankSpace: 8.0,
+                velocity: 50.0,
+                accelerationDuration: const Duration(seconds: 2),
+                accelerationCurve: Curves.linear,
+                decelerationDuration: const Duration(milliseconds: 0),
+                decelerationCurve: Curves.easeOut,
+                pauseAfterRound: const Duration(seconds: 7),
+                startAfter: const Duration(seconds: 7),
+              )
+            : Text(
+                provider.selectedSongName,
+                style: GoogleFonts.redHatDisplay(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                ),
+              ),
       ),
-      subtitle: Text(
-        provider.selectedSongArtist,
-        style: GoogleFonts.redHatDisplay(
-          color: Colors.grey,
-          fontWeight: FontWeight.w600,
-          fontSize: 11,
-        ),
+      subtitle: Container(
+        height: 20,
+        width: 60,
+        child: provider.selectedSongArtist.length >= 20
+            ? Marquee(
+                showFadingOnlyWhenScrolling: true,
+                text: provider.selectedSongArtist,
+                style: GoogleFonts.redHatDisplay(
+                    color: greyColor,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600),
+                scrollAxis: Axis.horizontal,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                blankSpace: 8.0,
+                velocity: 50.0,
+                accelerationDuration: const Duration(seconds: 2),
+                accelerationCurve: Curves.linear,
+                decelerationDuration: const Duration(milliseconds: 0),
+                decelerationCurve: Curves.easeOut,
+                pauseAfterRound: const Duration(seconds: 7),
+                startAfter: const Duration(seconds: 7),
+              )
+            : Text(
+                provider.selectedSongArtist,
+                style: GoogleFonts.redHatDisplay(
+                  color: greyColor,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 11,
+                ),
+              ),
       ),
       trailing: IconButton(
         onPressed: () {
