@@ -385,7 +385,7 @@ class _SongPlayer2ScreenState extends State<SongPlayer2Screen>
                             },
                             icon: Icon(
                               provider.player.isPlaying.value
-                                  ?  Icons.pause_rounded
+                                  ? Icons.pause_rounded
                                   : Icons.play_arrow_rounded,
                               size: 65,
                             ),

@@ -76,7 +76,7 @@ class MyApp extends StatelessWidget {
         ),
         // initialRoute: '/splash',
         // routes: routes,
-        home: const TheMusicPages(),
+        home:  TheMusicPages(),
         // home: SearchPage2(),
         // home: SplashScreen()
         // home: DemoPage(),

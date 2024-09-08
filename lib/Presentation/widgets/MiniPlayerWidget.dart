@@ -32,16 +32,18 @@ class _MiniPlayerWidgetState extends State<MiniPlayerWidget> {
     var searchProvider = Provider.of<SearchProvider>(context);
     var musicPlayerProvider = Provider.of<MusicPlayerProvider>(context);
 
-    String? image = searchProvider.selectedSongImage;
-    String? songName = searchProvider.selectedSongName;
-    String? songArtist = searchProvider.selectedSongArtist;
+    // Provide default values if the data is null
+    String image = searchProvider.selectedSongImage ??
+        'https://thefader-res.cloudinary.com/private_images/w_760,c_limit,f_auto,q_auto:best/unnamed-25_wgts3q/steve-lacy-solo-album-apollo-xxi.jpg';
+    String songName = searchProvider.selectedSongName ?? 'No Song Playing';
+    String songArtist = searchProvider.selectedSongArtist ?? 'Unknown Artist';
 
     MiniplayerController miniplayerController = Provider.of<MiniplayerController>(context);
 
     return GestureDetector(
       onTap: () {
-        // Check if the song is loaded
-        if (musicPlayerProvider.player.isPlaying.hasValue && musicPlayerProvider.player.isPlaying.value == true) {
+        if (musicPlayerProvider.player.isPlaying.hasValue &&
+            musicPlayerProvider.player.isPlaying.value == true) {
           if (navigationProvider.isExpanded) {
             miniplayerController.animateToHeight(state: PanelState.MIN);
           } else {
@@ -49,9 +51,9 @@ class _MiniPlayerWidgetState extends State<MiniPlayerWidget> {
           }
           navigationProvider.setExpanded();
         } else {
-          // Optionally show a loading indicator or a message
+          // Show a loading indicator or a message
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
+            const SnackBar(
               content: Text('Please wait while the song is loading...'),
               duration: Duration(seconds: 2),
             ),
@@ -68,13 +70,16 @@ class _MiniPlayerWidgetState extends State<MiniPlayerWidget> {
           maxHeight: MediaQuery.of(context).size.height,
           builder: (height, percentage) {
             if (height <= _minPlayerHeight + 50.0) {
-              return _buildCollapsedWidget(searchProvider, image, songArtist, songName);
+              return _buildCollapsedWidget(image, songArtist, songName);
             }
             if (navigationProvider.isExpanded) {
               return const SongPlayer2Screen();
             } else {
-              return  Center(
-                child: Text('No Song Selected',style: TextStyle(color: whiteColor),),
+              return Center(
+                child: Text(
+                  'No Song Selected',
+                  style: TextStyle(color: whiteColor),
+                ),
               );
             }
           },
@@ -83,13 +88,13 @@ class _MiniPlayerWidgetState extends State<MiniPlayerWidget> {
     );
   }
 
-  Widget _buildCollapsedWidget(SearchProvider searchProvider, String? image, String? songArtist, String? songName) {
+  Widget _buildCollapsedWidget(String image, String songArtist, String songName) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 17),
       height: 80,
       decoration: BoxDecoration(
         color: blackColor,
-        border:  Border(
+        border: Border(
           bottom: BorderSide(color: blackColor, width: 0),
           top: BorderSide(color: blackColor, width: 0),
         ),
@@ -104,10 +109,7 @@ class _MiniPlayerWidgetState extends State<MiniPlayerWidget> {
                 width: 50,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: NetworkImage(
-                      image ??
-                          'https://thefader-res.cloudinary.com/private_images/w_760,c_limit,f_auto,q_auto:best/unnamed-25_wgts3q/steve-lacy-solo-album-apollo-xxi.jpg',
-                    ),
+                    image: NetworkImage(image),
                     fit: BoxFit.cover,
                   ),
                   borderRadius: BorderRadius.circular(3),
@@ -119,18 +121,20 @@ class _MiniPlayerWidgetState extends State<MiniPlayerWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    truncateText(songName ?? 'No Song Playing', 25),
+                    truncateText(songName, 25),
                     style: GoogleFonts.redHatDisplay(
-                        color: whiteColor,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14),
+                      color: whiteColor,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
                   ),
                   Text(
-                    truncateText(songArtist ?? 'Steve Lacy', 30),
+                    truncateText(songArtist, 30),
                     style: GoogleFonts.redHatDisplay(
-                        color: greyColor,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 12),
+                      color: greyColor,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                    ),
                   ),
                 ],
               ),
