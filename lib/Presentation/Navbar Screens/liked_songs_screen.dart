@@ -132,8 +132,6 @@ void handleSongTap({
   required Song song,
 }) async {
   var searchProvider = Provider.of<SearchProvider>(context, listen: false);
-  var navigatorProvider =
-      Provider.of<NavigatorProvider>(context, listen: false);
   var musicPlayerProvider =
       Provider.of<MusicPlayerProvider>(context, listen: false);
 

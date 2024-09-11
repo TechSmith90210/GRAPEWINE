@@ -9,6 +9,8 @@ Color eerieblackColor = const Color(0xFF151515);
 Color blackColor = const Color(0xFF050909);
 Color greenColor = const Color(0xFF577F2B);
 Color darkgreyColor = const Color(0xFF979797);
+Color greyishColor = const Color(0xFF2C2C2C);
+
 Color yellowColor = const Color(0xFFFFE15D);
 Color linearColor1 = const Color(0xFFD72571);
 

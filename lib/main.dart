@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Presentation/Screens/Routes/routes.dart';
 import 'package:grapewine_music_app/Presentation/Screens/demo.dart';
@@ -22,7 +21,6 @@ import 'package:grapewine_music_app/Providers/password_provider.dart';
 import 'package:grapewine_music_app/Providers/search_provider.dart';
 import 'package:grapewine_music_app/Providers/signup_provider.dart';
 import 'package:just_audio_background/just_audio_background.dart';
-import 'package:miniplayer/miniplayer.dart';
 import 'package:provider/provider.dart';
 import 'Colors/colors.dart';
 import 'Providers/navigator_provider.dart';
@@ -63,7 +61,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => NewFindsProvider()),
         ChangeNotifierProvider(create: (context) => AccessTokenProvider()),
         ChangeNotifierProvider(create: (context) => SearchProvider()),
-        ChangeNotifierProvider(create: (context) => MiniplayerController()),
       ],
       child: MaterialApp(
         title: 'GrapeWine Demo',
