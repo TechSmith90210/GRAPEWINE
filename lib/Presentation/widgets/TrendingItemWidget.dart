@@ -12,12 +12,12 @@ class Trendingitemwidget extends StatelessWidget {
   final VoidCallback onTap;
 
   const Trendingitemwidget({
-    Key? key,
+    super.key,
     required this.imageUrl,
     required this.title,
     required this.artist,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +132,8 @@ class _TrendingSongsScrollableListState
                   imageUrl: artistImages[index],
                   songName: artistSongNames[index],
                   artists: artistNames[index]);
-          },
+              handleSongTap(context: context, song: song);
+            },
           );
         },
       ),

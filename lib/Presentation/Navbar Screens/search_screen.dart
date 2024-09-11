@@ -13,18 +13,6 @@ class SearchScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> artistNames = [
-      'Ed Sheeran',
-      'Ariana Grande',
-      'Drake',
-      'Taylor Swift',
-      'The Weeknd',
-      'Beyoncé',
-      'Kanye West',
-      'Dua Lipa',
-      'Ice Spice'
-    ];
-
     return Scaffold(
         appBar: AppBarWidget(
           title: 'SEARCH',

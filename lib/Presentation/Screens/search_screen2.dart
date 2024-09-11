@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
 import 'package:grapewine_music_app/Data/Api/MusicApisss.dart';
-import 'package:grapewine_music_app/Presentation/widgets/SearchBarWidget.dart';
 import 'package:grapewine_music_app/Presentation/widgets/SearchResultsWidget.dart';
-import 'package:grapewine_music_app/Presentation/widgets/SearchSongWidget.dart';
 
-import '../../Providers/search_provider.dart';
-import '../widgets/SearchWidgets.dart';
 
 class SearchPage2 extends StatefulWidget {
   const SearchPage2({super.key});
@@ -65,6 +60,7 @@ class _SearchPage2State extends State<SearchPage2> {
               focusNode: _focusNode,
               decoration: InputDecoration(
                 border: InputBorder.none,
+                contentPadding: const EdgeInsets.only(bottom: 6),
                 hintText: 'Search Song',
                 hintStyle: GoogleFonts.redHatDisplay(
                     fontWeight: FontWeight.w700,
