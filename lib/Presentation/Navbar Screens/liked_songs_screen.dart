@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:grapewine_music_app/Data/services/local_helper.dart';
 import 'package:grapewine_music_app/Presentation/widgets/MiniPlayerWidget.dart';
+import 'package:grapewine_music_app/models/recently_played.dart';
+import 'package:grapewine_music_app/models/song.dart';
+import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
 
 import '../../Providers/like_provider.dart'; // Adjust the path as needed
@@ -75,7 +79,7 @@ class _LikedSongsScreenState extends State<LikedSongsScreen> {
                     title: Text(
                       softWrap: false,
                       maxLines: 1,
-                      truncateText(song.songName, 30 ),
+                      truncateText(song.songName, 30),
                       style: GoogleFonts.redHatDisplay(
                         color: whiteColor,
                         fontWeight: FontWeight.w700,
@@ -134,6 +138,7 @@ void handleSongTap({
   var searchProvider = Provider.of<SearchProvider>(context, listen: false);
   var musicPlayerProvider =
       Provider.of<MusicPlayerProvider>(context, listen: false);
+  var localhelper = Provider.of<LocalHelper>(context, listen: false);
 
   searchProvider.setSongName(song.songName);
   searchProvider.setSongArtist(song.artists);
@@ -149,13 +154,31 @@ void handleSongTap({
 
   if (musicPlayerProvider.player.isPlaying.value) {
     await musicPlayerProvider.player.stop();
+    // Create SongModel instance if needed
+    SongModel songModel = SongModel()
+      ..imageUrl = song.imageUrl
+      ..songName = song.songName
+      ..artists = song.artists;
+    await localhelper.addSongToRecentlyPlayed(songModel);
+    // final recentlyPlayedEntry = await localhelper.isar!.recentlyPlayeds
+    //     .where()
+    //     .filter()
+    //     .idEqualTo(songModel.id)
+    //     .findFirst();
+    // print(recentlyPlayedEntry);
     await musicPlayerProvider
         .fetchSong(searchProvider.selectedSongName, searchProvider)
         .then((value) => musicPlayerProvider.updateDuration(value));
   } else {
+    // Create SongModel instance if needed
+    SongModel songModel = SongModel()
+      ..imageUrl = song.imageUrl
+      ..songName = song.songName
+      ..artists = song.artists;
     await musicPlayerProvider
         .fetchSong(searchProvider.selectedSongName, searchProvider)
         .then((value) => musicPlayerProvider.updateDuration(value));
     await musicPlayerProvider.player.play();
+    await localhelper.addSongToRecentlyPlayed(songModel);
   }
 }
