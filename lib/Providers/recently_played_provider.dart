@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:grapewine_music_app/models/recently_played.dart';
 
+import '../Data/services/local_helper.dart';
+
 class RecentlyPlayedProvider extends ChangeNotifier {
   // Maximum number of recently played songs
   static const int maxRecentlyPlayedSongs = 10;
@@ -21,17 +23,25 @@ class RecentlyPlayedProvider extends ChangeNotifier {
     if (_recentlyPlayedSongs.length >= maxRecentlyPlayedSongs) {
       _recentlyPlayedSongs.removeLast();
     }
-    if(isRecentlyPlayed(song)){
+    if (isRecentlyPlayed(song)) {
       removeRecentlyPlayed(song);
     }
 
     _recentlyPlayedSongs.add(song);
     notifyListeners();
+    // Sync with Isar
+    LocalHelper().saveRecentlyPlayedSongs(_recentlyPlayedSongs).then(
+          (value) => print('synced with isar'),
+        );
   }
 
   void removeRecentlyPlayed(RecentlyPlayed song) {
     _recentlyPlayedSongs.remove(song);
     notifyListeners();
+    // Sync with Isar
+    LocalHelper().saveRecentlyPlayedSongs(_recentlyPlayedSongs).then(
+          (value) => print('synced with isar'),
+        );
   }
 
   void toggleRecentlyPlayed(RecentlyPlayed song) {
@@ -42,5 +52,22 @@ class RecentlyPlayedProvider extends ChangeNotifier {
       addRecentlyPlayed(song);
     }
     notifyListeners();
+  }
+
+  // Method to load recently played songs from Isar and update provider
+  Future<void> loadFromIsar(LocalHelper localHelper) async {
+    try {
+      final songs = await localHelper.loadRecentlyPlayedSongs();
+      _recentlyPlayedSongs = songs;
+      notifyListeners();
+    } catch (e) {
+      print("Error loading recently played songs: $e");
+    }
+  }
+
+  void clearRecentlyPlayed() {
+    _recentlyPlayedSongs.clear();
+    notifyListeners();
+    LocalHelper().saveRecentlyPlayedSongs([]);
   }
 }

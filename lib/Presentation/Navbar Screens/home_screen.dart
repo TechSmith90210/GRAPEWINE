@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
+import 'package:grapewine_music_app/Presentation/Screens/recently_played_screen.dart';
 import 'package:grapewine_music_app/Presentation/widgets/AppBarWidget.dart';
 import 'package:grapewine_music_app/Presentation/widgets/NewReleasesWidget.dart';
 import 'package:grapewine_music_app/Presentation/widgets/RecentlyPlayedWidget.dart';
+import 'package:provider/provider.dart';
 import '../../Data/Api/MusicApisss.dart';
+import '../../Providers/recently_played_provider.dart';
 import '../widgets/SongsumightlikeWidget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -47,7 +50,8 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: EdgeInsets.only(right: 7),
             child: CircleAvatar(
               backgroundColor: Color(0xffE6E6E6),
-              backgroundImage: NetworkImage('https://i.pinimg.com/736x/3c/fe/f0/3cfef07dbfaea9c6229ec5eb4aa305e0.jpg'),
+              backgroundImage: NetworkImage(
+                  'https://i.pinimg.com/736x/3c/fe/f0/3cfef07dbfaea9c6229ec5eb4aa305e0.jpg'),
               // child: Icon(
               //   Icons.person,
               //   color: Color(0xffCCCCCC),
@@ -78,36 +82,50 @@ class _HomeScreenState extends State<HomeScreen> {
                               fontSize: 14,
                             ),
                           ),
-                          Row(
-                            children: [
-                              Text(
-                                'View All',
-                                style: GoogleFonts.redHatDisplay(
-                                  color: whiteColor,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 12,
+                          GestureDetector(
+                            onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const RecentlyPlayedScreen(),
+                                )),
+                            child: Row(
+                              children: [
+                                Text(
+                                  'View All',
+                                  style: GoogleFonts.redHatDisplay(
+                                    color: whiteColor,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12,
+                                  ),
                                 ),
-                              ),
-                              Icon(
-                                Icons.arrow_right,
-                                color: whiteColor,
-                              )
-                            ],
+                                Icon(
+                                  Icons.arrow_right,
+                                  color: whiteColor,
+                                )
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
                     SizedBox(
-                      height: 90,
-                      child: ListView.builder(
-                        itemCount: 6,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          return PreviouslyPlayedCircleWidget(index: index);
+                      height: 95,
+                      child: Consumer<RecentlyPlayedProvider>(
+                        builder: (context, recentlyPlayedProvider, child) {
+                          final recentlyPlayedSongs = recentlyPlayedProvider.recentlyPlayedSongs.reversed.toList();
+
+                          return ListView.builder(
+                            itemCount: recentlyPlayedSongs.length > 6 ? 6 : recentlyPlayedSongs.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              return PreviouslyPlayedCircleWidget(index: index);
+                            },
+                          );
                         },
                       ),
                     ),
-                   const SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Padding(

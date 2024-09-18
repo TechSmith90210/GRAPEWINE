@@ -187,7 +187,12 @@ class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
                       LikedSongs song = LikedSongs()
                         ..songName = songName
                         ..songArtists = songArtist
-                        ..songImageUrl = songImageUrl;
+                        ..songImageUrl = songImageUrl
+                        ..songDuration = musicPlayerProvider
+                                .player.current.valueOrNull?.audio.duration
+                                .toString() ??
+                            Duration.zero.toString()
+                        ..likedAt = DateTime.now();
                       var isLiked = value.isLiked(song);
                       return IconButton(
                         icon: Icon(

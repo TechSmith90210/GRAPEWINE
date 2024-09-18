@@ -1,30 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:grapewine_music_app/Presentation/Navbar%20Screens/liked_songs_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../Colors/colors.dart';
-import '../../Providers/albumInfo_provider.dart';
+import '../../Providers/recently_played_provider.dart';
+import '../../models/song_model.dart';
 
-class PreviouslyPlayedCircleWidget extends StatefulWidget {
+class PreviouslyPlayedCircleWidget extends StatelessWidget {
   const PreviouslyPlayedCircleWidget({super.key, required this.index});
   final int index;
-
-  @override
-  State<PreviouslyPlayedCircleWidget> createState() =>
-      _PreviouslyPlayedCircleWidgetState();
-}
-
-class _PreviouslyPlayedCircleWidgetState
-    extends State<PreviouslyPlayedCircleWidget>
-    with AutomaticKeepAliveClientMixin<PreviouslyPlayedCircleWidget> {
-  late Future<void> fetchDataFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    // Initialize the fetchDataFuture to avoid unnecessary API calls
-    fetchDataFuture = Future.value(); // No actual async fetch needed here
-  }
 
   String truncateText(String text, int maxLength) {
     if (text.length > maxLength) {
@@ -35,70 +21,76 @@ class _PreviouslyPlayedCircleWidgetState
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-    var albumInfoProvider = Provider.of<AlbumInfoProvider>(context, listen: false);
+    // Fetch the RecentlyPlayedProvider to access recently played songs
+    var recentlyPlayedProvider =
+        Provider.of<RecentlyPlayedProvider>(context, listen: false);
 
-    return FutureBuilder(
-        future: fetchDataFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            // Loading state
-            return Center(
-                child: CircularProgressIndicator(
-                  color: purpleColor,
-                ));
-          } else if (snapshot.hasError) {
-            // Error state
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            // Success state
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 13, right: 15, top: 10, bottom: 5),
-                  child: Container(
-                    height: 50,
-                    width: 94,
-                    decoration: ShapeDecoration(
-                        image: DecorationImage(
-                            image: NetworkImage(albumInfoProvider.albumCoversProviders[widget.index].toString()),
-                            fit: BoxFit.cover),
-                        shape: RoundedRectangleBorder(
-                            side: BorderSide(
-                              width: 1,
-                              strokeAlign: BorderSide.strokeAlignCenter,
-                              color: purpleColor,
-                            ),
-                            borderRadius: BorderRadius.circular(47))),
-                  ),
+    // Ensure the index is within bounds
+    if (index >= recentlyPlayedProvider.recentlyPlayedSongs.length) {
+      return Center(
+        child: Text(
+          'No Data',
+          style: TextStyle(color: whiteColor),
+        ),
+      );
+    }
+
+    // Get the recently played song data at the given index
+    final recentlyPlayedSong =
+        recentlyPlayedProvider.recentlyPlayedSongs.reversed.toList()[index];
+
+    Song song = Song(
+        imageUrl: recentlyPlayedSong.songImageUrl,
+        songName: recentlyPlayedSong.songName,
+        artists: recentlyPlayedSong.songArtists);
+
+    return Bounceable(
+      onTap: () => handleSongTap(context: context, song: song),
+      child: Column(
+        children: [
+          Padding(
+            padding:
+                const EdgeInsets.only(left: 13, right: 15, top: 10, bottom: 5),
+            child: Container(
+              height: 50,
+              width: 90,
+              decoration: ShapeDecoration(
+                image: DecorationImage(
+                  image: NetworkImage(
+                      recentlyPlayedSong.songImageUrl), // Using song's imageUrl
+                  fit: BoxFit.cover,
                 ),
-                Text(
-                  truncateText(
-                      albumInfoProvider.albumNamesProviders[widget.index].toString(),
-                      15),
-                  style: GoogleFonts.redHatDisplay(
-                    fontSize: 11,
-                    color: whiteColor,
-                    fontWeight: FontWeight.w400,
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(
+                    width: 1,
+                    strokeAlign: BorderSide.strokeAlignCenter,
+                    color: purpleColor,
                   ),
-                  overflow: TextOverflow.ellipsis,
+                  borderRadius: BorderRadius.circular(47),
                 ),
-                // Text(
-                //   truncateText(
-                //       albumInfoProvider.artistNamesProviders[widget.index].toString(),
-                //       15),
-                //   style: GoogleFonts.redHatDisplay(
-                //     fontSize: 10,
-                //     color: darkgreyColor,
-                //     fontWeight: FontWeight.w300,
-                //   ),
-                // ),
-              ],
-            );
-          }
-        });
+              ),
+            ),
+          ),
+          Text(
+            truncateText(recentlyPlayedSong.songName, 15), // Using song's name
+            style: GoogleFonts.redHatDisplay(
+              fontSize: 11,
+              color: whiteColor,
+              fontWeight: FontWeight.w500,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
+          Text(
+            truncateText(
+                recentlyPlayedSong.songArtists, 15), // Using song's artist
+            style: GoogleFonts.redHatDisplay(
+              fontSize: 10,
+              color: darkgreyColor,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ],
+      ),
+    );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

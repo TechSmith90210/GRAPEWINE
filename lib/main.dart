@@ -24,6 +24,8 @@ import 'Providers/like_provider.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  final localHelper = LocalHelper();
+  await localHelper.init();
 
   runApp(
     MultiProvider(
@@ -34,16 +36,29 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (context) => GoogleSignInProvider()),
         ChangeNotifierProvider(create: (context) => GenderProvider()),
         ChangeNotifierProvider(create: (context) => PasswordProvider()),
-        ChangeNotifierProvider(create: (context) => DateProvider(initialDate: DateTime.now())),
+        ChangeNotifierProvider(
+            create: (context) => DateProvider(initialDate: DateTime.now())),
         ChangeNotifierProvider(create: (context) => AlbumInfoProvider()),
         ChangeNotifierProvider(create: (context) => MusicPlayerProvider()),
         ChangeNotifierProvider(create: (context) => NewReleasesProvider()),
         ChangeNotifierProvider(create: (context) => NewFindsProvider()),
         ChangeNotifierProvider(create: (context) => AccessTokenProvider()),
         ChangeNotifierProvider(create: (context) => SearchProvider()),
-        ChangeNotifierProvider(create: (context) => LikedProvider()),
-        ChangeNotifierProvider(create: (context) => RecentlyPlayedProvider()),
-        ChangeNotifierProvider(create: (context) => LocalHelper()),
+        ChangeNotifierProvider(
+          create: (context) {
+            final likedProvider = LikedProvider();
+            likedProvider.loadFromIsar(localHelper);
+            return likedProvider;
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (context) {
+            final recentlyPlayedProvider = RecentlyPlayedProvider();
+            recentlyPlayedProvider.loadFromIsar(localHelper);
+            return recentlyPlayedProvider;
+          },
+        ),
+        ChangeNotifierProvider.value(value: localHelper),
       ],
       child: const MusicApp(),
     ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:grapewine_music_app/models/liked_songs.dart';
 
+import '../Data/services/local_helper.dart';
+
 class LikedProvider with ChangeNotifier {
   // A List to store liked songs
   List<LikedSongs> _likedSongs = [];
@@ -20,6 +22,11 @@ class LikedProvider with ChangeNotifier {
     if (!isLiked(song)) {
       _likedSongs.add(song);
       notifyListeners(); // Notify listeners only if a new song is added
+
+      // Sync with Isar
+      LocalHelper().saveLikedSongs(_likedSongs).then(
+            (value) => print('synced liked songs with isar'),
+          );
     }
   }
 
@@ -29,10 +36,13 @@ class LikedProvider with ChangeNotifier {
         likedSong.songName == song.songName &&
         likedSong.songArtists == song.songArtists);
     notifyListeners();
+    // Sync with Isar
+    LocalHelper().saveLikedSongs(_likedSongs).then(
+          (value) => print('synced liked songs with isar'),
+        );
   }
 
   void toggleLike(LikedSongs song) {
-
     if (isLiked(song)) {
       // Remove song from liked songs
       removeSongFromLiked(song); // Update in-memory state
@@ -47,5 +57,15 @@ class LikedProvider with ChangeNotifier {
   void clearLikedSongs() {
     _likedSongs.clear();
     notifyListeners();
+  }
+
+  // Load liked songs from Isar
+  Future<void> loadFromIsar(LocalHelper localHelper) async {
+    final songs = await localHelper.loadLikedSongs();
+
+    _likedSongs = songs;
+    notifyListeners();
+
+    print('loaded liked songs!');
   }
 }
