@@ -5,6 +5,7 @@ import 'package:grapewine_music_app/Data/services/local_helper.dart';
 import 'package:grapewine_music_app/Presentation/Screens/the_music_pages.dart';
 import 'package:grapewine_music_app/Providers/navigator_provider.dart';
 import 'package:grapewine_music_app/Providers/login_provider.dart';
+import 'package:grapewine_music_app/Providers/recently_played_provider.dart';
 import 'package:grapewine_music_app/Providers/signup_provider.dart';
 import 'package:grapewine_music_app/Providers/google_signin_provider.dart';
 import 'package:grapewine_music_app/Providers/gender_provider.dart';
@@ -23,8 +24,6 @@ import 'Providers/like_provider.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize LocalHelper
-  final localHelper = await LocalHelper.getInstance();
 
   runApp(
     MultiProvider(
@@ -37,13 +36,14 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (context) => PasswordProvider()),
         ChangeNotifierProvider(create: (context) => DateProvider(initialDate: DateTime.now())),
         ChangeNotifierProvider(create: (context) => AlbumInfoProvider()),
-        ChangeNotifierProvider(create: (context) => LikedProvider()),
         ChangeNotifierProvider(create: (context) => MusicPlayerProvider()),
         ChangeNotifierProvider(create: (context) => NewReleasesProvider()),
         ChangeNotifierProvider(create: (context) => NewFindsProvider()),
         ChangeNotifierProvider(create: (context) => AccessTokenProvider()),
         ChangeNotifierProvider(create: (context) => SearchProvider()),
-        ChangeNotifierProvider(create: (context) => localHelper), // Provide LocalHelper as ChangeNotifier
+        ChangeNotifierProvider(create: (context) => LikedProvider()),
+        ChangeNotifierProvider(create: (context) => RecentlyPlayedProvider()),
+        ChangeNotifierProvider(create: (context) => LocalHelper()),
       ],
       child: const MusicApp(),
     ),

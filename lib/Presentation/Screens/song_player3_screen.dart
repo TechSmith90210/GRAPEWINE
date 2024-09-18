@@ -3,11 +3,14 @@ import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
+import 'package:grapewine_music_app/Presentation/widgets/likeButtonWidget.dart';
 import 'package:grapewine_music_app/Providers/like_provider.dart';
 import 'package:grapewine_music_app/Providers/search_provider.dart';
+import 'package:grapewine_music_app/models/liked_songs.dart';
 import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart';
 
+import '../../Data/services/local_helper.dart';
 import '../../Providers/musicPlayer_provider.dart';
 import '../../models/song_model.dart';
 import '../widgets/MiniPlayerWidget.dart';
@@ -53,6 +56,7 @@ class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
     var searchProvider = Provider.of<SearchProvider>(context);
     var musicPlayerProvider = Provider.of<MusicPlayerProvider>(context);
     var likeProvider = Provider.of<LikedProvider>(context);
+    var localHelper = Provider.of<LocalHelper>(context);
 
     String songName = searchProvider.selectedSongName;
     String songArtist = searchProvider.selectedSongArtist;
@@ -116,83 +120,86 @@ class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
                     borderRadius: BorderRadius.circular(11)),
               ),
               ListTile(
-                title: SizedBox(
-                  height: 30,
-                  width: 180,
-                  child: songName.length >= 20
-                      ? Marquee(
-                          showFadingOnlyWhenScrolling: true,
-                          text: songName,
-                          style: GoogleFonts.redHatDisplay(
-                              color: _whiteColor,
-                              fontSize: 22,
-                              fontWeight: FontWeight.w700),
-                          scrollAxis: Axis.horizontal,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          blankSpace: 8.0,
-                          velocity: 50.0,
-                          accelerationDuration: const Duration(seconds: 2),
-                          accelerationCurve: Curves.linear,
-                          decelerationDuration: Duration(milliseconds: 0),
-                          decelerationCurve: Curves.easeOut,
-                          pauseAfterRound: Duration(seconds: 7),
-                          startAfter: Duration(seconds: 7),
-                        )
-                      : Text(
-                          songName,
-                          style: GoogleFonts.redHatDisplay(
-                              color: _whiteColor,
-                              fontSize: 22,
-                              fontWeight: FontWeight.w700),
+                  title: SizedBox(
+                    height: 30,
+                    width: 180,
+                    child: songName.length >= 20
+                        ? Marquee(
+                            showFadingOnlyWhenScrolling: true,
+                            text: songName,
+                            style: GoogleFonts.redHatDisplay(
+                                color: _whiteColor,
+                                fontSize: 22,
+                                fontWeight: FontWeight.w700),
+                            scrollAxis: Axis.horizontal,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            blankSpace: 8.0,
+                            velocity: 50.0,
+                            accelerationDuration: const Duration(seconds: 2),
+                            accelerationCurve: Curves.linear,
+                            decelerationDuration: Duration(milliseconds: 0),
+                            decelerationCurve: Curves.easeOut,
+                            pauseAfterRound: Duration(seconds: 7),
+                            startAfter: Duration(seconds: 7),
+                          )
+                        : Text(
+                            songName,
+                            style: GoogleFonts.redHatDisplay(
+                                color: _whiteColor,
+                                fontSize: 22,
+                                fontWeight: FontWeight.w700),
+                          ),
+                  ),
+                  subtitle: Container(
+                    height: 20,
+                    width: 140,
+                    child: songArtist.length >= 60
+                        ? Marquee(
+                            showFadingOnlyWhenScrolling: true,
+                            text: songArtist,
+                            style: GoogleFonts.redHatDisplay(
+                                color: _darkGreyColor,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500),
+                            scrollAxis: Axis.horizontal,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            blankSpace: 15.0,
+                            velocity: 50.0,
+                            accelerationDuration: const Duration(seconds: 1),
+                            accelerationCurve: Curves.linear,
+                            decelerationDuration: Duration(milliseconds: 500),
+                            decelerationCurve: Curves.easeOut,
+                            textDirection: TextDirection.ltr,
+                            pauseAfterRound: const Duration(seconds: 10),
+                            startAfter: const Duration(seconds: 7),
+                          )
+                        : Text(
+                            songArtist,
+                            style: GoogleFonts.redHatDisplay(
+                                color: _darkGreyColor,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500),
+                          ),
+                  ),
+                  contentPadding: const EdgeInsets.all(3),
+                  trailing: Consumer<LikedProvider>(
+                    builder: (context, value, child) {
+                      LikedSongs song = LikedSongs()
+                        ..songName = songName
+                        ..songArtists = songArtist
+                        ..songImageUrl = songImageUrl;
+                      var isLiked = value.isLiked(song);
+                      return IconButton(
+                        icon: Icon(
+                          isLiked ? Icons.favorite : Icons.favorite_border,
+                          color: isLiked ? Colors.red : Colors.grey,
                         ),
-                ),
-                subtitle: Container(
-                  height: 20,
-                  width: 140,
-                  child: songArtist.length >= 60
-                      ? Marquee(
-                          showFadingOnlyWhenScrolling: true,
-                          text: songArtist,
-                          style: GoogleFonts.redHatDisplay(
-                              color: _darkGreyColor,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500),
-                          scrollAxis: Axis.horizontal,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          blankSpace: 15.0,
-                          velocity: 50.0,
-                          accelerationDuration: const Duration(seconds: 1),
-                          accelerationCurve: Curves.linear,
-                          decelerationDuration: Duration(milliseconds: 500),
-                          decelerationCurve: Curves.easeOut,
-                          textDirection: TextDirection.ltr,
-                          pauseAfterRound: const Duration(seconds: 10),
-                          startAfter: const Duration(seconds: 7),
-                        )
-                      : Text(
-                          songArtist,
-                          style: GoogleFonts.redHatDisplay(
-                              color: _darkGreyColor,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500),
-                        ),
-                ),
-                contentPadding: EdgeInsets.all(3),
-                trailing: IconButton(
-                  onPressed: () {
-                    likeProvider.toggleLike(song);
-                  },
-                  icon: Icon(
-                      likeProvider.isLiked(song)
-                          ? Icons.favorite_rounded
-                          : Icons.favorite_border_rounded,
-                      color: likeProvider.isLiked(song)
-                          ? _purpleColor
-                          : _whiteColor,
-                      size: 30),
-                  color: _whiteColor,
-                ),
-              ),
+                        onPressed: () {
+                          value.toggleLike(song);
+                        },
+                      );
+                    },
+                  ))
             ],
           ),
           const SizedBox(height: 20),

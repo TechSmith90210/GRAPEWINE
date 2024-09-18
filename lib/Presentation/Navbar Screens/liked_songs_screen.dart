@@ -1,131 +1,135 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:grapewine_music_app/Data/services/local_helper.dart';
-import 'package:grapewine_music_app/Presentation/widgets/MiniPlayerWidget.dart';
+import 'package:grapewine_music_app/Providers/like_provider.dart';
+import 'package:grapewine_music_app/Providers/recently_played_provider.dart';
 import 'package:grapewine_music_app/models/recently_played.dart';
-import 'package:grapewine_music_app/models/song.dart';
-import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
-
-import '../../Providers/like_provider.dart'; // Adjust the path as needed
-import '../../Providers/musicPlayer_provider.dart';
-import '../../Providers/navigator_provider.dart';
-import '../../Providers/search_provider.dart';
 import '../../Colors/colors.dart';
+import '../../Providers/musicPlayer_provider.dart';
+import '../../Providers/search_provider.dart';
 import '../../models/song_model.dart';
 import '../widgets/AppBarWidget.dart';
 
-class LikedSongsScreen extends StatefulWidget {
+class LikedSongsScreen extends StatelessWidget {
   const LikedSongsScreen({super.key});
 
   @override
-  State<LikedSongsScreen> createState() => _LikedSongsScreenState();
-}
-
-class _LikedSongsScreenState extends State<LikedSongsScreen> {
-  @override
   Widget build(BuildContext context) {
-    var likedProvider = Provider.of<LikedProvider>(context);
-
     return Scaffold(
       appBar: AppBarWidget(
-          title: 'LIKED SONGS',
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
+        title: 'LIKED SONGS',
+        actions: [
+          Consumer<LikedProvider>(
+            builder: (context, likedProvider, child) {
+              final count = likedProvider
+                  .likedSongs.length; // Get the count of liked songs
+              return Text(
+                '$count',
+                style: GoogleFonts.redHatDisplay(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 14,
+                ),
+              );
             },
-            icon: Icon(
-              Icons.arrow_back,
-              color: whiteColor,
-            ),
-          )),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: likedProvider.likedSongs.length,
-              itemBuilder: (context, index) {
-                final song = likedProvider.likedSongs[index];
-
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 3),
-                  child: ListTile(
-                    tileColor: blackColor.withOpacity(0.2),
-                    onTap: () async {
-                      handleSongTap(
-                        context: context,
-                        song: Song(
-                          imageUrl: song.imageUrl,
-                          songName: song.songName,
-                          artists: song.artists,
-                        ),
-                      );
-                    },
-                    leading: Container(
-                      height: 55,
-                      width: 55,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage(
-                            song.imageUrl.isNotEmpty
-                                ? song.imageUrl
-                                : 'https://assets.audiomack.com/default-song-image.png',
-                          ),
-                          fit: BoxFit.cover,
-                        ),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
-                    title: Text(
-                      softWrap: false,
-                      maxLines: 1,
-                      truncateText(song.songName, 30),
-                      style: GoogleFonts.redHatDisplay(
-                        color: whiteColor,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 14,
-                      ),
-                    ),
-                    subtitle: Text(
-                      softWrap: false,
-                      truncateText(song.artists, 30),
-                      style: GoogleFonts.redHatDisplay(
-                        color: darkgreyColor,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 12,
-                      ),
-                    ),
-                    trailing: SizedBox(
-                      width: 120, // Adjust width as needed
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            song.duration != null
-                                ? '${song.duration!.inMinutes}:${(song.duration!.inSeconds % 60).toString().padLeft(2, '0')}'
-                                : '0:00',
-                            style: GoogleFonts.redHatDisplay(
-                              color: whiteColor,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 12,
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              // Handle more actions here
-                            },
-                            icon: const Icon(Icons.more_horiz),
-                            color: whiteColor,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
+          ),
+          IconButton(
+            onPressed: () {
+              final likeProvider =
+                  Provider.of<LikedProvider>(context, listen: false);
+              likeProvider.clearLikedSongs(); // Clear liked songs
+            },
+            icon: Icon(Icons.delete),
           ),
         ],
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            Icons.arrow_back,
+            color: whiteColor,
+          ),
+        ),
+      ),
+      body: Consumer<LikedProvider>(
+        builder: (context, likedProvider, child) {
+          final likedSongs =
+              likedProvider.likedSongs; // Access liked songs directly
+
+          if (likedSongs.isEmpty) {
+            return Center(
+              child: Text(
+                'No liked songs found',
+                style: GoogleFonts.redHatDisplay(
+                  color: whiteColor,
+                  fontSize: 16,
+                ),
+              ),
+            );
+          }
+
+          return ListView.builder(
+            itemCount: likedSongs.length,
+            itemBuilder: (context, index) {
+              final song = likedSongs[index];
+
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 3),
+                child: ListTile(
+                  tileColor: blackColor.withOpacity(0.2),
+                  onTap: () async {
+                    // Handle song tap
+                  },
+                  leading: Container(
+                    height: 55,
+                    width: 55,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage(
+                          song.songImageUrl.isNotEmpty
+                              ? song.songImageUrl
+                              : 'https://assets.audiomack.com/default-song-image.png',
+                        ),
+                        fit: BoxFit.cover,
+                      ),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                  title: Text(
+                    song.songName,
+                    softWrap: false,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.redHatDisplay(
+                      color: whiteColor,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                    ),
+                  ),
+                  subtitle: Text(
+                    song.songArtists,
+                    softWrap: false,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.redHatDisplay(
+                      color: darkgreyColor,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                    ),
+                  ),
+                  trailing: IconButton(
+                    onPressed: () {
+                      // Handle more actions here
+                    },
+                    icon: const Icon(Icons.more_horiz),
+                    color: whiteColor,
+                  ),
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }
@@ -138,7 +142,14 @@ void handleSongTap({
   var searchProvider = Provider.of<SearchProvider>(context, listen: false);
   var musicPlayerProvider =
       Provider.of<MusicPlayerProvider>(context, listen: false);
-  var localhelper = Provider.of<LocalHelper>(context, listen: false);
+
+  var recentProvider =
+      Provider.of<RecentlyPlayedProvider>(context, listen: false);
+  RecentlyPlayed recentlyPlayed = RecentlyPlayed()
+    ..songName = song.songName
+    ..songArtists = song.artists
+    ..songImageUrl = song.imageUrl
+    ..playedAt = DateTime.now();
 
   searchProvider.setSongName(song.songName);
   searchProvider.setSongArtist(song.artists);
@@ -154,31 +165,16 @@ void handleSongTap({
 
   if (musicPlayerProvider.player.isPlaying.value) {
     await musicPlayerProvider.player.stop();
-    // Create SongModel instance if needed
-    SongModel songModel = SongModel()
-      ..imageUrl = song.imageUrl
-      ..songName = song.songName
-      ..artists = song.artists;
-    await localhelper.addSongToRecentlyPlayed(songModel);
-    // final recentlyPlayedEntry = await localhelper.isar!.recentlyPlayeds
-    //     .where()
-    //     .filter()
-    //     .idEqualTo(songModel.id)
-    //     .findFirst();
-    // print(recentlyPlayedEntry);
+
     await musicPlayerProvider
         .fetchSong(searchProvider.selectedSongName, searchProvider)
         .then((value) => musicPlayerProvider.updateDuration(value));
+    recentProvider.toggleRecentlyPlayed(recentlyPlayed);
   } else {
-    // Create SongModel instance if needed
-    SongModel songModel = SongModel()
-      ..imageUrl = song.imageUrl
-      ..songName = song.songName
-      ..artists = song.artists;
     await musicPlayerProvider
         .fetchSong(searchProvider.selectedSongName, searchProvider)
         .then((value) => musicPlayerProvider.updateDuration(value));
     await musicPlayerProvider.player.play();
-    await localhelper.addSongToRecentlyPlayed(songModel);
+    recentProvider.toggleRecentlyPlayed(recentlyPlayed);
   }
 }
