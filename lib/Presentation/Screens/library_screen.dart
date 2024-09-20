@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:grapewine_music_app/Presentation/Screens/playlists_screen.dart';
 import 'package:grapewine_music_app/Providers/recently_played_provider.dart';
 import 'package:provider/provider.dart';
 import '../../Providers/like_provider.dart';
@@ -96,7 +97,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 ListTile(
                   splashColor: greyColor,
                   onTap: () {
-                    // Handle onTap for Playlists here if needed
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const PlaylistsScreen(),));
                   },
                   title: Text(
                     'Playlists',
@@ -112,9 +113,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
                   ),
                   trailing: Consumer<LikedProvider>(
                     builder: (context, likedProvider, child) {
-                      // Assuming `playlists` are managed by the same provider
                       return Text(
-                        likedProvider.likedSongs.length.toString(),
+                        '0',
                         style: GoogleFonts.redHatDisplay(
                           color: whiteColor,
                           fontWeight: FontWeight.w700,
@@ -189,7 +189,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                                     crossAxisSpacing: 16),
                             itemBuilder: (context, index) {
                               final song = songs[index];
-                              return buildRecentlyPlayedWidget(
+                              return buildSongTileWidget(
                                 cx: context,
                                 imageUrl: song.songImageUrl,
                                 songTitle: song.songName,
@@ -209,7 +209,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
   }
 }
 
-Widget buildRecentlyPlayedWidget({
+Widget buildSongTileWidget({
   required String imageUrl,
   required String songTitle,
   required String songArtist,

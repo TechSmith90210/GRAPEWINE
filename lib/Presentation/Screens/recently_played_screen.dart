@@ -58,7 +58,7 @@ class RecentlyPlayedScreen extends StatelessWidget {
                                 crossAxisSpacing: 16),
                         itemBuilder: (context, index) {
                           final song = songs[index];
-                          return buildRecentlyPlayedWidget(
+                          return buildSongTileWidget(
                             cx: context,
                             imageUrl: song.songImageUrl,
                             songTitle: song.songName,

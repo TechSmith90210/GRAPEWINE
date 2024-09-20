@@ -3,14 +3,12 @@ import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
-import 'package:grapewine_music_app/Presentation/widgets/likeButtonWidget.dart';
 import 'package:grapewine_music_app/Providers/like_provider.dart';
 import 'package:grapewine_music_app/Providers/search_provider.dart';
 import 'package:grapewine_music_app/models/liked_songs.dart';
 import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart';
 
-import '../../Data/services/local_helper.dart';
 import '../../Providers/musicPlayer_provider.dart';
 import '../../models/song_model.dart';
 import '../widgets/MiniPlayerWidget.dart';
@@ -21,10 +19,8 @@ class SongPlayer3Screen extends StatefulWidget {
 }
 
 class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
-  bool _isLiked = false;
   Color _whiteColor = Colors.white;
   Color _darkGreyColor = Colors.grey;
-  Color _purpleColor = Colors.purple;
 
   Future<void> _initialize() async {
     var searchProvider = Provider.of<SearchProvider>(context, listen: false);
@@ -55,8 +51,6 @@ class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
   Widget build(BuildContext context) {
     var searchProvider = Provider.of<SearchProvider>(context);
     var musicPlayerProvider = Provider.of<MusicPlayerProvider>(context);
-    var likeProvider = Provider.of<LikedProvider>(context);
-    var localHelper = Provider.of<LocalHelper>(context);
 
     String songName = searchProvider.selectedSongName;
     String songArtist = searchProvider.selectedSongArtist;
@@ -197,7 +191,7 @@ class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
                       return IconButton(
                         icon: Icon(
                           isLiked ? Icons.favorite : Icons.favorite_border,
-                          color: isLiked ? Colors.red : Colors.grey,
+                          color: isLiked ? purpleColor : greyColor,
                         ),
                         onPressed: () {
                           value.toggleLike(song);
