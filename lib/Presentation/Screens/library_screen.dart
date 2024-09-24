@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Presentation/Screens/playlists_screen.dart';
+import 'package:grapewine_music_app/Providers/playlist_provider.dart';
 import 'package:grapewine_music_app/Providers/recently_played_provider.dart';
 import 'package:provider/provider.dart';
 import '../../Providers/like_provider.dart';
@@ -97,7 +98,11 @@ class _LibraryScreenState extends State<LibraryScreen> {
                 ListTile(
                   splashColor: greyColor,
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const PlaylistsScreen(),));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const PlaylistsScreen(),
+                        ));
                   },
                   title: Text(
                     'Playlists',
@@ -111,10 +116,10 @@ class _LibraryScreenState extends State<LibraryScreen> {
                     Icons.queue_music,
                     color: whiteColor,
                   ),
-                  trailing: Consumer<LikedProvider>(
-                    builder: (context, likedProvider, child) {
+                  trailing: Consumer<PlaylistProvider>(
+                    builder: (context, playlistProvider, child) {
                       return Text(
-                        '0',
+                        playlistProvider.playlists.length.toString(),
                         style: GoogleFonts.redHatDisplay(
                           color: whiteColor,
                           fontWeight: FontWeight.w700,

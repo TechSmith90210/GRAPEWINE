@@ -5,6 +5,7 @@ import 'package:grapewine_music_app/Data/services/local_helper.dart';
 import 'package:grapewine_music_app/Presentation/Screens/the_music_pages.dart';
 import 'package:grapewine_music_app/Providers/navigator_provider.dart';
 import 'package:grapewine_music_app/Providers/login_provider.dart';
+import 'package:grapewine_music_app/Providers/playlist_provider.dart';
 import 'package:grapewine_music_app/Providers/recently_played_provider.dart';
 import 'package:grapewine_music_app/Providers/signup_provider.dart';
 import 'package:grapewine_music_app/Providers/google_signin_provider.dart';
@@ -59,6 +60,7 @@ Future<void> main() async {
           },
         ),
         ChangeNotifierProvider.value(value: localHelper),
+        ChangeNotifierProvider(create: (context) => PlaylistProvider(),)
       ],
       child: const MusicApp(),
     ),

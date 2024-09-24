@@ -1,23 +1,20 @@
 class PlaylistModel {
   final String playlistName;
   final String? imageUrl;
-  final int? Id;
+  final int? id;
+  final List<PlaylistSongModel> songs;
 
   PlaylistModel({
-    this.Id,
+    this.id,
+    List<PlaylistSongModel>? songs,
     this.imageUrl,
     required this.playlistName,
-  });
-}
-
-void main() {
-  PlaylistModel playlistModel = PlaylistModel(playlistName: 'hello');
-  print(playlistModel.playlistName);
+  }) : songs = songs ?? [];
 }
 
 class PlaylistSongModel {
   final int playlistId;
-  final int positionInPlaylist;
+  int positionInPlaylist;
   final String songName;
   final String songArtists;
   final String songImageUrl;
