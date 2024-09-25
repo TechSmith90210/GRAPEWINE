@@ -5,7 +5,7 @@ import 'package:grapewine_music_app/Data/services/local_helper.dart';
 import 'package:grapewine_music_app/Providers/recently_played_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../widgets/AppBarWidget.dart';
+import '../../../widgets/AppBarWidget.dart';
 import 'library_screen.dart';
 
 class RecentlyPlayedScreen extends StatelessWidget {

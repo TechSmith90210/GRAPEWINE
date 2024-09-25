@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:grapewine_music_app/Presentation/Screens/playlists_screen.dart';
+import 'package:grapewine_music_app/Presentation/Screens/music/library/playlist/playlists_screen.dart';
 import 'package:grapewine_music_app/Providers/playlist_provider.dart';
 import 'package:grapewine_music_app/Providers/recently_played_provider.dart';
 import 'package:provider/provider.dart';
-import '../../Providers/like_provider.dart';
-import '../../models/song_model.dart';
-import '../Navbar Screens/liked_songs_screen.dart';
-import '../Screens/recently_played_screen.dart';
-import '../widgets/AppBarWidget.dart';
-import '../../Colors/colors.dart';
-import '../widgets/MiniPlayerWidget.dart';
+import '../../../../Providers/like_provider.dart';
+import '../../../../models/song_model.dart';
+import 'liked_songs_screen.dart';
+import 'recently_played_screen.dart';
+import '../../../widgets/AppBarWidget.dart';
+import '../../../../Colors/colors.dart';
+import '../../../widgets/MiniPlayerWidget.dart';
 
 class LibraryScreen extends StatefulWidget {
   const LibraryScreen({super.key});
@@ -30,8 +30,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
           const AssetImage("assets/grapewine logo medium.png"),
           color: purpleColor,
         ),
-        actions: [
-          const Padding(
+        actions: const [
+           Padding(
             padding: EdgeInsets.only(right: 7),
             child: CircleAvatar(
               backgroundColor: Color(0xffE6E6E6),

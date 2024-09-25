@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import '../../Colors/colors.dart';
 import '../../models/song_model.dart';
-import '../Navbar Screens/liked_songs_screen.dart';
+import '../Screens/music/library/liked_songs_screen.dart';
 
 class Trendingitemwidget extends StatelessWidget {
   final String imageUrl;

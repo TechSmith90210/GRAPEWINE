@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:grapewine_music_app/Presentation/Navbar%20Screens/liked_songs_screen.dart';
+import 'package:grapewine_music_app/Presentation/Screens/music/library/liked_songs_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../Colors/colors.dart';

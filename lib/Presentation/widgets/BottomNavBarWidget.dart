@@ -12,7 +12,6 @@ class BottomNavBarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<NavigatorProvider>(
       builder: (context, navigatorProvider, child) {
-        bool isExpanded = navigatorProvider.isExpanded;
         return NavigationBarTheme(
           data: NavigationBarThemeData(
             backgroundColor: blackColor,

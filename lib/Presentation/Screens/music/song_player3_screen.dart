@@ -9,9 +9,9 @@ import 'package:grapewine_music_app/models/liked_songs.dart';
 import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart';
 
-import '../../Providers/musicPlayer_provider.dart';
-import '../../models/song_model.dart';
-import '../widgets/MiniPlayerWidget.dart';
+import '../../../Providers/musicPlayer_provider.dart';
+import '../../../models/song_model.dart';
+import '../../widgets/MiniPlayerWidget.dart';
 
 class SongPlayer3Screen extends StatefulWidget {
   @override

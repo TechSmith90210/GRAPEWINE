@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:google_fonts/google_fonts.dart'; // Import the Google Fonts package
-import 'package:grapewine_music_app/Presentation/Navbar%20Screens/liked_songs_screen.dart';
+import 'package:grapewine_music_app/Presentation/Screens/music/library/liked_songs_screen.dart';
 import 'package:grapewine_music_app/Presentation/widgets/AppBarWidget.dart';
 import 'package:grapewine_music_app/Presentation/widgets/SearchBarWidget.dart';
 import 'package:grapewine_music_app/Presentation/widgets/TrendingItemWidget.dart';
 import 'package:grapewine_music_app/models/song_model.dart';
-import '../../Colors/colors.dart';
+import '../../../../Colors/colors.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});

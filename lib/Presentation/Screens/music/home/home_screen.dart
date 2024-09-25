@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
-import 'package:grapewine_music_app/Presentation/Screens/recently_played_screen.dart';
+import 'package:grapewine_music_app/Presentation/Screens/music/library/recently_played_screen.dart';
 import 'package:grapewine_music_app/Presentation/widgets/AppBarWidget.dart';
 import 'package:grapewine_music_app/Presentation/widgets/NewReleasesWidget.dart';
 import 'package:grapewine_music_app/Presentation/widgets/RecentlyPlayedWidget.dart';
 import 'package:provider/provider.dart';
-import '../../Data/Api/MusicApisss.dart';
-import '../../Providers/recently_played_provider.dart';
-import '../widgets/SongsumightlikeWidget.dart';
+import '../../../../Data/Api/MusicApisss.dart';
+import '../../../../Providers/recently_played_provider.dart';
+import '../../../widgets/SongsumightlikeWidget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -31,10 +31,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _fetchAccessToken() async {
     await fetchData(context); // This will initialize the access token
-
-    setState(() {
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => setState(() {
       _isDataFetched = true; // Mark the data as fetched
-    });
+
+    }));
   }
 
   @override
@@ -114,10 +115,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: 95,
                       child: Consumer<RecentlyPlayedProvider>(
                         builder: (context, recentlyPlayedProvider, child) {
-                          final recentlyPlayedSongs = recentlyPlayedProvider.recentlyPlayedSongs.reversed.toList();
+                          final recentlyPlayedSongs = recentlyPlayedProvider
+                              .recentlyPlayedSongs.reversed
+                              .toList();
 
                           return ListView.builder(
-                            itemCount: recentlyPlayedSongs.length > 6 ? 6 : recentlyPlayedSongs.length,
+                            itemCount: recentlyPlayedSongs.length > 6
+                                ? 6
+                                : recentlyPlayedSongs.length,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
                               return PreviouslyPlayedCircleWidget(index: index);

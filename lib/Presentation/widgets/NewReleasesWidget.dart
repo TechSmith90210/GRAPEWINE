@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
-import 'package:grapewine_music_app/Presentation/Navbar%20Screens/liked_songs_screen.dart';
+import 'package:grapewine_music_app/Presentation/Screens/music/library/liked_songs_screen.dart';
 import 'package:grapewine_music_app/Providers/newReleases_provider.dart';
 import 'package:grapewine_music_app/models/song_model.dart';
 import 'package:provider/provider.dart';
@@ -19,10 +19,9 @@ class NewReleasesWidget extends StatefulWidget {
 }
 
 class _NewReleasesWidgetState extends State<NewReleasesWidget>
-    with AutomaticKeepAliveClientMixin<NewReleasesWidget> {
+     {
   @override
   Widget build(BuildContext context) {
-    super.build(context);
 
     return Consumer<NewReleasesProvider>(
       builder: (context, provider, child) {
@@ -97,6 +96,4 @@ class _NewReleasesWidgetState extends State<NewReleasesWidget>
     );
   }
 
-  @override
-  bool get wantKeepAlive => true;
 }

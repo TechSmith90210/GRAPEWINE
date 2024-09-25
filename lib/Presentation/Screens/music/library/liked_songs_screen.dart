@@ -5,11 +5,11 @@ import 'package:grapewine_music_app/Providers/like_provider.dart';
 import 'package:grapewine_music_app/Providers/recently_played_provider.dart';
 import 'package:grapewine_music_app/models/recently_played.dart';
 import 'package:provider/provider.dart';
-import '../../Colors/colors.dart';
-import '../../Providers/musicPlayer_provider.dart';
-import '../../Providers/search_provider.dart';
-import '../../models/song_model.dart';
-import '../widgets/AppBarWidget.dart';
+import '../../../../Colors/colors.dart';
+import '../../../../Providers/musicPlayer_provider.dart';
+import '../../../../Providers/search_provider.dart';
+import '../../../../models/song_model.dart';
+import '../../../widgets/AppBarWidget.dart';
 
 class LikedSongsScreen extends StatelessWidget {
   const LikedSongsScreen({super.key});
@@ -169,9 +169,9 @@ void handleSongTap({
   var searchProvider = Provider.of<SearchProvider>(context, listen: false);
   var musicPlayerProvider =
       Provider.of<MusicPlayerProvider>(context, listen: false);
-
   var recentProvider =
       Provider.of<RecentlyPlayedProvider>(context, listen: false);
+  musicPlayerProvider.setFirstSongRun();
   RecentlyPlayed recentlyPlayed = RecentlyPlayed()
     ..songName = song.songName
     ..songArtists = song.artists

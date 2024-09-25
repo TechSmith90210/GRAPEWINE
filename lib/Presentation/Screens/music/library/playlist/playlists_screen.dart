@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
-import 'package:grapewine_music_app/Presentation/Screens/create_playlist_screen.dart';
+import 'package:grapewine_music_app/Presentation/Screens/music/library/playlist/create_playlist_screen.dart';
 import 'package:grapewine_music_app/Presentation/widgets/AppBarWidget.dart';
 import 'package:grapewine_music_app/Providers/playlist_provider.dart';
 import 'package:provider/provider.dart';

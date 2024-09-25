@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
-import 'package:grapewine_music_app/Presentation/Screens/the_music_pages.dart';
+import 'package:grapewine_music_app/Presentation/Screens/music/home/the_music_pages.dart';
 import 'package:grapewine_music_app/Providers/musicPlayer_provider.dart';
 import 'package:grapewine_music_app/Providers/navigator_provider.dart';
 import 'package:grapewine_music_app/Providers/search_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/song_model.dart';
-import '../Navbar Screens/liked_songs_screen.dart';
+import '../Screens/music/library/liked_songs_screen.dart';
 
 Widget ArtistWidget(BuildContext context, int index) {
   var provider = Provider.of<SearchProvider>(context);

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:grapewine_music_app/Presentation/Screens/song_player3_screen.dart';
+import 'package:grapewine_music_app/Presentation/Screens/music/song_player3_screen.dart';
 import 'package:grapewine_music_app/Providers/musicPlayer_provider.dart';
 import 'package:grapewine_music_app/Providers/search_provider.dart';
 import 'package:marquee/marquee.dart';
@@ -180,7 +180,7 @@ class _TheMiniPlayerWidgetState extends State<TheMiniPlayerWidget> {
             } else {
               await musicProvider.player.play();
             }
-            setState(() {});
+              setState(() {});
           },
           icon: Icon(
             musicProvider.player.isPlaying.valueOrNull == true

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../Colors/colors.dart';
-import '../widgets/googleSignInWidget.dart';
-import '../../Providers/login_provider.dart';
-import '../../Providers/password_provider.dart';
+import '../../../../Colors/colors.dart';
+import '../../../../Providers/login_provider.dart';
+import '../../../../Providers/password_provider.dart';
+import '../../../../config/screen_size.dart';
 import 'package:provider/provider.dart';
-import '../../config/screen_size.dart';
+
+import '../../widgets/googleSignInWidget.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

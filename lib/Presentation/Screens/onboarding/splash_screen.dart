@@ -1,10 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:grapewine_music_app/Presentation/Screens/the_music_pages.dart';
-import '../../Colors/colors.dart';
-import '../../config/firebase_options.dart';
+import 'package:grapewine_music_app/Presentation/Screens/music/home/the_music_pages.dart';
+import '../../../config/firebase_options.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

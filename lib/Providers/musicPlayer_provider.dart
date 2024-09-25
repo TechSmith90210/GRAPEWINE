@@ -87,7 +87,6 @@ class MusicPlayerProvider with ChangeNotifier {
       // if (_player.isPlaying.value) {
       //   await _player.stop();
       // }
-
       var songName = provider.selectedSongDetails;
       if (songName != null) {
         final video = (await yt.search.search(songName)).first;

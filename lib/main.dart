@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Data/services/local_helper.dart';
-import 'package:grapewine_music_app/Presentation/Screens/the_music_pages.dart';
+import 'package:grapewine_music_app/Presentation/Screens/music/home/the_music_pages.dart';
 import 'package:grapewine_music_app/Providers/navigator_provider.dart';
 import 'package:grapewine_music_app/Providers/login_provider.dart';
 import 'package:grapewine_music_app/Providers/playlist_provider.dart';
@@ -23,7 +23,7 @@ import 'Colors/colors.dart';
 import 'Providers/like_provider.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+   WidgetsFlutterBinding.ensureInitialized();
 
   final localHelper = LocalHelper();
   await localHelper.init();
