@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grapewine_music_app/models/liked_songs.dart';
+import 'package:grapewine_music_app/models/song_model.dart';
 
 import '../Data/services/local_helper.dart';
 
@@ -11,11 +12,20 @@ class LikedProvider with ChangeNotifier {
   List<LikedSongs> get likedSongs => _likedSongs;
 
   // Method to check if a song is liked
-  bool isLiked(LikedSongs song) {
-    return _likedSongs.any((likedSong) =>
-        likedSong.songName == song.songName &&
-        likedSong.songArtists == song.songArtists);
+  bool isLiked(LikedSongs song, {Song? songModel}) {
+    if (songModel != null) {
+      // Use songModel to check if it's liked
+      return _likedSongs.any((likedSong) =>
+      likedSong.songName == songModel.songName &&
+          likedSong.songArtists == songModel.artists);
+    } else {
+      // Use the passed song parameter to check if it's liked
+      return _likedSongs.any((likedSong) =>
+      likedSong.songName == song.songName &&
+          likedSong.songArtists == song.songArtists);
+    }
   }
+
 
   // Method to add a song to liked songs, avoiding duplicates
   void addSongToLiked(LikedSongs song) {

@@ -38,7 +38,7 @@ class TheMusicPages extends StatelessWidget {
           ),
           // Draggable Scrollable Bottom Sheet for mini player
           if(musicProvider.firstSongRun)
-            TheMiniPlayerWidget()
+            const TheMiniPlayerWidget()
         ],
       ),
       bottomNavigationBar: const BottomNavBarWidget(),

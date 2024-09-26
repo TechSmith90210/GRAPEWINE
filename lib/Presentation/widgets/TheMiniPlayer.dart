@@ -49,6 +49,7 @@ class _TheMiniPlayerWidgetState extends State<TheMiniPlayerWidget> {
       initialChildSize: 0.1,
       minChildSize: 0.1,
       maxChildSize: 1.0,
+      snap: true,
       builder: (context, scrollController) {
         return LayoutBuilder(
           builder: (context, constraints) {
@@ -57,8 +58,8 @@ class _TheMiniPlayerWidgetState extends State<TheMiniPlayerWidget> {
 
             return Container(
               decoration: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                color: blackColor,
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
               ),
               child: Column(
                 children: [
@@ -116,7 +117,9 @@ class _TheMiniPlayerWidgetState extends State<TheMiniPlayerWidget> {
                 showFadingOnlyWhenScrolling: true,
                 text: provider.selectedSongName,
                 style: GoogleFonts.redHatDisplay(
-                    color: whiteColor, fontSize: 11, fontWeight: FontWeight.w600),
+                    color: whiteColor,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600),
                 scrollAxis: Axis.horizontal,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 blankSpace: 40.0,
@@ -150,7 +153,7 @@ class _TheMiniPlayerWidgetState extends State<TheMiniPlayerWidget> {
                     fontWeight: FontWeight.w600),
                 scrollAxis: Axis.horizontal,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                blankSpace:  32.0,
+                blankSpace: 32.0,
                 velocity: 50.0,
                 accelerationDuration: const Duration(seconds: 2),
                 accelerationCurve: Curves.linear,
@@ -180,7 +183,7 @@ class _TheMiniPlayerWidgetState extends State<TheMiniPlayerWidget> {
             } else {
               await musicProvider.player.play();
             }
-              setState(() {});
+            setState(() {});
           },
           icon: Icon(
             musicProvider.player.isPlaying.valueOrNull == true

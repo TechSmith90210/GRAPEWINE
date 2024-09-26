@@ -73,7 +73,8 @@ class LikedSongsScreen extends StatelessWidget {
           return ListView.builder(
             itemCount: likedSongs.length,
             itemBuilder: (context, index) {
-              final song = likedSongs[index];
+              final allLikedSongs = likedSongs.reversed.toList();
+              final song = allLikedSongs[index];
 
               return Padding(
                 padding: const EdgeInsets.only(bottom: 3),

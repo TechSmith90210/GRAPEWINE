@@ -3,6 +3,7 @@ import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
+import 'package:grapewine_music_app/Presentation/widgets/more_options_sheet.dart';
 import 'package:grapewine_music_app/Providers/like_provider.dart';
 import 'package:grapewine_music_app/Providers/search_provider.dart';
 import 'package:grapewine_music_app/models/liked_songs.dart';
@@ -64,6 +65,11 @@ class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
             musicPlayerProvider.player.current.valueOrNull?.audio.duration ??
                 Duration.zero);
 
+    LikedSongs likedSongs = LikedSongs()
+      ..songImageUrl = songImageUrl
+      ..songName = songName
+      ..songArtists = songArtist;
+
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 15),
       child: Column(
@@ -92,9 +98,26 @@ class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
                 ],
               ),
               IconButton(
-                  onPressed: () {},
+                onPressed: () {},
+                icon: Icon(Icons.keyboard_arrow_down_rounded),
+                color: greyColor,
+              ),
+              IconButton(
+                  onPressed: () {
+                    showModalBottomSheet(
+
+                      useSafeArea: true,
+                      enableDrag: true,
+                      showDragHandle: true,
+                      backgroundColor: eerieblackColor,
+                      context: context,
+                      builder: (context) {
+                        return MoreOptionsSheet(song: song);
+                      },
+                    );
+                  },
                   icon: Icon(
-                    Icons.keyboard_arrow_down_rounded,
+                    Icons.more_vert_outlined,
                     color: whiteColor,
                   ))
             ],
@@ -245,7 +268,7 @@ class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
               IconButton(
                 onPressed: () {},
                 icon: Icon(
-                  Icons.lyrics,
+                  Icons.lyrics_outlined,
                   color: whiteColor,
                 ),
               ),

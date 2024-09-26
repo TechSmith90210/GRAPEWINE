@@ -13,15 +13,15 @@ class PlaylistModel {
 }
 
 class PlaylistSongModel {
-  final int playlistId;
-  int positionInPlaylist;
+  int? playlistId;
+  int? positionInPlaylist;
   final String songName;
   final String songArtists;
   final String songImageUrl;
 
   PlaylistSongModel(
-      {required this.playlistId,
-      required this.positionInPlaylist,
+      { this.playlistId,
+      this.positionInPlaylist,
       required this.songName,
       required this.songArtists,
       required this.songImageUrl});

@@ -4,6 +4,11 @@ import 'package:grapewine_music_app/models/playlist_model.dart';
 class PlaylistProvider extends ChangeNotifier {
   final List<PlaylistModel> _playlists = [];
   List<PlaylistModel> get playlists => _playlists;
+
+  PlaylistModel getPlaylistById(int id) {
+    return playlists.firstWhere((playlist) => playlist.id == id);
+  }
+
   void createPlaylist(PlaylistModel playlistModel) {
     int newId = _playlists.isNotEmpty
         ? _playlists.map((e) => e.id!).reduce(

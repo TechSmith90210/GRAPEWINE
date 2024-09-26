@@ -3,10 +3,13 @@ import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
 import 'package:grapewine_music_app/Presentation/Screens/music/library/playlist/create_playlist_screen.dart';
+import 'package:grapewine_music_app/Presentation/Screens/music/library/playlist/play_playlist_screen.dart';
 import 'package:grapewine_music_app/Presentation/widgets/AppBarWidget.dart';
 import 'package:grapewine_music_app/Providers/playlist_provider.dart';
 import 'package:provider/provider.dart';
-import 'dart:io'; // Import for File
+import 'dart:io';
+
+import '../../../../../models/playlist_model.dart'; // Import for File
 
 class PlaylistsScreen extends StatelessWidget {
   const PlaylistsScreen({super.key});
@@ -55,6 +58,7 @@ class PlaylistsScreen extends StatelessWidget {
                     return PlaylistSongTileWidget(
                       playlistName: playlist.playlistName,
                       imageUrl: playlist.imageUrl.toString(),
+                      playlistModel: playlist,
                     );
                   },
                   itemCount: playlists.length,
@@ -74,17 +78,23 @@ class PlaylistsScreen extends StatelessWidget {
 class PlaylistSongTileWidget extends StatelessWidget {
   final String playlistName;
   final String imageUrl;
-
-  const PlaylistSongTileWidget({
-    super.key,
-    required this.playlistName,
-    required this.imageUrl,
-  });
+  final PlaylistModel playlistModel;
+  const PlaylistSongTileWidget(
+      {super.key,
+      required this.playlistName,
+      required this.imageUrl,
+      required this.playlistModel});
 
   @override
   Widget build(BuildContext context) {
     return Bounceable(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PlayPlaylistScreen(playlist: playlistModel),
+            ));
+      },
       child: Padding(
         padding: const EdgeInsets.only(left: 13, right: 5, top: 10, bottom: 5),
         child: Column(
