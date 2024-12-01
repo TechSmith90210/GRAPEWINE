@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
+import 'package:provider/provider.dart';
+import 'dart:math';
 
 import '../../Providers/search_provider.dart';
 import 'SearchWidgets.dart';
@@ -20,13 +22,14 @@ class SearchResultsListWidget extends StatefulWidget {
 class _SearchResultsListWidgetState extends State<SearchResultsListWidget> {
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<SearchProvider>(context,listen: false);
     return FutureBuilder(
       future: searchFor(context, widget.query),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           return Expanded(
             child: ListView.builder(
-              itemCount: 30,
+              itemCount: min(provider.searchTrackNames.length, 30),
               itemBuilder: (context, index) {
                 // var imageUrl =
                 //     provider.searchArtistImages[index].toString();

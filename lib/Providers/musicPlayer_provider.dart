@@ -1,7 +1,10 @@
-import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:assets_audio_player/assets_audio_player.dart'
+    as just; // Use 'just' prefix
 import 'package:flutter/foundation.dart';
 import 'package:grapewine_music_app/Providers/search_provider.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
+
+import '../models/song_model.dart';
 
 class MusicPlayerProvider with ChangeNotifier {
   bool _firstSongRun = false;
@@ -53,11 +56,12 @@ class MusicPlayerProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  late AssetsAudioPlayer _player = AssetsAudioPlayer();
-  AssetsAudioPlayer get player => _player;
+  late just.AssetsAudioPlayer _player =
+      just.AssetsAudioPlayer(); // Use just prefix
+  just.AssetsAudioPlayer get player => _player;
 
   void getNewPlayer() {
-    _player = AssetsAudioPlayer();
+    _player = just.AssetsAudioPlayer(); // Reinitialize with just prefix
     notifyListeners();
   }
 
@@ -79,14 +83,11 @@ class MusicPlayerProvider with ChangeNotifier {
 
   Uri? audioUrl;
 
+  // Fetch a single song
   Future<Duration?> fetchSong(
       String theSongName, SearchProvider provider) async {
     final yt = YoutubeExplode();
     try {
-      // Stop player if it's currently playing
-      // if (_player.isPlaying.value) {
-      //   await _player.stop();
-      // }
       var songName = provider.selectedSongDetails;
       if (songName != null) {
         final video = (await yt.search.search(songName)).first;
@@ -94,48 +95,44 @@ class MusicPlayerProvider with ChangeNotifier {
         var manifest = await yt.videos.streamsClient.getManifest(videoId);
         audioUrl = manifest.audioOnly.first.url;
 
-        // Dispose of previous player instance if necessary
         if (_player != null) {
           await _player.dispose();
         }
 
-        // Reinitialize the player
-        _player = AssetsAudioPlayer();
+        _player = just.AssetsAudioPlayer(); // Reinitialize with just prefix
 
-        try {
-          await _player.open(
-              Audio.network(audioUrl.toString(),
-                  metas: Metas(
-                      title: provider.selectedSongName,
-                      artist: provider.selectedSongArtist,
-                      album: provider.selectedSongAlbum,
-                      image: MetasImage(
-                          path: provider.selectedSongImage,
-                          type: ImageType.network))),
-              showNotification: true,
-              respectSilentMode: true,
-              autoStart: true,
-              playInBackground: PlayInBackground.enabled,
-              notificationSettings: NotificationSettings(
-                seekBarEnabled: true,
-                // stopEnabled: true,
-                playPauseEnabled: true,
-                customPlayPauseAction: (player) async {
-                  if (player.isPlaying.value) {
-                    await player.pause();
-                    togglePlayPause(); // Ensure state is updated
-                  } else {
-                    await player.play();
-                    togglePlayPause(); // Ensure state is updated
-                  }
-                },
-              ));
+        await _player.open(
+          just.Audio.network(audioUrl.toString(), // Use just prefix for Audio
+              metas: just.Metas(
+                title: provider.selectedSongName,
+                artist: provider.selectedSongArtist,
+                album: provider.selectedSongAlbum,
+                image: just.MetasImage(
+                  path: provider.selectedSongImage,
+                  type: just.ImageType.network, // Use just prefix for ImageType
+                ),
+              )),
+          showNotification: true,
+          respectSilentMode: true,
+          autoStart: true,
+          playInBackground: just.PlayInBackground.enabled, // Use just prefix
+          notificationSettings: just.NotificationSettings(
+            seekBarEnabled: true,
+            playPauseEnabled: true,
+            customPlayPauseAction: (player) async {
+              if (player.isPlaying.value) {
+                await player.pause();
+                togglePlayPause(); // Ensure state is updated
+              } else {
+                await player.play();
+                togglePlayPause(); // Ensure state is updated
+              }
+            },
+          ),
+        );
 
-          notifyListeners();
-          return video.duration;
-        } on AssetsAudioPlayerError catch (e) {
-          print('Error during audio playback: $e');
-        }
+        notifyListeners();
+        return video.duration;
       }
     } catch (e) {
       if (kDebugMode) {
@@ -143,5 +140,105 @@ class MusicPlayerProvider with ChangeNotifier {
       }
     }
     return null;
+  }
+
+  Future<void> fetchPlaylist(
+      List<Song> playlist, SearchProvider provider) async {
+    final yt = YoutubeExplode();
+    try {
+      List<just.Audio> audioList = []; // Use just prefix for Audio list
+
+      // Loop through each song in the playlist
+      for (var song in playlist) {
+        var songName = song.songName;
+        if (songName != null) {
+          final video = (await yt.search.search(songName)).first;
+          final videoId = video.id.value;
+          var manifest = await yt.videos.streamsClient.getManifest(videoId);
+          audioUrl = manifest.audioOnly.first.url;
+
+          // Create the Audio object for each song in the playlist
+          just.Audio audio = just.Audio.network(
+            audioUrl.toString(),
+            metas: just.Metas(
+              title: song.songName,
+              artist: song.artists,
+              album: 'album',
+              image: just.MetasImage(
+                path: song.imageUrl,
+                type: just.ImageType.network, // Use just prefix for ImageType
+              ),
+            ),
+          );
+          audioList.add(audio);
+        }
+      }
+
+      // Open the playlist using just prefix
+      await _player.open(
+        just.Playlist(audios: audioList), // Use just prefix for Playlist
+        loopMode:
+            just.LoopMode.playlist, // Loop the full playlist with just prefix
+        showNotification: true,
+        respectSilentMode: true,
+        autoStart: true,
+        playInBackground: just.PlayInBackground.enabled, // Use just prefix
+        notificationSettings: just.NotificationSettings(
+          seekBarEnabled: true,
+          playPauseEnabled: true,
+          customNextAction: (player) async {
+            await _player.next(stopIfLast: true); // Use just prefix for next
+            final currentSongMetas = _player.current.value!.audio.audio.metas;
+
+            // Update the SearchProvider with the current song's title, artists, and image
+            provider.setSongName(currentSongMetas.title!);
+            provider.setSongArtist(currentSongMetas.artist!);
+            provider.setSongImage(currentSongMetas.image!.path);
+          },
+          customPrevAction: (player) async {
+            await _player.previous(); // Use just prefix for next
+            final currentSongMetas = _player.current.value!.audio.audio.metas;
+
+            // Update the SearchProvider with the current song's title, artists, and image
+            provider.setSongName(currentSongMetas.title!);
+            provider.setSongArtist(currentSongMetas.artist!);
+            provider.setSongImage(currentSongMetas.image!.path);
+          },
+          customPlayPauseAction: (player) async {
+            if (player.isPlaying.value) {
+              await player.pause();
+              togglePlayPause(); // Ensure state is updated
+            } else {
+              await player.play();
+              togglePlayPause(); // Ensure state is updated
+            }
+          },
+        ),
+      );
+
+      // Set the song details for the current song in the playlist
+      // Get the current song's metadata
+      final currentSongMetas = _player.playlist!.audios.first.metas;
+
+      // Update the provider with the current song's title and artist
+      provider.setSongName(currentSongMetas.title!);
+      provider.setSongArtist(currentSongMetas.artist!);
+      provider.setSongImage(currentSongMetas.image!.path);
+
+      // Notify listeners to update the UI
+      provider.notifyListeners();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error fetching playlist: $e');
+      }
+    }
+  }
+
+  // Functions for controlling playlist
+
+  void playAtIndex(int index) {
+    if (_player.isPlaying.value) {
+      _player.playlistPlayAtIndex(index);
+    }
   }
 }
