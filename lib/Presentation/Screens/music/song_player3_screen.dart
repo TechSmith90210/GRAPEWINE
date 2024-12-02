@@ -7,6 +7,7 @@ import 'package:grapewine_music_app/Presentation/widgets/more_options_sheet.dart
 import 'package:grapewine_music_app/Providers/like_provider.dart';
 import 'package:grapewine_music_app/Providers/search_provider.dart';
 import 'package:grapewine_music_app/models/liked_songs.dart';
+import 'package:grapewine_music_app/models/playlist_model.dart';
 import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart';
 
@@ -97,22 +98,25 @@ class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
                   ),
                 ],
               ),
-              IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.keyboard_arrow_down_rounded),
-                color: greyColor,
-              ),
+              // IconButton(
+              //   onPressed: () {},
+              //   icon: Icon(Icons.keyboard_arrow_down_rounded),
+              //   color: greyColor,
+              // ),
               IconButton(
                   onPressed: () {
                     showModalBottomSheet(
-
                       useSafeArea: true,
                       enableDrag: true,
                       showDragHandle: true,
                       backgroundColor: eerieblackColor,
                       context: context,
                       builder: (context) {
-                        return MoreOptionsSheet(song: song);
+                        return MoreOptionsSheet(
+                            song: PlaylistSongModel(
+                                songName: songName,
+                                songArtists: songArtist,
+                                songImageUrl: songImageUrl));
                       },
                     );
                   },
@@ -275,20 +279,13 @@ class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
               IconButton(
                 onPressed: () async {
                   try {
-                    var currentPosition =
-                        musicPlayerProvider.player.currentPosition.valueOrNull;
+                    final musicProvider = Provider.of<MusicPlayerProvider>(context, listen: false);
+                    final searchProvider = Provider.of<SearchProvider>(context, listen: false);
 
-                    var rewindedPosition = (currentPosition != null)
-                        ? currentPosition - const Duration(seconds: 5)
-                        : Duration.zero;
-
-                    if (rewindedPosition < Duration.zero) {
-                      rewindedPosition = Duration.zero;
-                    }
-
-                    await musicPlayerProvider.player.seek(rewindedPosition);
+                    // Call handleNextAction
+                    musicProvider.handlePrevAction(musicProvider.player, searchProvider);
                   } catch (e) {
-                    print('Error seeking position: $e');
+                    print('Error playing previous song: $e');
                   }
                 },
                 icon: const Icon(
@@ -317,7 +314,13 @@ class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
                 color: whiteColor,
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  final musicProvider = Provider.of<MusicPlayerProvider>(context, listen: false);
+                  final searchProvider = Provider.of<SearchProvider>(context, listen: false);
+
+                  // Call handleNextAction
+                  musicProvider.handleNextAction(musicProvider.player, searchProvider);
+                },
                 icon: const Icon(
                   Icons.skip_next_rounded,
                   size: 55,

@@ -12,7 +12,7 @@ import '../../models/song_model.dart';
 import 'MiniPlayerWidget.dart'; // Adjust this import based on your project structure
 
 class MoreOptionsSheet extends StatelessWidget {
-  final Song song;
+  final PlaylistSongModel song;
 
   const MoreOptionsSheet({super.key, required this.song});
 
@@ -24,17 +24,12 @@ class MoreOptionsSheet extends StatelessWidget {
         'icon': Icons.add_circle_outline_rounded,
         'title': 'Add to Playlist',
         'onTap': () {
-          var fetchProvider =
-              Provider.of<SearchProvider>(context, listen: false);
-          PlaylistSongModel playlistSong = PlaylistSongModel(
-              songName: fetchProvider.selectedSongName,
-              songArtists: fetchProvider.selectedSongArtist,
-              songImageUrl: fetchProvider.selectedSongImage);
+
           Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => AddToPlaylistScreen(
-                  playlistSongModel: playlistSong,
+                  playlistSongModel: song,
                 ),
               ));
         },
@@ -43,7 +38,6 @@ class MoreOptionsSheet extends StatelessWidget {
         'icon': Icons.file_download,
         'title': 'Download',
         'onTap': () {
-          // Handle Download action
         },
       },
     ];
@@ -63,16 +57,18 @@ class MoreOptionsSheet extends StatelessWidget {
               width: 50,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
-                image: DecorationImage(image: NetworkImage(song.imageUrl)),
+                image: DecorationImage(image: NetworkImage(song.songImageUrl)),
               ),
             ),
             title: Text(
-              truncateText(song.songName, 15),
+              song.songName,
               style: GoogleFonts.redHatDisplay(color: whiteColor),
+              overflow: TextOverflow.ellipsis,
             ),
             subtitle: Text(
-              truncateText(song.artists, 40),
+              song.songArtists,
               style: GoogleFonts.redHatDisplay(color: greyColor),
+              overflow: TextOverflow.ellipsis,
             ),
           );
         } else {

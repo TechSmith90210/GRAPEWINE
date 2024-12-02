@@ -107,6 +107,7 @@ class LikedSongsScreen extends StatelessWidget {
                     tileColor: blackColor.withOpacity(0.2),
                     onTap: () async {
                       // Handle song tap
+                      handleSongTap(context: context, song: Song(imageUrl: song.songImageUrl, songName: song.songName, artists: song.songArtists));
                     },
                     leading: Container(
                       height: 55,
@@ -205,48 +206,17 @@ void handleSongTap({
     await musicPlayerProvider.player.play();
     recentProvider.toggleRecentlyPlayed(recentlyPlayed);
   }
-
-
-
-
 }
+
 void handlePlaylistTap({
   required BuildContext context,
   required List<Song> playlist,
 }) async {
   var searchProvider = Provider.of<SearchProvider>(context, listen: false);
   var musicPlayerProvider =
-  Provider.of<MusicPlayerProvider>(context, listen: false);
+      Provider.of<MusicPlayerProvider>(context, listen: false);
   var recentProvider =
-  Provider.of<RecentlyPlayedProvider>(context, listen: false);
-
+      Provider.of<RecentlyPlayedProvider>(context, listen: false);
   musicPlayerProvider.setFirstSongRun();
-
-  // Loop through each song in the playlist and add them to RecentlyPlayed
-  for (var song in playlist) {
-    RecentlyPlayed recentlyPlayed = RecentlyPlayed()
-      ..songName = song.songName
-      ..songArtists = song.artists
-      ..songImageUrl = song.imageUrl
-      ..playedAt = DateTime.now();
-
-    // Set the song details for the current song in the playlist
-    searchProvider.setSongName(song.songName);
-    searchProvider.setSongArtist(song.artists);
-    searchProvider.setSongDetails(
-        '${searchProvider.selectedSongName} ${searchProvider.selectedSongArtist} song audio');
-    print(searchProvider.selectedSongDetails);
-
-    // Set the song cover image with default if necessary
-    String songCover = song.imageUrl.isNotEmpty
-        ? song.imageUrl
-        : 'https://assets.audiomack.com/default-song-image.png';
-    searchProvider.setSongImage(songCover);
-
-    // Add the current song to the RecentlyPlayed list
-    recentProvider.toggleRecentlyPlayed(recentlyPlayed);
-  }
-
-  // After preparing the playlist and updating RecentlyPlayed, play the playlist
   await musicPlayerProvider.fetchPlaylist(playlist, searchProvider);
 }

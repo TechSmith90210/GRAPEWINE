@@ -148,7 +148,6 @@ class MusicPlayerProvider with ChangeNotifier {
     try {
       List<just.Audio> audioList = []; // Use just prefix for Audio list
 
-      // Loop through each song in the playlist
       for (var song in playlist) {
         var songName = song.songName;
         if (songName != null) {
@@ -157,7 +156,6 @@ class MusicPlayerProvider with ChangeNotifier {
           var manifest = await yt.videos.streamsClient.getManifest(videoId);
           audioUrl = manifest.audioOnly.first.url;
 
-          // Create the Audio object for each song in the playlist
           just.Audio audio = just.Audio.network(
             audioUrl.toString(),
             metas: just.Metas(
@@ -166,7 +164,7 @@ class MusicPlayerProvider with ChangeNotifier {
               album: 'album',
               image: just.MetasImage(
                 path: song.imageUrl,
-                type: just.ImageType.network, // Use just prefix for ImageType
+                type: just.ImageType.network,
               ),
             ),
           );
@@ -174,36 +172,20 @@ class MusicPlayerProvider with ChangeNotifier {
         }
       }
 
-      // Open the playlist using just prefix
       await _player.open(
-        just.Playlist(audios: audioList), // Use just prefix for Playlist
-        loopMode:
-            just.LoopMode.playlist, // Loop the full playlist with just prefix
+        just.Playlist(audios: audioList),
+        loopMode: just.LoopMode.playlist,
         showNotification: true,
         respectSilentMode: true,
         autoStart: true,
-        playInBackground: just.PlayInBackground.enabled, // Use just prefix
+        playInBackground: just.PlayInBackground.enabled,
         notificationSettings: just.NotificationSettings(
           seekBarEnabled: true,
           playPauseEnabled: true,
-          customNextAction: (player) async {
-            await _player.next(stopIfLast: true); // Use just prefix for next
-            final currentSongMetas = _player.current.value!.audio.audio.metas;
-
-            // Update the SearchProvider with the current song's title, artists, and image
-            provider.setSongName(currentSongMetas.title!);
-            provider.setSongArtist(currentSongMetas.artist!);
-            provider.setSongImage(currentSongMetas.image!.path);
-          },
-          customPrevAction: (player) async {
-            await _player.previous(); // Use just prefix for next
-            final currentSongMetas = _player.current.value!.audio.audio.metas;
-
-            // Update the SearchProvider with the current song's title, artists, and image
-            provider.setSongName(currentSongMetas.title!);
-            provider.setSongArtist(currentSongMetas.artist!);
-            provider.setSongImage(currentSongMetas.image!.path);
-          },
+          customNextAction: (player) =>
+              handleNextAction(_player, provider), // Call extracted method
+          customPrevAction: (player) =>
+              handlePrevAction(_player, provider), // Call extracted method
           customPlayPauseAction: (player) async {
             if (player.isPlaying.value) {
               await player.pause();
@@ -216,16 +198,12 @@ class MusicPlayerProvider with ChangeNotifier {
         ),
       );
 
-      // Set the song details for the current song in the playlist
-      // Get the current song's metadata
       final currentSongMetas = _player.playlist!.audios.first.metas;
 
-      // Update the provider with the current song's title and artist
       provider.setSongName(currentSongMetas.title!);
       provider.setSongArtist(currentSongMetas.artist!);
       provider.setSongImage(currentSongMetas.image!.path);
 
-      // Notify listeners to update the UI
       provider.notifyListeners();
     } catch (e) {
       if (kDebugMode) {
@@ -235,6 +213,40 @@ class MusicPlayerProvider with ChangeNotifier {
   }
 
   // Functions for controlling playlist
+  Future<void> handleNextAction(
+      just.AssetsAudioPlayer player, SearchProvider provider) async {
+    try {
+      await player.next(stopIfLast: true); // Play the next song, stop if last
+      final currentSongMetas = player.current.value!.audio.audio.metas;
+
+      // Update the SearchProvider with the current song's title, artists, and image
+      provider.setSongName(currentSongMetas.title!);
+      provider.setSongArtist(currentSongMetas.artist!);
+      provider.setSongImage(currentSongMetas.image!.path);
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error handling next action: $e');
+      }
+    }
+  }
+
+  Future<void> handlePrevAction(
+      just.AssetsAudioPlayer player, SearchProvider provider) async {
+    try {
+      await player.previous(); // Play the previous song
+      final currentSongMetas = player.current.value!.audio.audio.metas;
+
+      // Update the SearchProvider with the current song's title, artists, and image
+      provider.setSongName(currentSongMetas.title!);
+      provider.setSongArtist(currentSongMetas.artist!);
+      provider.setSongImage(currentSongMetas.image!.path);
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error handling previous action: $e');
+      }
+    }
+  }
+
 
   void playAtIndex(int index) {
     if (_player.isPlaying.value) {

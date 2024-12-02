@@ -31,11 +31,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> _fetchAccessToken() async {
     await fetchData(context); // This will initialize the access token
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => setState(() {
-      _isDataFetched = true; // Mark the data as fetched
-
-    }));
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
+          _isDataFetched = true; // Mark the data as fetched
+        }));
   }
 
   @override

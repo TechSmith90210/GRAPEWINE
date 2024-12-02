@@ -7,8 +7,10 @@ import 'package:grapewine_music_app/Providers/navigator_provider.dart';
 import 'package:grapewine_music_app/Providers/search_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../../models/playlist_model.dart';
 import '../../models/song_model.dart';
 import '../Screens/music/library/liked_songs_screen.dart';
+import 'more_options_sheet.dart';
 
 Widget ArtistWidget(BuildContext context, int index) {
   var provider = Provider.of<SearchProvider>(context);
@@ -54,6 +56,22 @@ Widget TrackWidget(BuildContext context, int index) {
   var provider = Provider.of<SearchProvider>(context);
   var imageUrl = provider.searchTrackImages[index].toString();
   return ListTile(
+    onLongPress: () {
+      showModalBottomSheet(
+        useSafeArea: true,
+        enableDrag: true,
+        showDragHandle: true,
+        backgroundColor: eerieblackColor,
+        context: context,
+        builder: (context) {
+          return MoreOptionsSheet(
+              song: PlaylistSongModel(
+                  songName: provider.searchTrackNames[index],
+                  songArtists: provider.searchTrackArtists[index],
+                  songImageUrl: imageUrl));
+        },
+      );
+    },
     onTap: () async {
       handleSongTap(
           context: context,
@@ -79,7 +97,6 @@ Widget TrackWidget(BuildContext context, int index) {
           color: greyColor, fontWeight: FontWeight.w500),
     ),
     leading: Container(
-
       height: 60,
       width: 60,
       decoration: BoxDecoration(
@@ -93,7 +110,24 @@ Widget TrackWidget(BuildContext context, int index) {
             fit: BoxFit.cover),
       ),
     ),
-    trailing: const Icon(Icons.arrow_forward_ios_rounded),
+    trailing: IconButton(
+        onPressed: () {
+          showModalBottomSheet(
+            useSafeArea: true,
+            enableDrag: true,
+            showDragHandle: true,
+            backgroundColor: eerieblackColor,
+            context: context,
+            builder: (context) {
+              return MoreOptionsSheet(
+                  song: PlaylistSongModel(
+                      songName: provider.searchTrackNames[index],
+                      songArtists: provider.searchTrackArtists[index],
+                      songImageUrl: imageUrl));
+            },
+          );
+        },
+        icon: Icon(Icons.more_vert_outlined)),
     // iconColor: greyColor,
     splashColor: blackColor,
     hoverColor: blackColor,

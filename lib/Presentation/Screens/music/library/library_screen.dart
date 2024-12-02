@@ -4,9 +4,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Presentation/Screens/music/library/playlist/playlists_screen.dart';
 import 'package:grapewine_music_app/Providers/playlist_provider.dart';
 import 'package:grapewine_music_app/Providers/recently_played_provider.dart';
+import 'package:grapewine_music_app/models/playlist_model.dart';
 import 'package:provider/provider.dart';
 import '../../../../Providers/like_provider.dart';
 import '../../../../models/song_model.dart';
+import '../../../widgets/more_options_sheet.dart';
 import 'liked_songs_screen.dart';
 import 'recently_played_screen.dart';
 import '../../../widgets/AppBarWidget.dart';
@@ -31,7 +33,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
           color: purpleColor,
         ),
         actions: const [
-           Padding(
+          Padding(
             padding: EdgeInsets.only(right: 7),
             child: CircleAvatar(
               backgroundColor: Color(0xffE6E6E6),
@@ -220,54 +222,74 @@ Widget buildSongTileWidget({
   required String songArtist,
   required BuildContext cx,
 }) {
-  return Bounceable(
-    onTap: () {
-      handleSongTap(
+  return GestureDetector(
+    onLongPress: () {
+      showModalBottomSheet(
+        useSafeArea: true,
+        enableDrag: true,
+        showDragHandle: true,
+        backgroundColor: eerieblackColor,
         context: cx,
-        song: Song(
-          imageUrl: imageUrl,
-          songName: songTitle,
-          artists: songArtist,
-        ),
+        builder: (context) {
+          return MoreOptionsSheet(
+              song: PlaylistSongModel(
+                  songName: songTitle,
+                  songArtists: songArtist,
+                  songImageUrl: imageUrl));
+        },
       );
     },
-    child: SizedBox(
-      width: 120, // Adjust width to fit within the grid
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            height: 100,
-            width: 100, // Ensure width matches the SizedBox
-            decoration: BoxDecoration(
-              color: blackColor,
-              image: DecorationImage(
-                image: NetworkImage(imageUrl),
-                fit: BoxFit.cover, // Ensure the image fits within the container
+    child: Bounceable(
+      onTap: () {
+        handleSongTap(
+          context: cx,
+          song: Song(
+            imageUrl: imageUrl,
+            songName: songTitle,
+            artists: songArtist,
+          ),
+        );
+      },
+      child: SizedBox(
+        width: 120, // Adjust width to fit within the grid
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 100,
+              width: 100,
+              decoration: BoxDecoration(
+                color: blackColor,
+                image: DecorationImage(
+                  image: NetworkImage(imageUrl),
+                  fit: BoxFit
+                      .cover, // Ensure the image fits within the container
+                ),
+                borderRadius: BorderRadius.circular(5),
               ),
-              borderRadius: BorderRadius.circular(5),
             ),
-          ),
-          const SizedBox(height: 8), // Add spacing between image and text
-          Text(
-            truncateText(songTitle, 14),
-            style: GoogleFonts.redHatDisplay(
-              color: whiteColor,
-              fontWeight: FontWeight.w700,
-              fontSize: 12,
+            const SizedBox(height: 8),
+            Text(
+              truncateText(songTitle, 14),
+              style: GoogleFonts.redHatDisplay(
+                color: whiteColor,
+                fontWeight: FontWeight.w700,
+                fontSize: 12,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          Text(
-            truncateText(songArtist, 16),
-            style: GoogleFonts.redHatDisplay(
-              color: greyColor,
-              fontWeight: FontWeight.w600,
-              fontSize: 12,
+            Text(
+              truncateText(songArtist, 16),
+              style: GoogleFonts.redHatDisplay(
+                color: greyColor,
+                fontWeight: FontWeight.w600,
+                fontSize: 11,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     ),
   );

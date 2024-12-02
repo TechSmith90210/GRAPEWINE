@@ -17,13 +17,13 @@ class PlaylistProvider extends ChangeNotifier {
   void createPlaylist(PlaylistModel playlistModel) {
     int newId = _playlists.isNotEmpty
         ? _playlists.map((e) => e.id!).reduce(
-          (a, b) => a > b ? a : b,
-    ) +
-        1
+                  (a, b) => a > b ? a : b,
+                ) +
+            1
         : 1;
     if (!_playlists.any(
           (playlist) => playlist.playlistName == playlistModel.playlistName,
-    ) &&
+        ) &&
         !_playlists.any((playlist) => playlist.id == playlistModel.id)) {
       playlistModel = PlaylistModel(
           id: newId,
@@ -39,7 +39,7 @@ class PlaylistProvider extends ChangeNotifier {
   void deletePlaylist(int playlistId) {
     try {
       final playlist = _playlists.firstWhere(
-            (playlist) => playlist.id == playlistId,
+        (playlist) => playlist.id == playlistId,
       );
       _playlists.remove(playlist);
       notifyListeners();
@@ -50,8 +50,9 @@ class PlaylistProvider extends ChangeNotifier {
 
   void addSongToPlaylist(int playlistId, PlaylistSongModel playlistSongModel) {
     final playlist = _playlists.firstWhere(
-          (element) => element.id == playlistId,
-      orElse: () => throw Exception('Playlist with ID $playlistId does not exist!'),
+      (element) => element.id == playlistId,
+      orElse: () =>
+          throw Exception('Playlist with ID $playlistId does not exist!'),
     );
 
     playlistSongModel = PlaylistSongModel(
@@ -68,9 +69,9 @@ class PlaylistProvider extends ChangeNotifier {
 
   void removeSongFromPlaylist(int playlistId, int songPosition) {
     final playlist = _playlists.firstWhere(
-          (element) => element.id == playlistId,
+      (element) => element.id == playlistId,
       orElse: () =>
-      throw Exception('Playlist with ID $playlistId does not exist!'),
+          throw Exception('Playlist with ID $playlistId does not exist!'),
     );
 
     if (songPosition >= 0 && songPosition < playlist.songs.length) {
@@ -89,7 +90,8 @@ class PlaylistProvider extends ChangeNotifier {
   // Method to play the entire playlist
   Future<void> playPlaylist(BuildContext context, int playlistId) async {
     var searchProvider = Provider.of<SearchProvider>(context, listen: false);
-    var musicPlayerProvider = Provider.of<MusicPlayerProvider>(context, listen: false);
+    var musicPlayerProvider =
+        Provider.of<MusicPlayerProvider>(context, listen: false);
     var playlist = getPlaylistById(playlistId);
 
     List<Song> playlistSongs = playlist.songs.map((songModel) {
@@ -104,6 +106,15 @@ class PlaylistProvider extends ChangeNotifier {
     await musicPlayerProvider.fetchPlaylist(playlistSongs, searchProvider);
 
     // Optional: Notify listeners if needed
+    notifyListeners();
+  }
+
+  bool _isEditing = false;
+
+  bool get isEditing => _isEditing;
+
+  void setEditing(bool editing) {
+    _isEditing = editing;
     notifyListeners();
   }
 }
