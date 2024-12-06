@@ -172,6 +172,7 @@ class MusicPlayerProvider with ChangeNotifier {
         }
       }
 
+      // Open the playlist
       await _player.open(
         just.Playlist(audios: audioList),
         loopMode: just.LoopMode.playlist,
@@ -203,6 +204,20 @@ class MusicPlayerProvider with ChangeNotifier {
       provider.setSongName(currentSongMetas.title!);
       provider.setSongArtist(currentSongMetas.artist!);
       provider.setSongImage(currentSongMetas.image!.path);
+
+      // Listener for when the current song changes
+      _player.current.listen((playing) {
+        if (playing != null) {
+          final currentMetas = playing.audio.audio.metas;
+
+          // Update the provider with the current song's metadata
+          provider.setSongName(currentMetas.title! ?? 'Unknown Title');
+          provider.setSongArtist(currentMetas.artist! ?? 'Unknown Artist');
+          provider.setSongImage(currentMetas.image!.path ?? '');
+
+          provider.notifyListeners(); // Notify listeners to rebuild UI
+        }
+      });
 
       provider.notifyListeners();
     } catch (e) {
@@ -246,7 +261,6 @@ class MusicPlayerProvider with ChangeNotifier {
       }
     }
   }
-
 
   void playAtIndex(int index) {
     if (_player.isPlaying.value) {

@@ -164,12 +164,15 @@ class PlayPlaylistScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      updatedPlaylist.playlistName,
-                      style: GoogleFonts.redHatDisplay(
-                        color: whiteColor,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 27,
+                    Expanded(
+                      child: Text(
+                        updatedPlaylist.playlistName,
+                        style: GoogleFonts.redHatDisplay(
+                          color: whiteColor,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18,
+                        ),
+                        softWrap: true,
                       ),
                     ),
                     IconButton(

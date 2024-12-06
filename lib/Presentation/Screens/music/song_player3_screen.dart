@@ -1,3 +1,4 @@
+
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
@@ -43,11 +44,13 @@ class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
 
   late Future<void> _initializationFuture;
 
+
   @override
   void initState() {
     super.initState();
     _initializationFuture = _initialize();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -241,6 +244,12 @@ class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
                   stream: musicPlayerProvider.player.currentPosition,
                   builder: (context, positionSnapshot) {
                     final position = positionSnapshot.data ?? Duration.zero;
+                    musicPlayerProvider.player.playlistAudioFinished.listen(
+                      (Playing playing) {},
+                      onDone: () {
+                        musicPlayerProvider.player.next(stopIfLast: true);
+                      },
+                    );
 
                     return ProgressBar(
                       progress: position,
@@ -279,11 +288,15 @@ class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
               IconButton(
                 onPressed: () async {
                   try {
-                    final musicProvider = Provider.of<MusicPlayerProvider>(context, listen: false);
-                    final searchProvider = Provider.of<SearchProvider>(context, listen: false);
+                    final musicProvider = Provider.of<MusicPlayerProvider>(
+                        context,
+                        listen: false);
+                    final searchProvider =
+                        Provider.of<SearchProvider>(context, listen: false);
 
                     // Call handleNextAction
-                    musicProvider.handlePrevAction(musicProvider.player, searchProvider);
+                    musicProvider.handlePrevAction(
+                        musicProvider.player, searchProvider);
                   } catch (e) {
                     print('Error playing previous song: $e');
                   }
@@ -315,11 +328,14 @@ class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
               ),
               IconButton(
                 onPressed: () {
-                  final musicProvider = Provider.of<MusicPlayerProvider>(context, listen: false);
-                  final searchProvider = Provider.of<SearchProvider>(context, listen: false);
+                  final musicProvider =
+                      Provider.of<MusicPlayerProvider>(context, listen: false);
+                  final searchProvider =
+                      Provider.of<SearchProvider>(context, listen: false);
 
                   // Call handleNextAction
-                  musicProvider.handleNextAction(musicProvider.player, searchProvider);
+                  musicProvider.handleNextAction(
+                      musicProvider.player, searchProvider);
                 },
                 icon: const Icon(
                   Icons.skip_next_rounded,
