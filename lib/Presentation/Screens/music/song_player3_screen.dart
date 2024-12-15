@@ -76,7 +76,7 @@ class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
       ..songArtists = songArtist;
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 15),
+      margin: const EdgeInsets.symmetric(horizontal: 15),
       child: Column(
         children: [
           const SizedBox(height: 30),

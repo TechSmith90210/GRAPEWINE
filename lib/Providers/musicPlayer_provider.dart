@@ -146,7 +146,8 @@ class MusicPlayerProvider with ChangeNotifier {
   }
 
   Future<void> fetchPlaylist(List<Song> playlist, SearchProvider provider,
-      RecentlyPlayedProvider recentProvider) async {
+      RecentlyPlayedProvider recentProvider,
+      {int? index}) async {
     final yt = YoutubeExplode();
     try {
       List<just.Audio> audioList = []; // Use just prefix for Audio list
@@ -177,7 +178,7 @@ class MusicPlayerProvider with ChangeNotifier {
 
       // Open the playlist
       await _player.open(
-        just.Playlist(audios: audioList),
+        just.Playlist(audios: audioList, startIndex: index ?? 0),
         loopMode: just.LoopMode.playlist,
         showNotification: true,
         respectSilentMode: true,
@@ -220,14 +221,13 @@ class MusicPlayerProvider with ChangeNotifier {
 
           provider.notifyListeners(); // Notify listeners to rebuild UI
 
-
-              RecentlyPlayed recentlyPlayed = RecentlyPlayed()
-                ..songName = currentSongMetas.title.toString()
-                ..songArtists = currentSongMetas.artist.toString()
-                ..songImageUrl = currentSongMetas.image!.path.toString()
-                ..playedAt = DateTime.now();
-
-              recentProvider.addRecentlyPlayed(recentlyPlayed);
+          // RecentlyPlayed recentlyPlayed = RecentlyPlayed()
+          //   ..songName = currentSongMetas.title!
+          //   ..songArtists = currentSongMetas.artist!
+          //   ..songImageUrl = currentSongMetas.image!.path
+          //   ..playedAt = DateTime.now();
+          //
+          // recentProvider.addRecentlyPlayed(recentlyPlayed);
         }
       });
 
@@ -279,12 +279,6 @@ class MusicPlayerProvider with ChangeNotifier {
       if (kDebugMode) {
         print('Error handling previous action: $e');
       }
-    }
-  }
-
-  void playAtIndex(int index) {
-    if (_player.isPlaying.value) {
-      _player.playlistPlayAtIndex(index);
     }
   }
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:grapewine_music_app/Presentation/Screens/music/add_to_playlist_screen.dart';
 import 'package:grapewine_music_app/Providers/like_provider.dart';
 import 'package:grapewine_music_app/Providers/recently_played_provider.dart';
+import 'package:grapewine_music_app/models/playlist_model.dart';
 import 'package:grapewine_music_app/models/recently_played.dart';
 import 'package:provider/provider.dart';
 import '../../../../Colors/colors.dart';
@@ -34,14 +36,21 @@ class LikedSongsScreen extends StatelessWidget {
               );
             },
           ),
+          // IconButton(
+          //   onPressed: () {
+          //     final likeProvider =
+          //         Provider.of<LikedProvider>(context, listen: false);
+          //     likeProvider.clearLikedSongs(); // Clear liked songs
+          //   },
+          //   icon: Icon(Icons.delete),
+          // ),
+
+          // TODO: add feature to play liked songs as a playlist and from any index
           IconButton(
-            onPressed: () {
-              final likeProvider =
-                  Provider.of<LikedProvider>(context, listen: false);
-              likeProvider.clearLikedSongs(); // Clear liked songs
-            },
-            icon: Icon(Icons.delete),
-          ),
+            onPressed: () {},
+            icon: const Icon(Icons.play_arrow_rounded),
+            color: whiteColor,
+          )
         ],
         leading: IconButton(
           onPressed: () {
@@ -84,7 +93,17 @@ class LikedSongsScreen extends StatelessWidget {
                       ActionPane(motion: const ScrollMotion(), children: [
                     SlidableAction(
                       autoClose: true,
-                      onPressed: (context) {},
+                      onPressed: (context) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddToPlaylistScreen(
+                                  playlistSongModel: PlaylistSongModel(
+                                      songName: song.songName,
+                                      songArtists: song.songArtists,
+                                      songImageUrl: song.songImageUrl)),
+                            ));
+                      },
                       backgroundColor: linearColor1,
                       foregroundColor: Colors.white,
                       icon: Icons.playlist_add,
@@ -213,16 +232,16 @@ void handleSongTap({
   }
 }
 
-void handlePlaylistTap({
-  required BuildContext context,
-  required List<Song> playlist,
-}) async {
+void handlePlaylistTap(
+    {required BuildContext context,
+    required List<Song> playlist,
+    int? index}) async {
   var searchProvider = Provider.of<SearchProvider>(context, listen: false);
   var musicPlayerProvider =
       Provider.of<MusicPlayerProvider>(context, listen: false);
   var recentProvider =
       Provider.of<RecentlyPlayedProvider>(context, listen: false);
   musicPlayerProvider.setFirstSongRun();
-  await musicPlayerProvider.fetchPlaylist(
-      playlist, searchProvider, recentProvider);
+  await musicPlayerProvider
+      .fetchPlaylist(playlist, searchProvider, recentProvider, index: index);
 }

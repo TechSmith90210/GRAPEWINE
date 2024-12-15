@@ -138,7 +138,7 @@ class PlayPlaylistScreen extends StatelessWidget {
         builder: (context, playlistProvider, musicPlayerProvider, child) {
           final updatedPlaylist =
               playlistProvider.getPlaylistById(playlist.id!);
-
+          List<Song> songs = mapPlaylistSongsToSongs(updatedPlaylist.songs);
           return Column(
             children: [
               Center(
@@ -184,10 +184,12 @@ class PlayPlaylistScreen extends StatelessWidget {
                         // If a song is already playing, pause it
                         if (musicPlayerProvider.player.isPlaying.value) {
                           await musicPlayerProvider.player.pause();
+                          handlePlaylistTap(
+                            context: context,
+                            playlist: songs,
+                          );
                         } else {
                           // Map playlist songs to Song model and play them
-                          List<Song> songs =
-                              mapPlaylistSongsToSongs(updatedPlaylist.songs);
                           handlePlaylistTap(
                             context: context,
                             playlist: songs,
@@ -237,7 +239,9 @@ class PlayPlaylistScreen extends StatelessWidget {
                               child: ListTile(
                                 tileColor: blackColor.withOpacity(0.2),
                                 onTap: () {
-                                  // Handle song tap (you can play this specific song here)
+                                  handlePlaylistTap(
+                                      context: context, playlist: songs,index: index);
+                                  print('playing specific song');
                                 },
                                 leading: Container(
                                   height: 55,

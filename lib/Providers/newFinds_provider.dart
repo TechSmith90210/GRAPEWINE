@@ -57,7 +57,7 @@ class NewFindsProvider with ChangeNotifier {
     "Lil Uzi Vert",
     "City Morgue, Zillakami & Sosmula",
     "Lyrical Lemonade",
-    "Playboi Carti",
+    "Playboi Carti, Travis Scott",
   ];
   List<String> get albumArtists => _albumArtists;
   updateArtistNames(List<String> newAlbumArtists) {
