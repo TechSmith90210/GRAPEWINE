@@ -69,6 +69,8 @@ dependencies:
   flutter_slidable: ^3.1.1
   image_picker: ^1.1.2
   modal_bottom_sheet: ^3.0.0
+  icons_launcher: ^3.0.0
+  flutter_native_splash: ^2.4.3
 
 
 
@@ -87,6 +89,21 @@ dev_dependencies:
   flutter_lints: ^3.0.1
   isar_generator: ^3.1.0+1
   build_runner: ^2.4.12
+  flutter_launcher_icons: "^0.14.2"
+
+icons_launcher:
+  image_path: "assets/logos/logo.png"
+  platforms:
+    android:
+      enable: true
+    ios:
+      enable: true
+
+flutter_native_splash:
+  color: "#1b1b1b"
+  android_12:
+    image: "assets/logos/logo.png"
+    icon_background_color: "#111111"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

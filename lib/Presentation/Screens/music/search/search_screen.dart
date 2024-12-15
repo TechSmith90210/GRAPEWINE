@@ -17,7 +17,7 @@ class SearchScreen extends StatelessWidget {
         appBar: AppBarWidget(
           title: 'SEARCH',
           leading: ImageIcon(
-            const AssetImage("assets/grapewine logo medium.png"),
+            const AssetImage("assets/grapewine_logo_medium.png"),
             color: purpleColor,
           ),
           actions: const [

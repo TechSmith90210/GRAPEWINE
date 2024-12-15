@@ -29,7 +29,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
       appBar: AppBarWidget(
         title: 'LIBRARY',
         leading: ImageIcon(
-          const AssetImage("assets/grapewine logo medium.png"),
+          const AssetImage("assets/grapewine_logo_medium.png"),
           color: purpleColor,
         ),
         actions: const [
