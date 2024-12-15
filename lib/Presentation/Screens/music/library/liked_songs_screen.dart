@@ -107,7 +107,12 @@ class LikedSongsScreen extends StatelessWidget {
                     tileColor: blackColor.withOpacity(0.2),
                     onTap: () async {
                       // Handle song tap
-                      handleSongTap(context: context, song: Song(imageUrl: song.songImageUrl, songName: song.songName, artists: song.songArtists));
+                      handleSongTap(
+                          context: context,
+                          song: Song(
+                              imageUrl: song.songImageUrl,
+                              songName: song.songName,
+                              artists: song.songArtists));
                     },
                     leading: Container(
                       height: 55,
@@ -218,5 +223,6 @@ void handlePlaylistTap({
   var recentProvider =
       Provider.of<RecentlyPlayedProvider>(context, listen: false);
   musicPlayerProvider.setFirstSongRun();
-  await musicPlayerProvider.fetchPlaylist(playlist, searchProvider);
+  await musicPlayerProvider.fetchPlaylist(
+      playlist, searchProvider, recentProvider);
 }

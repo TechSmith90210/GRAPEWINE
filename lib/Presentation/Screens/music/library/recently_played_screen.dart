@@ -16,12 +16,12 @@ class RecentlyPlayedScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBarWidget(
           title: 'Recently Played',
-          actions: [
-            IconButton(icon: Icon(Icons.clear,color: greyColor,),onPressed: () {
-              var provider  = Provider.of<RecentlyPlayedProvider>(context,listen: false);
-              provider.clearRecentlyPlayed();
-            },)
-          ],
+          // actions: [
+          //   IconButton(icon: Icon(Icons.clear,color: greyColor,),onPressed: () {
+          //     var provider  = Provider.of<RecentlyPlayedProvider>(context,listen: false);
+          //     provider.clearRecentlyPlayed();
+          //   },)
+          // ],
           leading: IconButton(
               onPressed: () {
                 Navigator.pop(context);

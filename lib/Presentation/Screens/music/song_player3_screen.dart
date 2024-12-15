@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
 import 'package:grapewine_music_app/Presentation/widgets/more_options_sheet.dart';
 import 'package:grapewine_music_app/Providers/like_provider.dart';
+import 'package:grapewine_music_app/Providers/recently_played_provider.dart';
 import 'package:grapewine_music_app/Providers/search_provider.dart';
 import 'package:grapewine_music_app/models/liked_songs.dart';
 import 'package:grapewine_music_app/models/playlist_model.dart';
@@ -332,10 +333,12 @@ class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
                       Provider.of<MusicPlayerProvider>(context, listen: false);
                   final searchProvider =
                       Provider.of<SearchProvider>(context, listen: false);
+                  final recentProvider =
+                  Provider.of<RecentlyPlayedProvider>(context, listen: false);
 
                   // Call handleNextAction
                   musicProvider.handleNextAction(
-                      musicProvider.player, searchProvider);
+                      musicProvider.player, searchProvider,recentProvider);
                 },
                 icon: const Icon(
                   Icons.skip_next_rounded,

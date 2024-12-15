@@ -21,23 +21,20 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     EdgeInsets margin = calculateMargin(screenHeight, screenWidth);
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: AppBar(surfaceTintColor: Colors.transparent,
-        leadingWidth: 25,
-        leading: leading,
-        centerTitle: true,
-        title: Text(
-          title,
-          style: GoogleFonts.redHatDisplay(
-            color: redColor,
-            fontWeight: FontWeight.w900,
-            fontSize: 20,
-          ),
+    return AppBar(
+      surfaceTintColor: Colors.transparent,
+      leading: leading,
+      // centerTitle: true,
+      title: Text(
+        title,
+        style: GoogleFonts.redHatDisplay(
+          color: redColor,
+          fontWeight: FontWeight.w900,
+          fontSize: 18,
         ),
-        actions: actions,
-        backgroundColor: backgroundColor,
       ),
+      actions: actions,
+      backgroundColor: backgroundColor,
     );
   }
 

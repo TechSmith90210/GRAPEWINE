@@ -39,13 +39,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarWidget(
+      appBar: const AppBarWidget(
         title: 'HOME',
-        leading: ImageIcon(
-          const AssetImage("assets/grapewine_logo_medium.png"),
-          color: purpleColor,
-        ),
-        actions: const [
+        // leading: ImageIcon(
+        //   const AssetImage("assets/grapewine_logo_medium.png"),
+        //   color: purpleColor,
+        // ),
+        actions: [
           Padding(
             padding: EdgeInsets.only(right: 7),
             child: CircleAvatar(
@@ -117,9 +117,22 @@ class _HomeScreenState extends State<HomeScreen> {
                               .recentlyPlayedSongs.reversed
                               .toList();
 
+                          if (recentlyPlayedSongs.isEmpty) {
+                            return Center(
+                              child: Text(
+                                "Listen to songs and check here later!",
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: greyColor,
+                                  // fontStyle: FontStyle.italic
+                                ),
+                              ),
+                            );
+                          }
+
                           return ListView.builder(
-                            itemCount: recentlyPlayedSongs.length > 6
-                                ? 6
+                            itemCount: recentlyPlayedSongs.length > 8
+                                ? 8
                                 : recentlyPlayedSongs.length,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {

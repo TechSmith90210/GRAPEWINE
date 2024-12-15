@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grapewine_music_app/Providers/recently_played_provider.dart';
 import 'package:grapewine_music_app/Providers/search_provider.dart';
 import 'package:grapewine_music_app/models/playlist_model.dart';
 import 'package:provider/provider.dart';
@@ -92,6 +93,8 @@ class PlaylistProvider extends ChangeNotifier {
     var searchProvider = Provider.of<SearchProvider>(context, listen: false);
     var musicPlayerProvider =
         Provider.of<MusicPlayerProvider>(context, listen: false);
+    var recentProvider =
+        Provider.of<RecentlyPlayedProvider>(context, listen: false);
     var playlist = getPlaylistById(playlistId);
 
     List<Song> playlistSongs = playlist.songs.map((songModel) {
@@ -103,7 +106,8 @@ class PlaylistProvider extends ChangeNotifier {
     }).toList();
 
     // Play the entire playlist using the MusicPlayerProvider
-    await musicPlayerProvider.fetchPlaylist(playlistSongs, searchProvider);
+    await musicPlayerProvider.fetchPlaylist(
+        playlistSongs, searchProvider, recentProvider);
 
     // Optional: Notify listeners if needed
     notifyListeners();

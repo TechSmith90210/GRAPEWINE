@@ -14,26 +14,26 @@ class SearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBarWidget(
+        appBar: const AppBarWidget(
           title: 'SEARCH',
-          leading: ImageIcon(
-            const AssetImage("assets/grapewine_logo_medium.png"),
-            color: purpleColor,
-          ),
-          actions: const [
-            Padding(
-              padding: EdgeInsets.only(right: 7),
-              child: CircleAvatar(
-                backgroundColor: Color(0xffE6E6E6),
-                backgroundImage: NetworkImage(
-                    'https://i.pinimg.com/736x/3c/fe/f0/3cfef07dbfaea9c6229ec5eb4aa305e0.jpg'),
-                // child: Icon(
-                //   Icons.person,
-                //   color: Color(0xffCCCCCC),
-                // ),
-              ),
-            )
-          ],
+          // leading: ImageIcon(
+          //   const AssetImage("assets/grapewine_logo_medium.png"),
+          //   color: purpleColor,
+          // ),
+          // actions: const [
+          //   Padding(
+          //     padding: EdgeInsets.only(right: 7),
+          //     child: CircleAvatar(
+          //       backgroundColor: Color(0xffE6E6E6),
+          //       backgroundImage: NetworkImage(
+          //           'https://i.pinimg.com/736x/3c/fe/f0/3cfef07dbfaea9c6229ec5eb4aa305e0.jpg'),
+          //       // child: Icon(
+          //       //   Icons.person,
+          //       //   color: Color(0xffCCCCCC),
+          //       // ),
+          //     ),
+          //   )
+          // ],
         ),
         body: Container(
           margin: const EdgeInsets.only(left: 16, right: 16),

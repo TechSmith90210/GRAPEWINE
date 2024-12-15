@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:grapewine_music_app/Presentation/Screens/music/library/playlist/create_playlist_screen.dart';
 import 'package:grapewine_music_app/Presentation/widgets/AppBarWidget.dart';
 import 'package:grapewine_music_app/Providers/playlist_provider.dart';
 import 'package:grapewine_music_app/models/playlist_model.dart';
@@ -25,6 +26,20 @@ class AddToPlaylistScreen extends StatelessWidget {
             color: whiteColor,
           ),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CreatePlaylistScreen(),
+                  ));
+            },
+            icon: Icon(Icons.add_circle_outline),
+            color: whiteColor,
+            tooltip: 'Create New Playlist',
+          )
+        ],
       ),
       body: Consumer<PlaylistProvider>(
         builder: (context, value, child) {

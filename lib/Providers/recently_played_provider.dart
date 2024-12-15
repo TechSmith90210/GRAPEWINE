@@ -5,7 +5,7 @@ import '../Data/services/local_helper.dart';
 
 class RecentlyPlayedProvider extends ChangeNotifier {
   // Maximum number of recently played songs
-  static const int maxRecentlyPlayedSongs = 10;
+  // static const int maxRecentlyPlayedSongs = 30;
 
   List<RecentlyPlayed> _recentlyPlayedSongs = [];
 
@@ -20,9 +20,9 @@ class RecentlyPlayedProvider extends ChangeNotifier {
   }
 
   void addRecentlyPlayed(RecentlyPlayed song) {
-    if (_recentlyPlayedSongs.length >= maxRecentlyPlayedSongs) {
-      _recentlyPlayedSongs.removeLast();
-    }
+    // if (_recentlyPlayedSongs.length >= maxRecentlyPlayedSongs) {
+    //   _recentlyPlayedSongs.removeLast();
+    // }
     if (isRecentlyPlayed(song)) {
       removeRecentlyPlayed(song);
     }

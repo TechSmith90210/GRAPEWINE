@@ -1,7 +1,10 @@
 import 'package:assets_audio_player/assets_audio_player.dart'
     as just; // Use 'just' prefix
 import 'package:flutter/foundation.dart';
+import 'package:grapewine_music_app/Providers/recently_played_provider.dart';
 import 'package:grapewine_music_app/Providers/search_provider.dart';
+import 'package:grapewine_music_app/models/recently_played.dart';
+import 'package:provider/provider.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import '../models/song_model.dart';
@@ -142,8 +145,8 @@ class MusicPlayerProvider with ChangeNotifier {
     return null;
   }
 
-  Future<void> fetchPlaylist(
-      List<Song> playlist, SearchProvider provider) async {
+  Future<void> fetchPlaylist(List<Song> playlist, SearchProvider provider,
+      RecentlyPlayedProvider recentProvider) async {
     final yt = YoutubeExplode();
     try {
       List<just.Audio> audioList = []; // Use just prefix for Audio list
@@ -183,8 +186,8 @@ class MusicPlayerProvider with ChangeNotifier {
         notificationSettings: just.NotificationSettings(
           seekBarEnabled: true,
           playPauseEnabled: true,
-          customNextAction: (player) =>
-              handleNextAction(_player, provider), // Call extracted method
+          customNextAction: (player) => handleNextAction(
+              _player, provider, recentProvider), // Call extracted method
           customPrevAction: (player) =>
               handlePrevAction(_player, provider), // Call extracted method
           customPlayPauseAction: (player) async {
@@ -216,6 +219,15 @@ class MusicPlayerProvider with ChangeNotifier {
           provider.setSongImage(currentMetas.image!.path ?? '');
 
           provider.notifyListeners(); // Notify listeners to rebuild UI
+
+
+              RecentlyPlayed recentlyPlayed = RecentlyPlayed()
+                ..songName = currentSongMetas.title.toString()
+                ..songArtists = currentSongMetas.artist.toString()
+                ..songImageUrl = currentSongMetas.image!.path.toString()
+                ..playedAt = DateTime.now();
+
+              recentProvider.addRecentlyPlayed(recentlyPlayed);
         }
       });
 
@@ -228,8 +240,8 @@ class MusicPlayerProvider with ChangeNotifier {
   }
 
   // Functions for controlling playlist
-  Future<void> handleNextAction(
-      just.AssetsAudioPlayer player, SearchProvider provider) async {
+  Future<void> handleNextAction(just.AssetsAudioPlayer player,
+      SearchProvider provider, RecentlyPlayedProvider recentProvider) async {
     try {
       await player.next(stopIfLast: true); // Play the next song, stop if last
       final currentSongMetas = player.current.value!.audio.audio.metas;
@@ -238,6 +250,14 @@ class MusicPlayerProvider with ChangeNotifier {
       provider.setSongName(currentSongMetas.title!);
       provider.setSongArtist(currentSongMetas.artist!);
       provider.setSongImage(currentSongMetas.image!.path);
+
+      RecentlyPlayed recentlyPlayed = RecentlyPlayed()
+        ..songName = currentSongMetas.title.toString()
+        ..songArtists = currentSongMetas.artist.toString()
+        ..songImageUrl = currentSongMetas.image!.path.toString()
+        ..playedAt = DateTime.now();
+
+      recentProvider.addRecentlyPlayed(recentlyPlayed);
     } catch (e) {
       if (kDebugMode) {
         print('Error handling next action: $e');
