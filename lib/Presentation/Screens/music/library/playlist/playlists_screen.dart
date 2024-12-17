@@ -9,7 +9,7 @@ import 'package:grapewine_music_app/Providers/playlist_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 
-import '../../../../../models/playlist_model.dart'; // Import for File
+import '../../../../../models/playlist.dart'; // Import for File
 
 class PlaylistsScreen extends StatelessWidget {
   const PlaylistsScreen({super.key});
@@ -78,7 +78,7 @@ class PlaylistsScreen extends StatelessWidget {
 class PlaylistSongTileWidget extends StatelessWidget {
   final String playlistName;
   final String imageUrl;
-  final PlaylistModel playlistModel;
+  final Playlist playlistModel;
   const PlaylistSongTileWidget(
       {super.key,
       required this.playlistName,

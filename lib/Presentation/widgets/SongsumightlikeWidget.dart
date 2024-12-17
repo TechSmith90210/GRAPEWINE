@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
 import 'package:grapewine_music_app/Presentation/Screens/music/library/liked_songs_screen.dart';
 import 'package:grapewine_music_app/Presentation/widgets/MiniPlayerWidget.dart';
-import 'package:grapewine_music_app/models/playlist_model.dart';
+import 'package:grapewine_music_app/models/playlist.dart';
 import 'package:grapewine_music_app/models/song_model.dart';
 import 'package:provider/provider.dart';
 import '../../Providers/newFinds_provider.dart';
@@ -84,7 +84,7 @@ class SongTileWidget extends StatelessWidget {
           context: context,
           builder: (context) {
             return MoreOptionsSheet(
-                song: PlaylistSongModel(
+                song: PlaylistSong(
                     songName: provider.albumNames[index],
                     songArtists: provider.albumArtists[index],
                     songImageUrl: provider.albumCovers[index]));
@@ -138,7 +138,7 @@ class SongTileWidget extends StatelessWidget {
                     context: context,
                     builder: (context) {
                       return MoreOptionsSheet(
-                          song: PlaylistSongModel(
+                          song: PlaylistSong(
                               songName: provider.albumNames[index],
                               songArtists: provider.albumArtists[index],
                               songImageUrl: provider.albumCovers[index]));

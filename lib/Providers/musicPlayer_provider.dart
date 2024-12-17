@@ -86,64 +86,94 @@ class MusicPlayerProvider with ChangeNotifier {
 
   Uri? audioUrl;
 
-  // Fetch a single song
-  Future<Duration?> fetchSong(
-      String theSongName, SearchProvider provider) async {
+  // Flag to prevent multiple simultaneous fetches
+  bool _isFetching = false;
+
+  Future<Duration?> fetchSong(String theSongName, SearchProvider provider) async {
+    if (_isFetching) {
+      print("Already fetching a song. Please wait.");
+      return null; // Prevent duplicate calls
+    }
+
+    _isFetching = true; // Set the flag to block further fetches
+
     final yt = YoutubeExplode();
     try {
+      // Check if the song details exist in the provider
       var songName = provider.selectedSongDetails;
       if (songName != null) {
+        // Search for the video
         final video = (await yt.search.search(songName)).first;
         final videoId = video.id.value;
-        var manifest = await yt.videos.streamsClient.getManifest(videoId);
-        audioUrl = manifest.audioOnly.first.url;
 
+        // Get the audio stream manifest
+        var manifest = await yt.videos.streamsClient.getManifest(videoId);
+        final newAudioUrl = manifest.audioOnly.first.url;
+
+        // Check if the song is already playing
+        if (audioUrl == newAudioUrl && _player != null && _player.isPlaying.value) {
+          print("The selected song is already playing.");
+          return null; // Skip reinitialization if the song is already playing
+        }
+
+        // Update the current audio URL
+        audioUrl = newAudioUrl;
+
+        // Dispose of the previous player if it exists
         if (_player != null) {
           await _player.dispose();
         }
 
-        _player = just.AssetsAudioPlayer(); // Reinitialize with just prefix
+        // Reinitialize the player
+        _player = just.AssetsAudioPlayer();
 
+        // Open the new audio and start playback
         await _player.open(
-          just.Audio.network(audioUrl.toString(), // Use just prefix for Audio
+          just.Audio.network(audioUrl.toString(),
               metas: just.Metas(
                 title: provider.selectedSongName,
                 artist: provider.selectedSongArtist,
                 album: provider.selectedSongAlbum,
                 image: just.MetasImage(
                   path: provider.selectedSongImage,
-                  type: just.ImageType.network, // Use just prefix for ImageType
+                  type: just.ImageType.network,
                 ),
               )),
           showNotification: true,
           respectSilentMode: true,
           autoStart: true,
-          playInBackground: just.PlayInBackground.enabled, // Use just prefix
+          playInBackground: just.PlayInBackground.enabled,
           notificationSettings: just.NotificationSettings(
             seekBarEnabled: true,
             playPauseEnabled: true,
             customPlayPauseAction: (player) async {
               if (player.isPlaying.value) {
                 await player.pause();
-                togglePlayPause(); // Ensure state is updated
+                togglePlayPause(); // Update play/pause state
               } else {
                 await player.play();
-                togglePlayPause(); // Ensure state is updated
+                togglePlayPause(); // Update play/pause state
               }
             },
           ),
         );
 
+        // Notify listeners to update the UI
         notifyListeners();
+
+        // Return the duration of the video
         return video.duration;
       }
     } catch (e) {
       if (kDebugMode) {
         print('Error fetching song: $e');
       }
+    } finally {
+      _isFetching = false; // Reset the flag when the method completes
     }
     return null;
   }
+
 
   Future<void> fetchPlaylist(List<Song> playlist, SearchProvider provider,
       RecentlyPlayedProvider recentProvider,

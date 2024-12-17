@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:grapewine_music_app/Presentation/Screens/music/library/playlist/create_playlist_screen.dart';
 import 'package:grapewine_music_app/Presentation/widgets/AppBarWidget.dart';
 import 'package:grapewine_music_app/Providers/playlist_provider.dart';
-import 'package:grapewine_music_app/models/playlist_model.dart';
+import 'package:grapewine_music_app/models/playlist.dart';
 import 'package:provider/provider.dart';
 
 import '../../../Colors/colors.dart';
 
 class AddToPlaylistScreen extends StatelessWidget {
-  final PlaylistSongModel playlistSongModel;
+  final PlaylistSong playlistSongModel;
   const AddToPlaylistScreen({super.key, required this.playlistSongModel});
 
   @override
@@ -35,7 +35,7 @@ class AddToPlaylistScreen extends StatelessWidget {
                     builder: (context) => const CreatePlaylistScreen(),
                   ));
             },
-            icon: Icon(Icons.add_circle_outline),
+            icon: const Icon(Icons.add_circle_outline),
             color: whiteColor,
             tooltip: 'Create New Playlist',
           )
@@ -77,12 +77,11 @@ class AddToPlaylistScreen extends StatelessWidget {
                   ),
                 ),
                 title: Text(
-                  playlist
-                      .playlistName, // Assuming playlist has a name property
+                  playlist.playlistName,
                   style: TextStyle(color: whiteColor),
                 ),
                 onTap: () {
-                  value.addSongToPlaylist(playlist.id!, playlistSongModel);
+                  value.addSongToPlaylist(playlist.id, playlistSongModel);
                   Navigator.pop(context);
                 },
               );

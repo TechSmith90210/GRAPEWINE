@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Providers/playlist_provider.dart';
-import 'package:grapewine_music_app/models/playlist_model.dart';
+import 'package:grapewine_music_app/models/playlist.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
 import 'package:grapewine_music_app/Presentation/widgets/AppBarWidget.dart';
@@ -122,7 +122,7 @@ class _CreatePlaylistScreenState extends State<CreatePlaylistScreen> {
                       } else {
                         // Create the playlist if the name is unique
                         String? imageUrl = selectedImage?.path;
-                        PlaylistModel playlist = PlaylistModel(
+                        Playlist playlist = Playlist(
                           playlistName: playlistName,
                           imageUrl: imageUrl ?? '', // Provide a default value if null
                         );

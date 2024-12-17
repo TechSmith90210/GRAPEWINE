@@ -7,7 +7,7 @@ import 'package:grapewine_music_app/Providers/navigator_provider.dart';
 import 'package:grapewine_music_app/Providers/search_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/playlist_model.dart';
+import '../../models/playlist.dart';
 import '../../models/song_model.dart';
 import '../Screens/music/library/liked_songs_screen.dart';
 import 'more_options_sheet.dart';
@@ -65,7 +65,7 @@ Widget TrackWidget(BuildContext context, int index) {
         context: context,
         builder: (context) {
           return MoreOptionsSheet(
-              song: PlaylistSongModel(
+              song: PlaylistSong(
                   songName: provider.searchTrackNames[index],
                   songArtists: provider.searchTrackArtists[index],
                   songImageUrl: imageUrl));
@@ -120,7 +120,7 @@ Widget TrackWidget(BuildContext context, int index) {
             context: context,
             builder: (context) {
               return MoreOptionsSheet(
-                  song: PlaylistSongModel(
+                  song: PlaylistSong(
                       songName: provider.searchTrackNames[index],
                       songArtists: provider.searchTrackArtists[index],
                       songImageUrl: imageUrl));

@@ -1,36 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:grapewine_music_app/Providers/recently_played_provider.dart';
 import 'package:grapewine_music_app/Providers/search_provider.dart';
-import 'package:grapewine_music_app/models/playlist_model.dart';
+import 'package:grapewine_music_app/models/playlist.dart';
 import 'package:provider/provider.dart';
 
+import '../Data/services/local_helper.dart';
 import '../models/song_model.dart';
 import 'musicPlayer_provider.dart';
 
 class PlaylistProvider extends ChangeNotifier {
-  final List<PlaylistModel> _playlists = [];
-  List<PlaylistModel> get playlists => _playlists;
+  List<Playlist> _playlists = [];
+  List<Playlist> get playlists => _playlists;
 
-  PlaylistModel getPlaylistById(int id) {
-    return playlists.firstWhere((playlist) => playlist.id == id);
+  // Load playlists from LocalHelper and store them in _playlists
+  // Fetch playlists from Isar and convert IsarLinks<PlaylistSong> to List<PlaylistSong> without reassigning
+  Future<void> loadPlaylists(LocalHelper localHelper) async {
+    // Load playlists from Isar using the passed localHelper instance
+    _playlists = await localHelper.loadPlaylists();
+
+    // Convert IsarLinks<PlaylistSong> to List<PlaylistSong> for use
+    for (var playlist in _playlists) {
+      // Instead of reassigning, use the add() method to add songs to the IsarLinks
+      playlist.songs.addAll(playlist.songs.toList()); // Convert IsarLinks to List and add the songs
+    }
+
+    // Notify listeners after loading playlists
+    notifyListeners();
   }
 
-  void createPlaylist(PlaylistModel playlistModel) {
+
+// Assuming _playlists is a List<Playlist> declared in your provider
+  Playlist getPlaylistById(int id) {
+    // Return the playlist with the given id
+    return _playlists.firstWhere((playlist) => playlist.id == id);
+  }
+
+  void createPlaylist(Playlist playlist) {
     int newId = _playlists.isNotEmpty
-        ? _playlists.map((e) => e.id!).reduce(
-                  (a, b) => a > b ? a : b,
-                ) +
-            1
+        ? _playlists.map((e) => e.id).reduce((a, b) => a > b ? a : b) + 1
         : 1;
-    if (!_playlists.any(
-          (playlist) => playlist.playlistName == playlistModel.playlistName,
-        ) &&
-        !_playlists.any((playlist) => playlist.id == playlistModel.id)) {
-      playlistModel = PlaylistModel(
-          id: newId,
-          playlistName: playlistModel.playlistName,
-          imageUrl: playlistModel.imageUrl);
-      _playlists.add(playlistModel);
+
+    if (!_playlists.any((existingPlaylist) =>
+        existingPlaylist.playlistName == playlist.playlistName)) {
+      playlist = Playlist(
+        id: newId,
+        playlistName: playlist.playlistName,
+        imageUrl: playlist.imageUrl,
+      );
+      _playlists.add(playlist);
+      LocalHelper().savePlaylists(_playlists); // Save updated playlists
       notifyListeners();
     } else {
       print('Playlist with the same name exists! Choose a different name!');
@@ -39,53 +57,78 @@ class PlaylistProvider extends ChangeNotifier {
 
   void deletePlaylist(int playlistId) {
     try {
-      final playlist = _playlists.firstWhere(
-        (playlist) => playlist.id == playlistId,
-      );
+      final playlist =
+          _playlists.firstWhere((playlist) => playlist.id == playlistId);
       _playlists.remove(playlist);
+      LocalHelper().savePlaylists(_playlists); // Save updated playlists
       notifyListeners();
     } catch (e) {
       print('Playlist with ID $playlistId does not exist!');
     }
   }
+  void addSongToPlaylist(int playlistId, PlaylistSong playlistSong) {
+    // Find the playlist locally in _playlists
+    final playlistIndex = _playlists.indexWhere((p) => p.id == playlistId);
+    if (playlistIndex == -1) {
+      throw Exception('Playlist with ID $playlistId does not exist!');
+    }
 
-  void addSongToPlaylist(int playlistId, PlaylistSongModel playlistSongModel) {
-    final playlist = _playlists.firstWhere(
-      (element) => element.id == playlistId,
-      orElse: () =>
-          throw Exception('Playlist with ID $playlistId does not exist!'),
-    );
+    final playlist = _playlists[playlistIndex];
 
-    playlistSongModel = PlaylistSongModel(
-      playlistId: playlistId,
-      positionInPlaylist: playlist.songs.length,
-      songName: playlistSongModel.songName,
-      songArtists: playlistSongModel.songArtists,
-      songImageUrl: playlistSongModel.songImageUrl,
-    );
+    // Add the song to the playlist in Isar using LocalHelper
+    LocalHelper().addSongToPlaylistInIsar(playlist, playlistSong);
 
-    playlist.songs.add(playlistSongModel);
+    // Update local state by reloading the playlist links
+    playlist.songs.add(playlistSong); // Add locally for instant UI updates
+    _playlists[playlistIndex] = playlist;
+
+    // Notify listeners to reflect UI changes
     notifyListeners();
+
+    print('Song "${playlistSong.songName}" added to playlist "${playlist.playlistName}".');
   }
 
-  void removeSongFromPlaylist(int playlistId, int songPosition) {
+
+
+
+  void removeSongFromPlaylist(int playlistId, int songId) async {
+    // Find the playlist by ID
     final playlist = _playlists.firstWhere(
       (element) => element.id == playlistId,
       orElse: () =>
           throw Exception('Playlist with ID $playlistId does not exist!'),
     );
 
-    if (songPosition >= 0 && songPosition < playlist.songs.length) {
-      playlist.songs.removeAt(songPosition);
+    // Load the songs from the IsarLinks
+    await playlist.songs.load(); // Load the linked songs into a list
 
-      for (int i = songPosition; i < playlist.songs.length; i++) {
-        playlist.songs[i].positionInPlaylist = i;
-      }
+    // Find the song by songId
+    final songToRemove = playlist.songs.firstWhere(
+      (song) => song.id == songId,
+      orElse: () => throw Exception(
+          'Song with ID $songId does not exist in the playlist!'),
+    );
 
-      notifyListeners();
-    } else {
-      print('Invalid position!');
+    // Remove the song from the IsarLink using removeLink
+    playlist.songs.remove(songToRemove);
+
+    // Save the updated playlist (unlinking happens automatically)
+    await LocalHelper().savePlaylists(_playlists);
+
+    // Optionally, remove the song entirely from Isar if needed
+    await LocalHelper().removePlaylistSong(songToRemove.id);
+
+    // Update positions of remaining songs
+    List<PlaylistSong> updatedSongs =
+        playlist.songs.toList(); // Convert IsarLinks to List
+
+    // Update positions of remaining songs
+    for (int i = 0; i < updatedSongs.length; i++) {
+      updatedSongs[i].positionInPlaylist = i;
     }
+
+    // Notify listeners
+    notifyListeners();
   }
 
   // Method to play the entire playlist
@@ -109,7 +152,6 @@ class PlaylistProvider extends ChangeNotifier {
     await musicPlayerProvider.fetchPlaylist(
         playlistSongs, searchProvider, recentProvider);
 
-    // Optional: Notify listeners if needed
     notifyListeners();
   }
 
@@ -120,5 +162,15 @@ class PlaylistProvider extends ChangeNotifier {
   void setEditing(bool editing) {
     _isEditing = editing;
     notifyListeners();
+  }
+
+  // Load playlists from Isar
+  Future<void> loadPlaylistsFromIsar(LocalHelper localHelper) async {
+    final playlists = await localHelper.loadPlaylists();
+
+    _playlists = playlists;
+    notifyListeners();
+
+    print('Loaded playlists!');
   }
 }

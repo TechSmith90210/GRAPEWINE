@@ -9,7 +9,7 @@ import 'package:grapewine_music_app/Providers/like_provider.dart';
 import 'package:grapewine_music_app/Providers/recently_played_provider.dart';
 import 'package:grapewine_music_app/Providers/search_provider.dart';
 import 'package:grapewine_music_app/models/liked_songs.dart';
-import 'package:grapewine_music_app/models/playlist_model.dart';
+import 'package:grapewine_music_app/models/playlist.dart';
 import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart';
 
@@ -62,19 +62,6 @@ class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
     String songArtist = searchProvider.selectedSongArtist;
     String songImageUrl = searchProvider.selectedSongImage;
 
-    Song song = Song(
-        imageUrl: songImageUrl,
-        songName: songName,
-        artists: songArtist,
-        duration:
-            musicPlayerProvider.player.current.valueOrNull?.audio.duration ??
-                Duration.zero);
-
-    LikedSongs likedSongs = LikedSongs()
-      ..songImageUrl = songImageUrl
-      ..songName = songName
-      ..songArtists = songArtist;
-
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 15),
       child: Column(
@@ -117,7 +104,7 @@ class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
                       context: context,
                       builder: (context) {
                         return MoreOptionsSheet(
-                            song: PlaylistSongModel(
+                            song: PlaylistSong(
                                 songName: songName,
                                 songArtists: songArtist,
                                 songImageUrl: songImageUrl));

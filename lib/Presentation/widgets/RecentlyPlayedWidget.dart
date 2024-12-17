@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Presentation/Screens/music/library/liked_songs_screen.dart';
-import 'package:grapewine_music_app/models/playlist_model.dart';
+import 'package:grapewine_music_app/models/playlist.dart';
 import 'package:provider/provider.dart';
 
 import '../../Colors/colors.dart';
@@ -46,7 +46,7 @@ class PreviouslyPlayedCircleWidget extends StatelessWidget {
         songName: recentlyPlayedSong.songName,
         artists: recentlyPlayedSong.songArtists);
 
-    PlaylistSongModel songModel = PlaylistSongModel(
+    PlaylistSong songModel = PlaylistSong(
         songName: recentlyPlayedSong.songName,
         songArtists: recentlyPlayedSong.songArtists,
         songImageUrl: recentlyPlayedSong.songImageUrl);

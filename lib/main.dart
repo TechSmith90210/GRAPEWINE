@@ -60,7 +60,13 @@ Future<void> main() async {
           },
         ),
         ChangeNotifierProvider.value(value: localHelper),
-        ChangeNotifierProvider(create: (context) => PlaylistProvider(),)
+        ChangeNotifierProvider(
+          create: (context) {
+            final playlistProvider = PlaylistProvider();
+            playlistProvider.loadPlaylists(localHelper);
+            return playlistProvider;
+          },
+        ),
       ],
       child: const MusicApp(),
     ),

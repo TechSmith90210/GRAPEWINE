@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Presentation/Screens/music/add_to_playlist_screen.dart';
 import 'package:grapewine_music_app/Providers/like_provider.dart';
 import 'package:grapewine_music_app/Providers/recently_played_provider.dart';
-import 'package:grapewine_music_app/models/playlist_model.dart';
+import 'package:grapewine_music_app/models/playlist.dart';
 import 'package:grapewine_music_app/models/recently_played.dart';
 import 'package:provider/provider.dart';
 import '../../../../Colors/colors.dart';
@@ -98,7 +98,7 @@ class LikedSongsScreen extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => AddToPlaylistScreen(
-                                  playlistSongModel: PlaylistSongModel(
+                                  playlistSongModel: PlaylistSong(
                                       songName: song.songName,
                                       songArtists: song.songArtists,
                                       songImageUrl: song.songImageUrl)),

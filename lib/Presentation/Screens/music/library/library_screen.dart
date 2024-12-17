@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Presentation/Screens/music/library/playlist/playlists_screen.dart';
 import 'package:grapewine_music_app/Providers/playlist_provider.dart';
 import 'package:grapewine_music_app/Providers/recently_played_provider.dart';
-import 'package:grapewine_music_app/models/playlist_model.dart';
+import 'package:grapewine_music_app/models/playlist.dart';
 import 'package:provider/provider.dart';
 import '../../../../Providers/like_provider.dart';
 import '../../../../models/song_model.dart';
@@ -145,11 +145,11 @@ class _LibraryScreenState extends State<LibraryScreen> {
                     Text(
                       'Recently Played',
                       style: GoogleFonts.redHatDisplay(
-                          color: whiteColor,
+                          color: greenColor,
                           fontSize: 14,
                           fontWeight: FontWeight.w700),
                     ),
-                    GestureDetector(
+                    Bounceable(
                       onTap: () {
                         Navigator.push(
                             context,
@@ -160,9 +160,9 @@ class _LibraryScreenState extends State<LibraryScreen> {
                       child: Text(
                         'View All',
                         style: GoogleFonts.redHatDisplay(
-                            color: redColor,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700),
+                            color: whiteColor,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600),
                       ),
                     ),
                   ],
@@ -232,7 +232,7 @@ Widget buildSongTileWidget({
         context: cx,
         builder: (context) {
           return MoreOptionsSheet(
-              song: PlaylistSongModel(
+              song: PlaylistSong(
                   songName: songTitle,
                   songArtists: songArtist,
                   songImageUrl: imageUrl));

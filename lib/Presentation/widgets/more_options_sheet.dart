@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Presentation/Screens/music/add_to_playlist_screen.dart';
 import 'package:grapewine_music_app/Providers/like_provider.dart';
 import 'package:grapewine_music_app/Providers/search_provider.dart';
-import 'package:grapewine_music_app/models/playlist_model.dart';
+import 'package:grapewine_music_app/models/playlist.dart';
 import 'package:provider/provider.dart';
 
 import '../../Colors/colors.dart';
@@ -12,7 +12,7 @@ import '../../models/song_model.dart';
 import 'MiniPlayerWidget.dart'; // Adjust this import based on your project structure
 
 class MoreOptionsSheet extends StatelessWidget {
-  final PlaylistSongModel song;
+  final PlaylistSong song;
 
   const MoreOptionsSheet({super.key, required this.song});
 
