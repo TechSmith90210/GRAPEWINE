@@ -57,15 +57,32 @@ class PlaylistProvider extends ChangeNotifier {
 
   void deletePlaylist(int playlistId) {
     try {
-      final playlist =
-          _playlists.firstWhere((playlist) => playlist.id == playlistId);
-      _playlists.remove(playlist);
-      LocalHelper().savePlaylists(_playlists); // Save updated playlists
+      // Locate the playlist to be deleted
+      final playlistIndex = _playlists.indexWhere((playlist) => playlist.id == playlistId);
+      if (playlistIndex == -1) {
+        throw Exception('Playlist with ID $playlistId does not exist!');
+      }
+
+      final playlist = _playlists[playlistIndex];
+
+      // Clear IsarLinks for the playlist (detach the songs)
+      LocalHelper().clearPlaylistSongs(playlist);
+
+      // Remove the playlist from the local list
+      _playlists.removeAt(playlistIndex);
+
+      // Save updated playlists back to Isar
+      LocalHelper().savePlaylists(_playlists);
+
+      // Notify listeners to update the UI
       notifyListeners();
+
+      print('Playlist "${playlist.playlistName}" deleted successfully.');
     } catch (e) {
-      print('Playlist with ID $playlistId does not exist!');
+      print('Error deleting playlist: $e');
     }
   }
+
   void addSongToPlaylist(int playlistId, PlaylistSong playlistSong) {
     // Find the playlist locally in _playlists
     final playlistIndex = _playlists.indexWhere((p) => p.id == playlistId);

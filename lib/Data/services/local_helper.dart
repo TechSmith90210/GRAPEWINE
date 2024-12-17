@@ -96,7 +96,8 @@ class LocalHelper extends ChangeNotifier {
         if (savedSong != null) {
           playlist.songs.add(savedSong);
           await playlist.songs.save(); // Save the IsarLinks
-          print('Song "${savedSong.songName}" added to playlist "${playlist.playlistName}"');
+          print(
+              'Song "${savedSong.songName}" added to playlist "${playlist.playlistName}"');
         }
       } catch (e) {
         print('Error adding song to playlist: $e');
@@ -113,4 +114,26 @@ class LocalHelper extends ChangeNotifier {
       print("Error removing song: $e");
     });
   }
+
+  void clearPlaylistSongs(Playlist playlist) async {
+    try {
+      await _isar.writeTxn(() async {
+        // Delete all songs from the playlist (from the Isar database)
+        await Future.forEach(playlist.songs, (PlaylistSong song) async {
+          await _isar.playlistSongs.delete(song.id);  // Delete the song from the Isar database
+        });
+
+        // Clear the IsarLinks (unlink the songs from the playlist)
+        playlist.songs.clear();
+
+        // Save the updated playlist (removing the links to the songs)
+        await _isar.playlists.put(playlist);
+      });
+
+      print('All songs deleted and detached from playlist "${playlist.playlistName}".');
+    } catch (e) {
+      print('Error clearing songs from playlist: $e');
+    }
+  }
+
 }

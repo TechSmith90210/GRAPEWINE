@@ -76,6 +76,8 @@ class PlayPlaylistScreen extends StatelessWidget {
                                     onPressed: () async {
                                       Navigator.pop(context);
                                       Navigator.pop(context);
+                                      await Future.delayed(const Duration(seconds: 3)); // Adjust duration as needed
+
                                       playlistProvider
                                           .deletePlaylist(playlist.id);
                                     },
