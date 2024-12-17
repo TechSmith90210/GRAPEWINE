@@ -74,12 +74,16 @@ class PlayPlaylistScreen extends StatelessWidget {
                                   ),
                                   TextButton(
                                     onPressed: () async {
+                                      if (playlistProvider.isEditing == true) {
+                                        playlistProvider.setEditing(false);
+                                      }
                                       Navigator.pop(context);
                                       Navigator.pop(context);
-                                      await Future.delayed(const Duration(seconds: 3)); // Adjust duration as needed
+                                      await Future.delayed(
+                                          const Duration(milliseconds: 300));
 
-                                      playlistProvider
-                                          .deletePlaylist(playlist.id);
+                                      playlistProvider.deletePlaylist(
+                                          playlist.id, context);
                                     },
                                     child: const Text(
                                       'Delete',
@@ -185,107 +189,115 @@ class PlayPlaylistScreen extends StatelessWidget {
               Expanded(
                 child: updatedPlaylist.songs.toList().isEmpty
                     ? Center(
-                  child: Text(
-                    'No songs in this playlist.',
-                    style: GoogleFonts.redHatDisplay(
-                      color: whiteColor,
-                      fontSize: 16,
-                    ),
-                  ),
-                )
-                    : ListView.builder(
-                  itemCount: updatedPlaylist.songs.length,
-                  itemBuilder: (context, index) {
-                    final play =  updatedPlaylist.songs.toList();
-                    final song = play[index];
-                    final thePlaylist = mapPlaylistSongsToSongs(updatedPlaylist.songs.toList());
-
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 3),
-                      child: Slidable(
-                        closeOnScroll: true,
-                        endActionPane: ActionPane(
-                          motion: const ScrollMotion(),
-                          children: [
-                            SlidableAction(
-                              autoClose: true,
-                              onPressed: (context) {
-                                playlistProvider.removeSongFromPlaylist(updatedPlaylist.id, index);
-                              },
-                              backgroundColor: redColor,
-                              foregroundColor: Colors.white,
-                              icon: Icons.playlist_remove,
-                              label: 'Remove from playlist',
-                            ),
-                          ],
+                        child: Text(
+                          'No songs in this playlist.',
+                          style: GoogleFonts.redHatDisplay(
+                            color: whiteColor,
+                            fontSize: 16,
+                          ),
                         ),
-                        child: ListTile(
-                          tileColor: blackColor.withOpacity(0.2),
-                          onTap: () {
-                            handlePlaylistTap(
-                              context: context,
-                              playlist: thePlaylist,
-                              index: index,
-                            );
-                          },
-                          leading: Container(
-                            height: 55,
-                            width: 55,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: NetworkImage(
-                                  song.songImageUrl.isNotEmpty
-                                      ? song.songImageUrl
-                                      : 'https://assets.audiomack.com/default-song-image.png',
-                                ),
-                                fit: BoxFit.cover,
+                      )
+                    : ListView.builder(
+                        itemCount: updatedPlaylist.songs.length,
+                        itemBuilder: (context, index) {
+                          final play = updatedPlaylist.songs.toList();
+                          final song = play[index];
+                          final thePlaylist = mapPlaylistSongsToSongs(
+                              updatedPlaylist.songs.toList());
+
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 3),
+                            child: Slidable(
+                              closeOnScroll: true,
+                              endActionPane: ActionPane(
+                                motion: const ScrollMotion(),
+                                children: [
+                                  SlidableAction(
+                                    autoClose: true,
+                                    onPressed: (context) {
+                                      playlistProvider.removeSongFromPlaylist(
+                                          updatedPlaylist.id, index);
+                                    },
+                                    backgroundColor: redColor,
+                                    foregroundColor: Colors.white,
+                                    icon: Icons.playlist_remove,
+                                    label: 'Remove from playlist',
+                                  ),
+                                ],
                               ),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                          title: Text(
-                            song.songName,
-                            style: GoogleFonts.redHatDisplay(
-                              color: whiteColor,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 14,
-                            ),
-                          ),
-                          subtitle: Text(
-                            song.songArtists,
-                            style: GoogleFonts.redHatDisplay(
-                              color: darkgreyColor,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 12,
-                            ),
-                          ),
-                          trailing: IconButton(
-                            onPressed: () {
-                              playlistProvider.isEditing
-                                  ? playlistProvider.removeSongFromPlaylist(updatedPlaylist.id, index)
-                                  : showModalBottomSheet(backgroundColor: eerieblackColor,
-                                context: context,
-                                builder: (context) {
-                                  return MoreOptionsSheet(
-                                    song: PlaylistSong(
-                                      songName: song.songName,
-                                      songArtists: song.songArtists,
-                                      songImageUrl: song.songImageUrl,
-                                    ),
+                              child: ListTile(
+                                tileColor: blackColor.withOpacity(0.2),
+                                onTap: () {
+                                  handlePlaylistTap(
+                                    context: context,
+                                    playlist: thePlaylist,
+                                    index: index,
                                   );
                                 },
-                              );
-                            },
-                            icon: Icon(
-                              playlistProvider.isEditing ? Icons.close : Icons.more_horiz,
-                              color: whiteColor,
+                                leading: Container(
+                                  height: 55,
+                                  width: 55,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: NetworkImage(
+                                        song.songImageUrl.isNotEmpty
+                                            ? song.songImageUrl
+                                            : 'https://assets.audiomack.com/default-song-image.png',
+                                      ),
+                                      fit: BoxFit.cover,
+                                    ),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                ),
+                                title: Text(
+                                  song.songName,
+                                  style: GoogleFonts.redHatDisplay(
+                                    color: whiteColor,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  song.songArtists,
+                                  style: GoogleFonts.redHatDisplay(
+                                    color: darkgreyColor,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                trailing: IconButton(
+                                  onPressed: () {
+                                    playlistProvider.isEditing
+                                        ? playlistProvider
+                                            .removeSongFromPlaylist(
+                                                updatedPlaylist.id, index)
+                                        : showModalBottomSheet(
+                                            backgroundColor: eerieblackColor,
+                                            context: context,
+                                            builder: (context) {
+                                              return MoreOptionsSheet(
+                                                song: PlaylistSong(
+                                                  songName: song.songName,
+                                                  songArtists: song.songArtists,
+                                                  songImageUrl:
+                                                      song.songImageUrl,
+                                                ),
+                                              );
+                                            },
+                                          );
+                                  },
+                                  icon: Icon(
+                                    playlistProvider.isEditing
+                                        ? Icons.close
+                                        : Icons.more_horiz,
+                                    color: whiteColor,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
               )
             ],
           );

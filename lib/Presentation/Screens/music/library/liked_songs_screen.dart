@@ -18,6 +18,13 @@ class LikedSongsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var recentProvider =
+        Provider.of<RecentlyPlayedProvider>(context, listen: false);
+    var searchProvider = Provider.of<SearchProvider>(context, listen: false);
+    var musicPlayerProvider =
+        Provider.of<MusicPlayerProvider>(context, listen: false);
+    var likeProvider = Provider.of<LikedProvider>(context, listen: false);
+
     return Scaffold(
       appBar: AppBarWidget(
         title: 'LIKED SONGS',
@@ -45,9 +52,11 @@ class LikedSongsScreen extends StatelessWidget {
           //   icon: Icon(Icons.delete),
           // ),
 
-          // TODO: add feature to play liked songs as a playlist and from any index
           IconButton(
-            onPressed: () {},
+            onPressed: () async {
+              await likeProvider.playLikedSongs(
+                  musicPlayerProvider, searchProvider, recentProvider);
+            },
             icon: const Icon(Icons.play_arrow_rounded),
             color: whiteColor,
           )
@@ -123,15 +132,20 @@ class LikedSongsScreen extends StatelessWidget {
                     ),
                   ]),
                   child: ListTile(
-                    tileColor: blackColor.withOpacity(0.2),
+                    tileColor: blackColor.withOpacity(0.4),
                     onTap: () async {
-                      // Handle song tap
-                      handleSongTap(
-                          context: context,
-                          song: Song(
-                              imageUrl: song.songImageUrl,
-                              songName: song.songName,
-                              artists: song.songArtists));
+                      // // Handle song tap
+                      // handleSongTap(
+                      //     context: context,
+                      //     song: Song(
+                      //         imageUrl: song.songImageUrl,
+                      //         songName: song.songName,
+                      //         artists: song.songArtists));
+                      await likeProvider.playLikedSongsAtIndex(
+                          musicPlayerProvider,
+                          index,
+                          searchProvider,
+                          recentProvider);
                     },
                     leading: Container(
                       height: 55,

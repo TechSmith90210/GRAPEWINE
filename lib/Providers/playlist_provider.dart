@@ -55,7 +55,7 @@ class PlaylistProvider extends ChangeNotifier {
     }
   }
 
-  void deletePlaylist(int playlistId) {
+  void deletePlaylist(int playlistId,BuildContext cx) {
     try {
       // Locate the playlist to be deleted
       final playlistIndex = _playlists.indexWhere((playlist) => playlist.id == playlistId);

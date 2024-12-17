@@ -42,16 +42,16 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: const AppBarWidget(
         title: 'HOME',
         // leading: ImageIcon(
-        //   const AssetImage("assets/grapewine_logo_medium.png"),
+        //   const AssetImage(""),
         //   color: purpleColor,
         // ),
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 7),
             child: CircleAvatar(
-              backgroundColor: Color(0xffE6E6E6),
-              backgroundImage: NetworkImage(
-                  'https://i.pinimg.com/736x/3c/fe/f0/3cfef07dbfaea9c6229ec5eb4aa305e0.jpg'),
+              backgroundColor: Color(0xffffff),
+              backgroundImage: AssetImage(
+                  'assets/grapewine_logo.png',),radius: 17,
               // child: Icon(
               //   Icons.person,
               //   color: Color(0xffCCCCCC),
