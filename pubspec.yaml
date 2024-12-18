@@ -71,6 +71,9 @@ dependencies:
   modal_bottom_sheet: ^3.0.0
   icons_launcher: ^3.0.0
   flutter_native_splash: ^2.4.3
+  scrollable_positioned_list: ^0.3.8
+  genius_lyrics: ^1.0.1
+  mini_music_visualizer: ^1.1.4
 
 
 

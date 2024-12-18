@@ -1,9 +1,11 @@
-
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
+import 'package:grapewine_music_app/CustomStrings.dart';
+import 'package:grapewine_music_app/Presentation/Screens/music/lyrics_screen.dart';
+import 'package:grapewine_music_app/Presentation/Screens/music/queue_screen.dart';
 import 'package:grapewine_music_app/Presentation/widgets/more_options_sheet.dart';
 import 'package:grapewine_music_app/Providers/like_provider.dart';
 import 'package:grapewine_music_app/Providers/recently_played_provider.dart';
@@ -30,6 +32,8 @@ class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
     var searchProvider = Provider.of<SearchProvider>(context, listen: false);
     var musicPlayerProvider =
         Provider.of<MusicPlayerProvider>(context, listen: false);
+    var recentProvider =
+        Provider.of<RecentlyPlayedProvider>(context, listen: false);
 
     if (!musicPlayerProvider.firstSongRun &&
         !musicPlayerProvider.isInitialized &&
@@ -45,13 +49,11 @@ class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
 
   late Future<void> _initializationFuture;
 
-
   @override
   void initState() {
     super.initState();
     _initializationFuture = _initialize();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -267,7 +269,16 @@ class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: (context) => LyricsScreen(
+                  //         songName: songName,
+                  //         songArtist: songArtist,
+                  //       ),
+                  //     ));
+                },
                 icon: Icon(
                   Icons.lyrics_outlined,
                   color: whiteColor,
@@ -320,12 +331,13 @@ class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
                       Provider.of<MusicPlayerProvider>(context, listen: false);
                   final searchProvider =
                       Provider.of<SearchProvider>(context, listen: false);
-                  final recentProvider =
-                  Provider.of<RecentlyPlayedProvider>(context, listen: false);
+                  final recentProvider = Provider.of<RecentlyPlayedProvider>(
+                      context,
+                      listen: false);
 
                   // Call handleNextAction
                   musicProvider.handleNextAction(
-                      musicProvider.player, searchProvider,recentProvider);
+                      musicProvider.player, searchProvider, recentProvider);
                 },
                 icon: const Icon(
                   Icons.skip_next_rounded,
@@ -334,7 +346,13 @@ class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
                 color: whiteColor,
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => QueueScreen(),
+                      ));
+                },
                 icon: Icon(
                   Icons.queue_music,
                   color: whiteColor,

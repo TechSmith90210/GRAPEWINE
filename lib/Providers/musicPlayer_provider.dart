@@ -89,7 +89,8 @@ class MusicPlayerProvider with ChangeNotifier {
   // Flag to prevent multiple simultaneous fetches
   bool _isFetching = false;
 
-  Future<Duration?> fetchSong(String theSongName, SearchProvider provider) async {
+  Future<Duration?> fetchSong(
+      String theSongName, SearchProvider provider) async {
     if (_isFetching) {
       print("Already fetching a song. Please wait.");
       return null; // Prevent duplicate calls
@@ -111,7 +112,9 @@ class MusicPlayerProvider with ChangeNotifier {
         final newAudioUrl = manifest.audioOnly.first.url;
 
         // Check if the song is already playing
-        if (audioUrl == newAudioUrl && _player != null && _player.isPlaying.value) {
+        if (audioUrl == newAudioUrl &&
+            _player != null &&
+            _player.isPlaying.value) {
           print("The selected song is already playing.");
           return null; // Skip reinitialization if the song is already playing
         }
@@ -126,6 +129,14 @@ class MusicPlayerProvider with ChangeNotifier {
 
         // Reinitialize the player
         _player = just.AssetsAudioPlayer();
+
+        // Clear the queue and add the new song to it
+        _queue.clear(); // Clear the queue
+        _queue.add(Song(
+          songName: provider.selectedSongName,
+          artists: provider.selectedSongArtist,
+          imageUrl: provider.selectedSongImage,
+        )); // Add the fetched song to the queue
 
         // Open the new audio and start playback
         await _player.open(
@@ -174,13 +185,21 @@ class MusicPlayerProvider with ChangeNotifier {
     return null;
   }
 
-
-  Future<void> fetchPlaylist(List<Song> playlist, SearchProvider provider,
-      RecentlyPlayedProvider recentProvider,
-      {int? index}) async {
+  Future<void> fetchPlaylist(
+    List<Song> playlist,
+    SearchProvider provider,
+    RecentlyPlayedProvider recentProvider, {
+    int? index,
+  }) async {
     final yt = YoutubeExplode();
+
     try {
-      List<just.Audio> audioList = []; // Use just prefix for Audio list
+      // Clear the current queue
+      _queue.clear();
+
+      // Temporary lists to hold audios and songs
+      List<just.Audio> audioList = [];
+      List<Song> songQueue = [];
 
       for (var song in playlist) {
         var songName = song.songName;
@@ -190,6 +209,7 @@ class MusicPlayerProvider with ChangeNotifier {
           var manifest = await yt.videos.streamsClient.getManifest(videoId);
           audioUrl = manifest.audioOnly.first.url;
 
+          // Create an Audio object for just_audio
           just.Audio audio = just.Audio.network(
             audioUrl.toString(),
             metas: just.Metas(
@@ -202,9 +222,24 @@ class MusicPlayerProvider with ChangeNotifier {
               ),
             ),
           );
+
+          // Add the Audio object to the audio list
           audioList.add(audio);
+
+          // Create a new Song object from the current song
+          Song songItem = Song(
+            songName: song.songName,
+            artists: song.artists,
+            imageUrl: song.imageUrl,
+          );
+
+          // Add the Song object to the songQueue
+          songQueue.add(songItem);
         }
       }
+
+      // Update the queue with the new songQueue
+      _queue.addAll(songQueue);
 
       // Open the playlist
       await _player.open(
@@ -217,50 +252,39 @@ class MusicPlayerProvider with ChangeNotifier {
         notificationSettings: just.NotificationSettings(
           seekBarEnabled: true,
           playPauseEnabled: true,
-          customNextAction: (player) => handleNextAction(
-              _player, provider, recentProvider), // Call extracted method
-          customPrevAction: (player) =>
-              handlePrevAction(_player, provider), // Call extracted method
+          customNextAction: (player) =>
+              handleNextAction(_player, provider, recentProvider),
+          customPrevAction: (player) => handlePrevAction(_player, provider),
           customPlayPauseAction: (player) async {
             if (player.isPlaying.value) {
               await player.pause();
-              togglePlayPause(); // Ensure state is updated
+              togglePlayPause();
             } else {
               await player.play();
-              togglePlayPause(); // Ensure state is updated
+              togglePlayPause();
             }
           },
         ),
       );
 
+      // Update metadata for the current song
       final currentSongMetas = _player.playlist!.audios.first.metas;
+      provider.setSongName(currentSongMetas.title ?? 'Unknown Title');
+      provider.setSongArtist(currentSongMetas.artist ?? 'Unknown Artist');
+      provider.setSongImage(currentSongMetas.image?.path ?? '');
 
-      provider.setSongName(currentSongMetas.title!);
-      provider.setSongArtist(currentSongMetas.artist!);
-      provider.setSongImage(currentSongMetas.image!.path);
-
-      // Listener for when the current song changes
+      // Listen for changes in the current playing song
       _player.current.listen((playing) {
         if (playing != null) {
           final currentMetas = playing.audio.audio.metas;
-
-          // Update the provider with the current song's metadata
-          provider.setSongName(currentMetas.title! ?? 'Unknown Title');
-          provider.setSongArtist(currentMetas.artist! ?? 'Unknown Artist');
-          provider.setSongImage(currentMetas.image!.path ?? '');
-
-          provider.notifyListeners(); // Notify listeners to rebuild UI
-
-          // RecentlyPlayed recentlyPlayed = RecentlyPlayed()
-          //   ..songName = currentSongMetas.title!
-          //   ..songArtists = currentSongMetas.artist!
-          //   ..songImageUrl = currentSongMetas.image!.path
-          //   ..playedAt = DateTime.now();
-          //
-          // recentProvider.addRecentlyPlayed(recentlyPlayed);
+          provider.setSongName(currentMetas.title ?? 'Unknown Title');
+          provider.setSongArtist(currentMetas.artist ?? 'Unknown Artist');
+          provider.setSongImage(currentMetas.image?.path ?? '');
+          provider.notifyListeners();
         }
       });
 
+      // Notify provider listeners
       provider.notifyListeners();
     } catch (e) {
       if (kDebugMode) {
@@ -310,5 +334,21 @@ class MusicPlayerProvider with ChangeNotifier {
         print('Error handling previous action: $e');
       }
     }
+  }
+
+  List<Song> _queue = [];
+
+  List<Song> get queue => _queue;
+
+  // Add a song to the queue
+  void addSongToQueue(Song song) {
+    _queue.add(song);
+    notifyListeners(); // Notify listeners of changes
+  }
+
+  // Remove a song from the queue
+  void removeSongFromQueue(int index) {
+    _queue.removeAt(index);
+    notifyListeners(); // Notify listeners of changes
   }
 }
