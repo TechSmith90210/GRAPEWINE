@@ -5,11 +5,13 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
+
     <application
         android:label="Grapewine"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
-
+        <receiver android:name="androidx.work.impl.background.systemjob.SystemJobService" />
+        <receiver android:name="androidx.work.impl.background.firebase.FirebaseJobService" />
         <activity
             android:name="com.ryanheise.audioservice.AudioServiceActivity"
             android:exported="true"
@@ -18,7 +20,10 @@
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize"
-            android:enableOnBackInvokedCallback="true">
+            android:enableOnBackInvokedCallback="true"
+            android:usesCleartextTraffic="true"
+            android:allowBackup="true"
+            >
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"
                 android:resource="@style/NormalTheme"/>

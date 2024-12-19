@@ -68,4 +68,27 @@ class NewReleasesProvider with ChangeNotifier {
   void updateIndex(int newIndex) {
     _index = newIndex;
   }
+
+  List<String> realalbumIds = [];
+  List<String> realalbumNames = [];
+  List<List<String?>> allAlbumArtists = [];
+  List<String?> realalbumCovers = [];
+
+  // Method to update the album data
+  void updateAlbumData(List<String> ids, List<String> names,
+      List<List<String?>> artists, List<String?> covers) {
+    realalbumIds = ids;
+    realalbumNames = names;
+    allAlbumArtists = artists;
+    realalbumCovers = covers;
+
+    // Notify listeners so that widgets can rebuild with the new data
+    notifyListeners();
+  }
+
+  // Optionally, you can add getter methods to access the updated data:
+  List<String> get getAlbumIds => albumIds;
+  List<String> get getAlbumNames => albumNames;
+  List<List<String?>> get getAllAlbumArtists => allAlbumArtists;
+  List<String?> get getAlbumCovers => albumCovers;
 }

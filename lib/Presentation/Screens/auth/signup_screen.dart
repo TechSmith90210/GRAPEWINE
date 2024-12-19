@@ -3,9 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
 import 'package:grapewine_music_app/Presentation/widgets/googleSignInWidget.dart';
-import 'package:grapewine_music_app/Providers/date_provider.dart';
-import 'package:grapewine_music_app/Providers/gender_provider.dart';
-import 'package:grapewine_music_app/Providers/signup_provider.dart';
+import 'package:grapewine_music_app/Providers/auth_provider.dart';
 import 'package:grapewine_music_app/config/screen_size.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -56,7 +54,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     EdgeInsets margin = calculateMargin(screenHeight, screenWidth);
-    var signUpProvider = Provider.of<SignupProvider>(context);
+    var signUpProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
         body: SingleChildScrollView(
       scrollDirection: Axis.vertical,
@@ -227,7 +225,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Expanded(
                       child: Align(
                         alignment: Alignment.centerRight,
-                        child: Consumer<GenderProvider>(
+                        child: Consumer<AuthProvider>(
                           builder: (context, genderProvider, child) {
                             return Container(
                               padding: EdgeInsets.only(left: 30, right: 30),
@@ -275,7 +273,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 Container(
                   width: double.infinity,
-                  child: Consumer<DateProvider>(
+                  child: Consumer<AuthProvider>(
                     builder: (context, value, child) {
                       return ElevatedButton(
                         onPressed: () async {
@@ -292,7 +290,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             DateTime? dob =
                                 DateFormat('dd MMM yyyy').parse(dateofbirth);
 
-                            var gender = Provider.of<GenderProvider>(context,
+                            var gender = Provider.of<AuthProvider>(context,
                                     listen: false)
                                 .selectedGender;
 

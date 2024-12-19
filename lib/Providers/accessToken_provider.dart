@@ -10,8 +10,8 @@ class AccessTokenProvider with ChangeNotifier {
   String? get accessToken => _accessToken;
 
   // Fetch the access token if not available
-  Future<String?> getAccessToken(BuildContext context) async {
-    _accessToken ??= await fetchAccessToken(context);
+  Future<String?> getAccessToken() async {
+    _accessToken ??= await fetchAccessToken();
     return _accessToken;
   }
 
@@ -21,7 +21,7 @@ class AccessTokenProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<String?> fetchAccessToken(BuildContext context) async {
+  Future<String?> fetchAccessToken() async {
     const clientId = CustomStrings.clientId;
     const clientSecret = CustomStrings.clientSecret;
 

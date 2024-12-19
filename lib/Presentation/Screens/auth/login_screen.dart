@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:grapewine_music_app/Providers/auth_provider.dart';
 import '../../../../Colors/colors.dart';
-import '../../../../Providers/login_provider.dart';
-import '../../../../Providers/password_provider.dart';
 import '../../../../config/screen_size.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     EdgeInsets margin = calculateMargin(screenHeight, screenWidth);
-    var loginProvider = Provider.of<LoginProvider>(context);
+    var loginProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -91,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             height: 10,
                           ),
 
-                          Consumer<PasswordProvider>(
+                          Consumer<AuthProvider>(
                             builder: (context, passwordProvider, child) {
                               return TextField(
                                 controller: passwordProvider.passwordController,
@@ -107,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   suffixIcon: InkWell(
                                     onTap: () {
                                       print('I rebuilt!');
-                                      passwordProvider.seePassword();
+                                      passwordProvider.togglePasswordVisibility();
                                     },
                                     child: Icon(passwordProvider.obscureText
                                         ? Icons.visibility
@@ -141,7 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           Container(
                             width: double.infinity,
-                            child: Consumer<PasswordProvider>(
+                            child: Consumer<AuthProvider>(
                               builder: (context, passwordProvider, child) {
                                 return ElevatedButton(
                                   onPressed: () async {

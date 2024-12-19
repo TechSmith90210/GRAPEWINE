@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
-import 'package:grapewine_music_app/Providers/google_signin_provider.dart';
 import 'package:provider/provider.dart';
+
+import '../../Providers/auth_provider.dart';
 
 class GoogleSignInButton extends StatefulWidget {
   final String text;
@@ -16,13 +17,13 @@ class GoogleSignInButton extends StatefulWidget {
 class _GoogleSignInButtonState extends State<GoogleSignInButton> {
   @override
   Widget build(BuildContext context) {
-    var googleSignInProvider = Provider.of<GoogleSignInProvider>(context);
+    var googleSignInProvider = Provider.of<AuthProvider>(context);
 
     return Container(
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
-          googleSignInProvider.signinwithgoogle(context);
+          googleSignInProvider.signInWithGoogle(context);
         },
         style: ElevatedButton.styleFrom(
           padding: EdgeInsets.all(15),

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
+import 'package:grapewine_music_app/Data/Api/fetchNewReleases.dart';
+import 'package:grapewine_music_app/Presentation/Screens/music/home/new_releases_screen.dart';
 import 'package:grapewine_music_app/Presentation/Screens/music/library/recently_played_screen.dart';
 import 'package:grapewine_music_app/Presentation/widgets/AppBarWidget.dart';
 import 'package:grapewine_music_app/Presentation/widgets/NewReleasesWidget.dart';
@@ -51,7 +54,9 @@ class _HomeScreenState extends State<HomeScreen> {
             child: CircleAvatar(
               backgroundColor: Color(0xffffff),
               backgroundImage: AssetImage(
-                  'assets/grapewine_logo.png',),radius: 17,
+                'assets/grapewine_logo.png',
+              ),
+              radius: 17,
               // child: Icon(
               //   Icons.person,
               //   color: Color(0xffCCCCCC),
@@ -158,35 +163,34 @@ class _HomeScreenState extends State<HomeScreen> {
                               fontSize: 14,
                             ),
                           ),
-                          Row(
-                            children: [
-                              Text(
-                                'View All',
-                                style: GoogleFonts.redHatDisplay(
-                                  color: whiteColor,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 12,
+                          Bounceable(
+                            onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const NewReleasesScreen(),
+                                )),
+                            child: Row(
+                              children: [
+                                Text(
+                                  'View All',
+                                  style: GoogleFonts.redHatDisplay(
+                                    color: whiteColor,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12,
+                                  ),
                                 ),
-                              ),
-                              Icon(
-                                Icons.arrow_right,
-                                color: whiteColor,
-                              )
-                            ],
+                                Icon(
+                                  Icons.arrow_right,
+                                  color: whiteColor,
+                                )
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 180,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 6,
-                        itemBuilder: (context, index) {
-                          return NewReleasesWidget(index: index);
-                        },
-                      ),
-                    ),
+                    const NewReleasesWidget(),
                     const SizedBox(
                       height: 10,
                     ),

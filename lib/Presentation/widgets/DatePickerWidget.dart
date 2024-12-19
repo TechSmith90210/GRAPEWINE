@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
-import 'package:grapewine_music_app/Providers/date_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
+import '../../Providers/auth_provider.dart';
 
 class DatePickerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print('I built myself');
-    return Consumer<DateProvider>(
+    return Consumer<AuthProvider>(
       builder: (context, dateProvider, child) {
         String hintText = dateProvider.selectedDate != null
             ? DateFormat('dd MMM yyyy').format(dateProvider.selectedDate!)
@@ -48,16 +49,16 @@ class DatePickerWidget extends StatelessWidget {
   }
 
   Future<void> _showDatePicker(
-      BuildContext context, DateProvider dateProvider) async {
+      BuildContext context, AuthProvider authProvider) async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
-      initialDate: dateProvider.selectedDate ?? DateTime.now(),
+      initialDate: authProvider.selectedDate ?? DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2026),
     );
 
     if (pickedDate != null) {
-      dateProvider.setDate(pickedDate);
+      authProvider.setDate(pickedDate);
     }
   }
 }
