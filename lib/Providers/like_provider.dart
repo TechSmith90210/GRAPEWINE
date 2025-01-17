@@ -90,6 +90,7 @@ class LikedProvider with ChangeNotifier {
         songName: likedSong.songName,
         imageUrl: likedSong.songImageUrl,
         artists: likedSong.songArtists,
+        songId: likedSong.songId
       );
     }).toList();
 
@@ -119,6 +120,7 @@ class LikedProvider with ChangeNotifier {
         songName: likedSong.songName,
         imageUrl: likedSong.songImageUrl,
         artists: likedSong.songArtists,
+        songId: likedSong.songId
       );
     }).toList();
 

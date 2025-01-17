@@ -6,7 +6,9 @@ import 'package:grapewine_music_app/Presentation/widgets/AppBarWidget.dart';
 import 'package:grapewine_music_app/Presentation/widgets/SearchBarWidget.dart';
 import 'package:grapewine_music_app/Presentation/widgets/TrendingItemWidget.dart';
 import 'package:grapewine_music_app/models/song_model.dart';
+import 'package:provider/provider.dart';
 import '../../../../Colors/colors.dart';
+import '../../../../Providers/musicPlayer_provider.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
@@ -50,9 +52,13 @@ class SearchScreen extends StatelessWidget {
                 ),
                 Bounceable(
                   onTap: () {
-                    handleSongTap(
+                    var provider = Provider.of<MusicPlayerProvider>(context);
+
+                    provider.handleSongTap(
                         context: context,
                         song: Song(
+                          //TODO: add song id of forever by destroy lonely
+                          songId: '',
                             imageUrl:
                                 'https://i.scdn.co/image/ab67616d0000b273dca2deff544636f1ad1d9d96',
                             songName: 'FOREVER',

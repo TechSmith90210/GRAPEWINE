@@ -9,6 +9,7 @@ class RecentlyPlayed {
   late String songName; // name of the song
   late String songArtists; // song artists name
   late String songImageUrl; // link of the song's image
+  late String songId;
 
   late DateTime playedAt; // Timestamp of when the song was played
 }

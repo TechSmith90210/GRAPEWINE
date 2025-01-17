@@ -5,7 +5,6 @@ import 'package:grapewine_music_app/Presentation/Screens/music/search/search_scr
 import 'package:grapewine_music_app/Presentation/Screens/music/library/library_screen.dart';
 import 'package:grapewine_music_app/Presentation/Screens/music/song_player3_screen.dart';
 import 'package:grapewine_music_app/Presentation/widgets/BottomNavBarWidget.dart';
-import 'package:grapewine_music_app/Presentation/widgets/MiniPlayerWidget.dart';
 import 'package:grapewine_music_app/Presentation/widgets/TheMiniPlayer.dart';
 import 'package:grapewine_music_app/Providers/musicPlayer_provider.dart';
 import 'package:provider/provider.dart';

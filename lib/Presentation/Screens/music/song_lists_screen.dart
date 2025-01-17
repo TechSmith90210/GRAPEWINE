@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,42 +8,42 @@ import '../../../../../Providers/musicPlayer_provider.dart';
 import '../../../../../Providers/playlist_provider.dart';
 import '../../../../../models/playlist.dart';
 import '../../../../../models/song_model.dart';
-import '../../../../widgets/more_options_sheet.dart';
-import '../liked_songs_screen.dart';
+import '../../../models/album_model.dart';
+import '../../widgets/more_options_sheet.dart';
+import 'add_to_playlist_screen.dart';
 
-class PlayPlaylistScreen extends StatelessWidget {
-  final Playlist playlist;
+class SongListsScreen extends StatelessWidget {
+  final AlbumModel album;
 
-  const PlayPlaylistScreen({super.key, required this.playlist});
+  const SongListsScreen({super.key, required this.album});
 
-  List<Song> mapPlaylistSongsToSongs(List<PlaylistSong> playlistSongs) {
-    return playlistSongs.map((playlistSong) {
+  List<Song> mapPlaylistSongsToSongs(List<AlbumSong> albumSongs) {
+    return albumSongs.map((albumSong) {
       return Song(
-        songName: playlistSong.songName,
-        artists: playlistSong.songArtists,
-        imageUrl: playlistSong.songImageUrl,
-        songId: playlistSong.songId
+        songName: albumSong.name,
+        artists: albumSong.artists,
+        imageUrl: albumSong.imageUrl,
+        songId: albumSong.id,
       );
     }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    var playlistProvider = Provider.of<PlaylistProvider>(context);
     var musicProvider = Provider.of<MusicPlayerProvider>(context);
 
     return Scaffold(
       body: Consumer<PlaylistProvider>(
         builder: (context, playlistProvider, child) {
-          final updatedPlaylist = playlistProvider.getPlaylistById(playlist.id);
-          List<PlaylistSong> songs = updatedPlaylist.songs.toList();
-          final playlistSongs = mapPlaylistSongsToSongs(songs);
+          List<AlbumSong> songs = album.songs;
+
+          final albumSongs = mapPlaylistSongsToSongs(songs);
 
           return CustomScrollView(
             slivers: [
               SliverAppBar(
                 title: Text(
-                  playlist.playlistName,
+                  album.name,
                   style: GoogleFonts.redHatDisplay(
                       color: redColor,
                       fontSize: 14,
@@ -53,78 +51,6 @@ class PlayPlaylistScreen extends StatelessWidget {
                 ),
                 foregroundColor: whiteColor,
                 actions: [
-                  Builder(
-                    builder: (context) {
-                      return playlistProvider.isEditing
-                          ? Row(
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) => AlertDialog(
-                                        backgroundColor: Colors.black,
-                                        title: const Text(
-                                          'Delete Playlist',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        content: const Text(
-                                          'Are you sure you want to delete this playlist?',
-                                          style:
-                                              TextStyle(color: Colors.white70),
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () =>
-                                                Navigator.pop(context),
-                                            child: const Text(
-                                              'Cancel',
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                          ),
-                                          TextButton(
-                                            onPressed: () async {
-                                              playlistProvider
-                                                  .setEditing(false);
-                                              Navigator.pop(context);
-                                              Navigator.pop(context);
-                                              await Future.delayed(
-                                                  const Duration(
-                                                      milliseconds: 300));
-                                              playlistProvider.deletePlaylist(
-                                                  playlist.id, context);
-                                            },
-                                            child: const Text(
-                                              'Delete',
-                                              style:
-                                                  TextStyle(color: Colors.red),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                  icon: const Icon(Icons.delete_outline),
-                                  color: whiteColor,
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    playlistProvider.setEditing(false);
-                                  },
-                                  icon: const Icon(Icons.check),
-                                  color: whiteColor,
-                                ),
-                              ],
-                            )
-                          : IconButton(
-                              onPressed: () =>
-                                  playlistProvider.setEditing(true),
-                              icon: const Icon(Icons.edit_outlined),
-                              color: whiteColor,
-                            );
-                    },
-                  ),
                   IconButton(
                     onPressed: () async {
                       if (musicProvider.player.isPlaying.value) {
@@ -132,7 +58,7 @@ class PlayPlaylistScreen extends StatelessWidget {
                       }
                       // Handle playlist play
                       musicProvider.handlePlaylistTap(
-                          context: context, playlist: playlistSongs);
+                          context: context, playlist: albumSongs);
                     },
                     icon: Icon(
                       musicProvider.player.isPlaying.value
@@ -153,11 +79,11 @@ class PlayPlaylistScreen extends StatelessWidget {
                       Container(
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: playlist.imageUrl != null
-                                ? FileImage(File(playlist.imageUrl!))
+                            image: album.imageUrl != null &&
+                                    album.imageUrl!.isNotEmpty
+                                ? NetworkImage(album.imageUrl!)
                                 : const NetworkImage(
-                                        'https://assets.audiomack.com/default-song-image.png')
-                                    as ImageProvider,
+                                    'https://assets.audiomack.com/default-song-image.png'),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -178,7 +104,7 @@ class PlayPlaylistScreen extends StatelessWidget {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Text(
-                                      playlist.playlistName,
+                                      album.name,
                                       style: GoogleFonts.redHatDisplay(
                                         fontWeight: FontWeight.w600,
                                         fontSize: 18,
@@ -188,7 +114,7 @@ class PlayPlaylistScreen extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
-                                      '${playlist.songs.length} songs',
+                                      '${album.songs.length} songs',
                                       style: GoogleFonts.redHatDisplay(
                                         fontWeight: FontWeight.w400,
                                         fontSize: 14,
@@ -209,9 +135,8 @@ class PlayPlaylistScreen extends StatelessWidget {
                                   }
 
                                   // Handle playlist play
-                                 musicProvider.handlePlaylistTap(
-                                      context: context,
-                                      playlist: playlistSongs);
+                                  musicProvider.handlePlaylistTap(
+                                      context: context, playlist: albumSongs);
                                 },
                                 icon: Icon(
                                   musicProvider.player.isPlaying.value
@@ -243,24 +168,46 @@ class PlayPlaylistScreen extends StatelessWidget {
                             SlidableAction(
                               autoClose: true,
                               onPressed: (context) {
-                                playlistProvider.removeSongFromPlaylist(
-                                    updatedPlaylist.id, index);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => AddToPlaylistScreen(
+                                          playlistSongModel: PlaylistSong(
+                                              songName: song.name,
+                                              songArtists: song.artists,
+                                              songImageUrl: song.imageUrl)),
+                                    ));
                               },
                               backgroundColor: redColor,
                               foregroundColor: Colors.white,
-                              icon: Icons.playlist_remove,
+                              icon: Icons.playlist_add,
                               label: 'Remove',
                             ),
                           ],
                         ),
                         child: ListTile(
                           tileColor: blackColor.withOpacity(0.2),
+                          onLongPress: () {
+                            showModalBottomSheet(
+                              useSafeArea: true,
+                              enableDrag: true,
+                              showDragHandle: true,
+                              backgroundColor: eerieblackColor,
+                              context: context,
+                              builder: (context) {
+                                return MoreOptionsSheet(
+                                    song: PlaylistSong(
+                                        songId: song.id,
+                                        songName: song.name,
+                                        songArtists: song.artists,
+                                        songImageUrl: song.imageUrl));
+                              },
+                            );
+                          },
                           onTap: () {
-
                             musicProvider.handlePlaylistTap(
                               context: context,
-                              playlist: mapPlaylistSongsToSongs(
-                                  updatedPlaylist.songs.toList()),
+                              playlist: mapPlaylistSongsToSongs(album.songs),
                               index: index,
                             );
                           },
@@ -270,8 +217,8 @@ class PlayPlaylistScreen extends StatelessWidget {
                             decoration: BoxDecoration(
                               image: DecorationImage(
                                 image: NetworkImage(
-                                  song.songImageUrl.isNotEmpty
-                                      ? song.songImageUrl
+                                  song.imageUrl.isNotEmpty
+                                      ? song.imageUrl
                                       : 'https://assets.audiomack.com/default-song-image.png',
                                 ),
                                 fit: BoxFit.cover,
@@ -280,7 +227,7 @@ class PlayPlaylistScreen extends StatelessWidget {
                             ),
                           ),
                           title: Text(
-                            song.songName,
+                            song.name,
                             style: GoogleFonts.redHatDisplay(
                               color: whiteColor,
                               fontWeight: FontWeight.w700,
@@ -288,38 +235,19 @@ class PlayPlaylistScreen extends StatelessWidget {
                             ),
                           ),
                           subtitle: Text(
-                            song.songArtists,
+                            song.artists,
                             style: GoogleFonts.redHatDisplay(
                               color: darkgreyColor,
                               fontWeight: FontWeight.w600,
                               fontSize: 12,
                             ),
                           ),
-                          trailing: IconButton(
-                            onPressed: () {
-                              playlistProvider.isEditing
-                                  ? playlistProvider.removeSongFromPlaylist(
-                                      updatedPlaylist.id, index)
-                                  : showModalBottomSheet(
-                                      backgroundColor: eerieblackColor,
-                                      context: context,
-                                      builder: (context) {
-                                        return MoreOptionsSheet(
-                                          song: PlaylistSong(
-                                            songId: song.songId,
-                                            songName: song.songName,
-                                            songArtists: song.songArtists,
-                                            songImageUrl: song.songImageUrl,
-                                          ),
-                                        );
-                                      },
-                                    );
-                            },
-                            icon: Icon(
-                              playlistProvider.isEditing
-                                  ? Icons.close
-                                  : Icons.more_horiz,
-                              color: whiteColor,
+                          trailing: Text(
+                            song.trackNumber.toString(),
+                            style: GoogleFonts.redHatDisplay(
+                              color: darkgreyColor,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12,
                             ),
                           ),
                         ),

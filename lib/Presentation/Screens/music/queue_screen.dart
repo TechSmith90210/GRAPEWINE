@@ -48,6 +48,7 @@ class QueueScreen extends StatelessWidget {
                     builder: (context) {
                       return MoreOptionsSheet(
                         song: PlaylistSong(
+                          songId: song.songId,
                           songName: song.songName,
                           songArtists: song.artists,
                           songImageUrl: song.imageUrl,

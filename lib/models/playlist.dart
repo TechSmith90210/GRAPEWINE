@@ -18,7 +18,7 @@ class Playlist {
 
   // Constructor updated to include id as an optional parameter.
   Playlist({
-    this.id = Isar.autoIncrement,  // Allow id to be passed or auto-generated
+    this.id = Isar.autoIncrement, // Allow id to be passed or auto-generated
     required this.playlistName,
     this.imageUrl,
     this.description,
@@ -35,16 +35,18 @@ class PlaylistSong {
   late String songName;
   late String songArtists;
   late String songImageUrl;
+  String? songId;
   int? durationInSeconds;
 
   final playlist = IsarLink<Playlist>(); // Backlink to the Playlist
 
   // Constructor updated to include id as an optional parameter.
   PlaylistSong({
-    this.id = Isar.autoIncrement,  // Allow id to be passed or auto-generated
+    this.id = Isar.autoIncrement, // Allow id to be passed or auto-generated
     required this.songName,
     required this.songArtists,
     required this.songImageUrl,
+    this.songId,
     this.positionInPlaylist,
     this.durationInSeconds,
   });

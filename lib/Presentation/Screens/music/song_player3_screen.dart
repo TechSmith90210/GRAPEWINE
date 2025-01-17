@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
 import 'package:grapewine_music_app/CustomStrings.dart';
-import 'package:grapewine_music_app/Presentation/Screens/music/lyrics_screen.dart';
 import 'package:grapewine_music_app/Presentation/Screens/music/queue_screen.dart';
 import 'package:grapewine_music_app/Presentation/widgets/more_options_sheet.dart';
 import 'package:grapewine_music_app/Providers/like_provider.dart';
@@ -17,7 +16,7 @@ import 'package:provider/provider.dart';
 
 import '../../../Providers/musicPlayer_provider.dart';
 import '../../../models/song_model.dart';
-import '../../widgets/MiniPlayerWidget.dart';
+import '../../../utlities/truncate_text.dart';
 
 class SongPlayer3Screen extends StatefulWidget {
   @override
@@ -63,6 +62,7 @@ class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
     String songName = searchProvider.selectedSongName;
     String songArtist = searchProvider.selectedSongArtist;
     String songImageUrl = searchProvider.selectedSongImage;
+    String songId = searchProvider.selectedSongId;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 15),
@@ -107,6 +107,7 @@ class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
                       builder: (context) {
                         return MoreOptionsSheet(
                             song: PlaylistSong(
+                              songId: songId,
                                 songName: songName,
                                 songArtists: songArtist,
                                 songImageUrl: songImageUrl));
@@ -206,7 +207,9 @@ class _SongPlayer3ScreenState extends State<SongPlayer3Screen> {
                                 .player.current.valueOrNull?.audio.duration
                                 .toString() ??
                             Duration.zero.toString()
-                        ..likedAt = DateTime.now();
+                        ..likedAt = DateTime.now()
+                      ..songId =songId
+                      ;
                       var isLiked = value.isLiked(song);
                       return IconButton(
                         icon: Icon(

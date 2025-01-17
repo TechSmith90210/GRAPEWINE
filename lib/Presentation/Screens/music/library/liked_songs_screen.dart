@@ -108,6 +108,7 @@ class LikedSongsScreen extends StatelessWidget {
                             MaterialPageRoute(
                               builder: (context) => AddToPlaylistScreen(
                                   playlistSongModel: PlaylistSong(
+                                    songId: song.songId,
                                       songName: song.songName,
                                       songArtists: song.songArtists,
                                       songImageUrl: song.songImageUrl)),
@@ -200,62 +201,4 @@ class LikedSongsScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-void handleSongTap({
-  required BuildContext context,
-  required Song song,
-}) async {
-  var searchProvider = Provider.of<SearchProvider>(context, listen: false);
-  var musicPlayerProvider =
-      Provider.of<MusicPlayerProvider>(context, listen: false);
-  var recentProvider =
-      Provider.of<RecentlyPlayedProvider>(context, listen: false);
-  musicPlayerProvider.setFirstSongRun();
-  RecentlyPlayed recentlyPlayed = RecentlyPlayed()
-    ..songName = song.songName
-    ..songArtists = song.artists
-    ..songImageUrl = song.imageUrl
-    ..playedAt = DateTime.now();
-
-  searchProvider.setSongName(song.songName);
-  searchProvider.setSongArtist(song.artists);
-  searchProvider.setSongDetails(
-      '${searchProvider.selectedSongName} ${searchProvider.selectedSongArtist} song audio');
-  print(searchProvider.selectedSongDetails);
-
-  // Set the song cover image with default if necessary
-  String songCover = song.imageUrl.isNotEmpty
-      ? song.imageUrl
-      : 'https://assets.audiomack.com/default-song-image.png';
-  searchProvider.setSongImage(songCover);
-
-  if (musicPlayerProvider.player.isPlaying.value) {
-    await musicPlayerProvider.player.stop();
-
-    await musicPlayerProvider
-        .fetchSong(searchProvider.selectedSongName, searchProvider)
-        .then((value) => musicPlayerProvider.updateDuration(value));
-    recentProvider.toggleRecentlyPlayed(recentlyPlayed);
-  } else {
-    await musicPlayerProvider
-        .fetchSong(searchProvider.selectedSongName, searchProvider)
-        .then((value) => musicPlayerProvider.updateDuration(value));
-    await musicPlayerProvider.player.play();
-    recentProvider.toggleRecentlyPlayed(recentlyPlayed);
-  }
-}
-
-void handlePlaylistTap(
-    {required BuildContext context,
-    required List<Song> playlist,
-    int? index}) async {
-  var searchProvider = Provider.of<SearchProvider>(context, listen: false);
-  var musicPlayerProvider =
-      Provider.of<MusicPlayerProvider>(context, listen: false);
-  var recentProvider =
-      Provider.of<RecentlyPlayedProvider>(context, listen: false);
-  musicPlayerProvider.setFirstSongRun();
-  await musicPlayerProvider
-      .fetchPlaylist(playlist, searchProvider, recentProvider, index: index);
 }

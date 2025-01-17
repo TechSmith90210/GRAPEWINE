@@ -29,8 +29,8 @@ class NewReleasesScreen extends StatelessWidget {
       body: Consumer<NewReleasesProvider>(
         builder: (context, provider, child) {
           // Check if data is loaded
-          if (provider.realalbumNames.isEmpty ||
-              provider.realalbumCovers.isEmpty ||
+          if (provider.albumNames.isEmpty ||
+              provider.albumCovers.isEmpty ||
               provider.allAlbumArtists.isEmpty) {
             return Center(
               child: CircularProgressIndicator(
@@ -46,11 +46,12 @@ class NewReleasesScreen extends StatelessWidget {
               mainAxisSpacing: 6, // Vertical space between items
               crossAxisSpacing: 16, // Horizontal space between items
             ),
-            itemCount: provider.realalbumNames.length,
+            itemCount: provider.albumNames.length,
             itemBuilder: (context, index) {
               Song song = Song(
-                imageUrl: provider.realalbumCovers[index].toString(),
-                songName: provider.realalbumNames[index].toString(),
+                songId: provider.albumIds[index].toString(),
+                imageUrl: provider.albumCovers[index].toString(),
+                songName: provider.albumNames[index].toString(),
                 artists: provider.allAlbumArtists[index].toString(),
               );
               return NewReleaseTile(song: song); // Display each new release

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Colors/colors.dart';
+import 'package:grapewine_music_app/Providers/musicPlayer_provider.dart';
 import 'package:grapewine_music_app/Providers/newReleases_provider.dart';
 import 'package:grapewine_music_app/models/song_model.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
-import '../Screens/music/library/liked_songs_screen.dart';
-import 'MiniPlayerWidget.dart';
+import '../../utlities/truncate_text.dart';
 
 class NewReleasesWidget extends StatelessWidget {
   const NewReleasesWidget({super.key});
@@ -16,8 +16,8 @@ class NewReleasesWidget extends StatelessWidget {
     return Consumer<NewReleasesProvider>(
       builder: (context, provider, child) {
         // Ensure data is available
-        if (provider.realalbumNames.isEmpty ||
-            provider.realalbumCovers.isEmpty ||
+        if (provider.albumNames.isEmpty ||
+            provider.albumCovers.isEmpty ||
             provider.allAlbumArtists.isEmpty) {
           return Center(
             child: CircularProgressIndicator(
@@ -27,15 +27,16 @@ class NewReleasesWidget extends StatelessWidget {
         }
 
         return SizedBox(
-          height: 180, // Adjust the height as needed
+          height: 180,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: provider.realalbumNames.length,
+            itemCount: 10,
             itemBuilder: (context, index) {
               // Create a song object
               Song song = Song(
-                imageUrl: provider.realalbumCovers[index].toString(),
-                songName: provider.realalbumNames[index].toString(),
+                songId: provider.albumIds[index].toString(),
+                imageUrl: provider.albumCovers[index].toString(),
+                songName: provider.albumNames[index].toString(),
                 artists: provider.allAlbumArtists[index].toString(),
               );
 
@@ -56,16 +57,18 @@ class NewReleaseTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<MusicPlayerProvider>(context);
     return GestureDetector(
       onLongPress: () {
         // Handle long press if necessary
       },
       child: Bounceable(
         onTap: () {
-          handleSongTap(context: context, song: song);
+         provider.handleSongTap(context: context, song: song);
         },
         child: Padding(
-          padding: const EdgeInsets.only(left: 13, right: 5, top: 10, bottom: 5),
+          padding:
+              const EdgeInsets.only(left: 13, right: 5, top: 10, bottom: 5),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

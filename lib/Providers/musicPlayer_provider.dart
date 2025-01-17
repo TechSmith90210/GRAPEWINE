@@ -1,6 +1,7 @@
 import 'package:assets_audio_player/assets_audio_player.dart'
     as just; // Use 'just' prefix
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:grapewine_music_app/Providers/recently_played_provider.dart';
 import 'package:grapewine_music_app/Providers/search_provider.dart';
 import 'package:grapewine_music_app/models/recently_played.dart';
@@ -133,10 +134,11 @@ class MusicPlayerProvider with ChangeNotifier {
         // Clear the queue and add the new song to it
         _queue.clear(); // Clear the queue
         _queue.add(Song(
-          songName: provider.selectedSongName,
-          artists: provider.selectedSongArtist,
-          imageUrl: provider.selectedSongImage,
-        )); // Add the fetched song to the queue
+            songName: provider.selectedSongName,
+            artists: provider.selectedSongArtist,
+            imageUrl: provider.selectedSongImage,
+            songId:
+                provider.selectedSongId)); // Add the fetched song to the queue
 
         // Open the new audio and start playback
         await _player.open(
@@ -196,6 +198,7 @@ class MusicPlayerProvider with ChangeNotifier {
     try {
       // Clear the current queue
       _queue.clear();
+      _player.stop();
 
       // Temporary lists to hold audios and songs
       List<just.Audio> audioList = [];
@@ -215,7 +218,7 @@ class MusicPlayerProvider with ChangeNotifier {
             metas: just.Metas(
               title: song.songName,
               artist: song.artists,
-              album: 'album',
+              album: provider.selectedSongAlbum,
               image: just.MetasImage(
                 path: song.imageUrl,
                 type: just.ImageType.network,
@@ -228,10 +231,10 @@ class MusicPlayerProvider with ChangeNotifier {
 
           // Create a new Song object from the current song
           Song songItem = Song(
-            songName: song.songName,
-            artists: song.artists,
-            imageUrl: song.imageUrl,
-          );
+              songName: song.songName,
+              artists: song.artists,
+              imageUrl: song.imageUrl,
+              songId: song.songId);
 
           // Add the Song object to the songQueue
           songQueue.add(songItem);
@@ -351,4 +354,94 @@ class MusicPlayerProvider with ChangeNotifier {
     _queue.removeAt(index);
     notifyListeners(); // Notify listeners of changes
   }
+
+  void handleSongTap({
+    required BuildContext context,
+    required Song song,
+  }) async {
+    var searchProvider = Provider.of<SearchProvider>(context, listen: false);
+    var musicPlayerProvider =
+        Provider.of<MusicPlayerProvider>(context, listen: false);
+    var recentProvider =
+        Provider.of<RecentlyPlayedProvider>(context, listen: false);
+    musicPlayerProvider.setFirstSongRun();
+    RecentlyPlayed recentlyPlayed = RecentlyPlayed()
+      ..songName = song.songName
+      ..songArtists = song.artists
+      ..songImageUrl = song.imageUrl
+      ..playedAt = DateTime.now()
+      ..songId = song.songId!;
+
+    searchProvider.setSongName(song.songName);
+    searchProvider.setSongArtist(song.artists);
+    searchProvider.setSongDetails(
+        '${searchProvider.selectedSongName} ${searchProvider.selectedSongArtist} song audio');
+    searchProvider.setSongId(song.songId!);
+    print(searchProvider.selectedSongDetails);
+
+    // Set the song cover image with default if necessary
+    String songCover = song.imageUrl.isNotEmpty
+        ? song.imageUrl
+        : 'https://assets.audiomack.com/default-song-image.png';
+    searchProvider.setSongImage(songCover);
+
+    if (musicPlayerProvider.player.isPlaying.value) {
+      await musicPlayerProvider.player.stop();
+
+      await musicPlayerProvider
+          .fetchSong(searchProvider.selectedSongName, searchProvider)
+          .then((value) => musicPlayerProvider.updateDuration(value));
+      recentProvider.toggleRecentlyPlayed(recentlyPlayed);
+    } else {
+      await musicPlayerProvider
+          .fetchSong(searchProvider.selectedSongName, searchProvider)
+          .then((value) => musicPlayerProvider.updateDuration(value));
+      await musicPlayerProvider.player.play();
+      recentProvider.toggleRecentlyPlayed(recentlyPlayed);
+    }
+  }
+
+  void handlePlaylistTap({
+    required BuildContext context,
+    required List<Song> playlist,
+    int? index,
+  }) async {
+    var searchProvider = Provider.of<SearchProvider>(context, listen: false);
+    var musicPlayerProvider =
+    Provider.of<MusicPlayerProvider>(context, listen: false);
+    var recentProvider =
+    Provider.of<RecentlyPlayedProvider>(context, listen: false);
+
+    // Get the current song from the playlist using the index
+    Song song = playlist[index ?? 0]; // Fallback to the first song if index is null
+
+    // Update MusicPlayerProvider and SearchProvider
+    musicPlayerProvider.setFirstSongRun();
+    searchProvider.setSongName(song.songName);
+    searchProvider.setSongArtist(song.artists);
+    searchProvider.setSongDetails(
+        '${song.songName} ${song.artists} song audio');
+    searchProvider.setSongId(song.songId!);
+
+    print('Selected Song Details: ${searchProvider.selectedSongDetails}');
+
+    // Create a RecentlyPlayed object and add it to the provider
+    RecentlyPlayed recentlyPlayed = RecentlyPlayed()
+      ..songName = song.songName
+      ..songArtists = song.artists
+      ..songImageUrl = song.imageUrl
+      ..playedAt = DateTime.now()
+      ..songId = song.songId!;
+
+    recentProvider.addRecentlyPlayed(recentlyPlayed);
+
+    // Fetch the playlist in MusicPlayerProvider
+    await musicPlayerProvider.fetchPlaylist(
+      playlist,
+      searchProvider,
+      recentProvider,
+      index: index,
+    );
+  }
+
 }

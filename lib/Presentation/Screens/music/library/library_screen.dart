@@ -7,13 +7,14 @@ import 'package:grapewine_music_app/Providers/recently_played_provider.dart';
 import 'package:grapewine_music_app/models/playlist.dart';
 import 'package:provider/provider.dart';
 import '../../../../Providers/like_provider.dart';
+import '../../../../Providers/musicPlayer_provider.dart';
 import '../../../../models/song_model.dart';
+import '../../../../utlities/truncate_text.dart';
 import '../../../widgets/more_options_sheet.dart';
 import 'liked_songs_screen.dart';
 import 'recently_played_screen.dart';
 import '../../../widgets/AppBarWidget.dart';
 import '../../../../Colors/colors.dart';
-import '../../../widgets/MiniPlayerWidget.dart';
 
 class LibraryScreen extends StatefulWidget {
   const LibraryScreen({super.key});
@@ -201,6 +202,7 @@ class _LibraryScreenState extends State<LibraryScreen> {
                                 imageUrl: song.songImageUrl,
                                 songTitle: song.songName,
                                 songArtist: song.songArtists,
+                                songId: song.songId
                               );
                             },
                             itemCount: songs.length < 6 ? songs.length : 6,
@@ -220,6 +222,7 @@ Widget buildSongTileWidget({
   required String imageUrl,
   required String songTitle,
   required String songArtist,
+  required String songId,
   required BuildContext cx,
 }) {
   return GestureDetector(
@@ -233,6 +236,7 @@ Widget buildSongTileWidget({
         builder: (context) {
           return MoreOptionsSheet(
               song: PlaylistSong(
+                songId: songId,
                   songName: songTitle,
                   songArtists: songArtist,
                   songImageUrl: imageUrl));
@@ -241,12 +245,15 @@ Widget buildSongTileWidget({
     },
     child: Bounceable(
       onTap: () {
-        handleSongTap(
+        var provider = Provider.of<MusicPlayerProvider>(cx,listen: false);
+
+        provider.handleSongTap(
           context: cx,
           song: Song(
             imageUrl: imageUrl,
             songName: songTitle,
             artists: songArtist,
+            songId: songId
           ),
         );
       },

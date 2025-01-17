@@ -3,14 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grapewine_music_app/Data/services/local_helper.dart';
 import 'package:grapewine_music_app/Presentation/Screens/music/home/the_music_pages.dart';
+import 'package:grapewine_music_app/Providers/album_provider.dart';
 import 'package:grapewine_music_app/Providers/auth_provider.dart';
 import 'package:grapewine_music_app/Providers/navigator_provider.dart';
 import 'package:grapewine_music_app/Providers/playlist_provider.dart';
 import 'package:grapewine_music_app/Providers/recently_played_provider.dart';
-import 'package:grapewine_music_app/Providers/albumInfo_provider.dart';
 import 'package:grapewine_music_app/Providers/musicPlayer_provider.dart';
 import 'package:grapewine_music_app/Providers/newReleases_provider.dart';
-import 'package:grapewine_music_app/Providers/newFinds_provider.dart';
 import 'package:grapewine_music_app/Providers/accessToken_provider.dart';
 import 'package:grapewine_music_app/Providers/search_provider.dart';
 import 'package:provider/provider.dart';
@@ -53,11 +52,10 @@ Future<void> main() async {
         ChangeNotifierProvider(
             create: (context) => AuthProvider(initialDate: DateTime.now())),
         ChangeNotifierProvider(create: (context) => MusicPlayerProvider()),
-        ChangeNotifierProvider(create: (context) => AlbumInfoProvider()),
         ChangeNotifierProvider(create: (context) => NewReleasesProvider()),
-        ChangeNotifierProvider(create: (context) => NewFindsProvider()),
         ChangeNotifierProvider(create: (context) => AccessTokenProvider()),
         ChangeNotifierProvider(create: (context) => SearchProvider()),
+        ChangeNotifierProvider(create: (context) => AlbumProvider(),),
         ChangeNotifierProvider(
           create: (context) {
             final likedProvider = LikedProvider();
@@ -98,6 +96,7 @@ class MusicApp extends StatelessWidget {
       title: 'GrapeWine Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        brightness: Brightness.dark,
         scaffoldBackgroundColor: backgroundColor,
         colorSchemeSeed: whiteColor,
         fontFamily: GoogleFonts.redHatDisplay().fontFamily,

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
+import 'package:provider/provider.dart';
 import '../../Colors/colors.dart';
+import '../../Providers/musicPlayer_provider.dart';
 import '../../models/song_model.dart';
-import '../Screens/music/library/liked_songs_screen.dart';
 
 class Trendingitemwidget extends StatelessWidget {
   final String imageUrl;
@@ -132,7 +133,8 @@ class _TrendingSongsScrollableListState
                   imageUrl: artistImages[index],
                   songName: artistSongNames[index],
                   artists: artistNames[index]);
-              handleSongTap(context: context, song: song);
+              var provider = Provider.of<MusicPlayerProvider>(context);
+             provider.handleSongTap(context: context, song: song);
             },
           );
         },

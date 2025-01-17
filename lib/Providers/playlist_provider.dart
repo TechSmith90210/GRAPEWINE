@@ -162,6 +162,7 @@ class PlaylistProvider extends ChangeNotifier {
         songName: songModel.songName,
         artists: songModel.songArtists,
         imageUrl: songModel.songImageUrl,
+        songId: songModel.songId
       );
     }).toList();
 

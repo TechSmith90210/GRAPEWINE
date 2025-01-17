@@ -9,6 +9,7 @@ class LikedSongs{
   late String songName; // name of the song
   late String songArtists; // song artists name
   late String songImageUrl; // link of the song's image
+  late String songId;
 
   late String? songDuration; // duration of song
 

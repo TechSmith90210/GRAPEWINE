@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 
 import '../../Colors/colors.dart';
 import '../../models/song_model.dart';
-import 'MiniPlayerWidget.dart'; // Adjust this import based on your project structure
 
 class MoreOptionsSheet extends StatelessWidget {
   final PlaylistSong song;

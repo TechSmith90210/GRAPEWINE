@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:grapewine_music_app/Presentation/Screens/music/library/liked_songs_screen.dart';
 import 'package:grapewine_music_app/models/playlist.dart';
 import 'package:provider/provider.dart';
 
 import '../../Colors/colors.dart';
+import '../../Providers/musicPlayer_provider.dart';
 import '../../Providers/recently_played_provider.dart';
 import '../../models/song_model.dart';
 import 'more_options_sheet.dart';
@@ -47,6 +47,7 @@ class PreviouslyPlayedCircleWidget extends StatelessWidget {
         artists: recentlyPlayedSong.songArtists);
 
     PlaylistSong songModel = PlaylistSong(
+      songId: recentlyPlayedSong.songId,
         songName: recentlyPlayedSong.songName,
         songArtists: recentlyPlayedSong.songArtists,
         songImageUrl: recentlyPlayedSong.songImageUrl);
@@ -65,7 +66,9 @@ class PreviouslyPlayedCircleWidget extends StatelessWidget {
         );
       },
       child: Bounceable(
-        onTap: () => handleSongTap(context: context, song: song),
+        onTap: () {
+          var provider = Provider.of<MusicPlayerProvider>(context,listen: false);
+          provider.handleSongTap(context: context, song: song);},
         child: Column(
           children: [
             Padding(

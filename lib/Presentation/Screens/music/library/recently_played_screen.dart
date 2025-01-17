@@ -63,6 +63,7 @@ class RecentlyPlayedScreen extends StatelessWidget {
                             imageUrl: song.songImageUrl,
                             songTitle: song.songName,
                             songArtist: song.songArtists,
+                            songId: song.songId
                           );
                         },
                         itemCount: songs.length,
