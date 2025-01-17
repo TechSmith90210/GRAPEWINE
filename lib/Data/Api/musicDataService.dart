@@ -56,7 +56,7 @@ class MusicDataService {
           albumIds, albumNames, allAlbumArtists, albumCovers,albumTypes);
 
       // print(albumIds.toString());
-      print('loaded new releases');
+      // print('loaded new releases');
     } catch (e) {
       print('Error fetching new releases: $e');
     }

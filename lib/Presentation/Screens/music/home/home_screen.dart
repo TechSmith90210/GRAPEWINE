@@ -15,6 +15,7 @@ import 'package:grapewine_music_app/Providers/search_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../../Data/Api/MusicApisss.dart';
 import '../../../../Providers/recently_played_provider.dart';
+import '../../../widgets/PlaylistsTiles.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -278,7 +279,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Songs You Might Like',
+                            'Your Playlists',
                             style: GoogleFonts.redHatDisplay(
                               color: greenColor,
                               fontWeight: FontWeight.w900,
@@ -304,6 +305,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ),
+                    const PlaylistsWidget(),
                   ],
                 ),
               ),

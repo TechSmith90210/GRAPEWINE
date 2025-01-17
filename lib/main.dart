@@ -36,7 +36,7 @@ void callbackDispatcher() {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Workmanager().initialize(callbackDispatcher,
-      isInDebugMode: true); // Set `isInDebugMode: false` for production
+      isInDebugMode: false); // Set `isInDebugMode: false` for production
   Workmanager().registerPeriodicTask(
     '1', // Unique identifier for the task
     'refreshAccessToken', // Task name

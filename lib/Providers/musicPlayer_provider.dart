@@ -296,25 +296,33 @@ class MusicPlayerProvider with ChangeNotifier {
     }
   }
 
-  // Functions for controlling playlist
-  Future<void> handleNextAction(just.AssetsAudioPlayer player,
-      SearchProvider provider, RecentlyPlayedProvider recentProvider) async {
+  Future<void> handleNextAction(
+    just.AssetsAudioPlayer player,
+    SearchProvider provider,
+    RecentlyPlayedProvider recentProvider,
+  ) async {
     try {
       await player.next(stopIfLast: true); // Play the next song, stop if last
-      final currentSongMetas = player.current.value!.audio.audio.metas;
 
-      // Update the SearchProvider with the current song's title, artists, and image
-      provider.setSongName(currentSongMetas.title!);
-      provider.setSongArtist(currentSongMetas.artist!);
-      provider.setSongImage(currentSongMetas.image!.path);
+      final currentSongMetas = player.current.value?.audio.audio.metas;
 
-      RecentlyPlayed recentlyPlayed = RecentlyPlayed()
-        ..songName = currentSongMetas.title.toString()
-        ..songArtists = currentSongMetas.artist.toString()
-        ..songImageUrl = currentSongMetas.image!.path.toString()
-        ..playedAt = DateTime.now();
+      if (currentSongMetas != null) {
+        // Update the SearchProvider with the current song's details
+        provider.setSongName(currentSongMetas.title ?? 'Unknown Title');
+        provider.setSongArtist(currentSongMetas.artist ?? 'Unknown Artist');
+        provider.setSongImage(currentSongMetas.image?.path ?? '');
 
-      recentProvider.addRecentlyPlayed(recentlyPlayed);
+        // Create RecentlyPlayed object
+        RecentlyPlayed recentlyPlayed = RecentlyPlayed()
+          ..songName = currentSongMetas.title ?? 'Unknown Title'
+          ..songArtists = currentSongMetas.artist ?? 'Unknown Artist'
+          ..songImageUrl = currentSongMetas.image?.path ?? ''
+          ..playedAt = DateTime.now()
+          ..songId = currentSongMetas.id ?? '';
+
+        // Add to recently played list
+        recentProvider.addRecentlyPlayed(recentlyPlayed);
+      }
     } catch (e) {
       if (kDebugMode) {
         print('Error handling next action: $e');
@@ -408,19 +416,20 @@ class MusicPlayerProvider with ChangeNotifier {
   }) async {
     var searchProvider = Provider.of<SearchProvider>(context, listen: false);
     var musicPlayerProvider =
-    Provider.of<MusicPlayerProvider>(context, listen: false);
+        Provider.of<MusicPlayerProvider>(context, listen: false);
     var recentProvider =
-    Provider.of<RecentlyPlayedProvider>(context, listen: false);
+        Provider.of<RecentlyPlayedProvider>(context, listen: false);
 
     // Get the current song from the playlist using the index
-    Song song = playlist[index ?? 0]; // Fallback to the first song if index is null
+    Song song =
+        playlist[index ?? 0]; // Fallback to the first song if index is null
 
     // Update MusicPlayerProvider and SearchProvider
     musicPlayerProvider.setFirstSongRun();
     searchProvider.setSongName(song.songName);
     searchProvider.setSongArtist(song.artists);
-    searchProvider.setSongDetails(
-        '${song.songName} ${song.artists} song audio');
+    searchProvider
+        .setSongDetails('${song.songName} ${song.artists} song audio');
     searchProvider.setSongId(song.songId!);
 
     print('Selected Song Details: ${searchProvider.selectedSongDetails}');
@@ -435,6 +444,8 @@ class MusicPlayerProvider with ChangeNotifier {
 
     recentProvider.addRecentlyPlayed(recentlyPlayed);
 
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Playing playlist')));
+
     // Fetch the playlist in MusicPlayerProvider
     await musicPlayerProvider.fetchPlaylist(
       playlist,
@@ -443,5 +454,4 @@ class MusicPlayerProvider with ChangeNotifier {
       index: index,
     );
   }
-
 }

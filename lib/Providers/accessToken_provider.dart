@@ -39,12 +39,12 @@ class AccessTokenProvider with ChangeNotifier {
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = json.decode(response.body);
       final accessToken = data['access_token'];
-      print('Access Token: $accessToken');
+      // print('Access Token: $accessToken');
       saveAccessToken(accessToken);
       return accessToken;
     } else {
       print('Failed to get access token. Status code: ${response.statusCode}');
-      print('Response body: ${response.body}');
+      // print('Response body: ${response.body}');
       return null;
     }
   }
