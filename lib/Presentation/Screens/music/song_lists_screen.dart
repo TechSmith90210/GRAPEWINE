@@ -134,9 +134,15 @@ class SongListsScreen extends StatelessWidget {
                                     await musicProvider.player.pause();
                                   }
 
-                                  // Handle playlist play
-                                  musicProvider.handlePlaylistTap(
-                                      context: context, playlist: albumSongs);
+                                  if (albumSongs.length > 1) {
+                                    // Handle playlist play
+                                    musicProvider.handlePlaylistTap(
+                                        context: context, playlist: albumSongs);
+                                  } else {
+                                    musicProvider.handleSongTap(
+                                        context: context,
+                                        song: albumSongs.first);
+                                  }
                                 },
                                 icon: Icon(
                                   musicProvider.player.isPlaying.value

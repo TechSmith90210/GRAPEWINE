@@ -1,0 +1,2 @@
+C:/Users/salma/AndroidStudioProjects/Grapewine_music_app/android/app/.cxx/RelWithDebInfo/2e2u3h42/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/salma/AndroidStudioProjects/Grapewine_music_app/android/app/.cxx/RelWithDebInfo/2e2u3h42/x86_64/CMakeFiles/rebuild_cache.dir

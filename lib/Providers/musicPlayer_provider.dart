@@ -188,17 +188,17 @@ class MusicPlayerProvider with ChangeNotifier {
   }
 
   Future<void> fetchPlaylist(
-    List<Song> playlist,
-    SearchProvider provider,
-    RecentlyPlayedProvider recentProvider, {
-    int? index,
-  }) async {
+      List<Song> playlist,
+      SearchProvider provider,
+      RecentlyPlayedProvider recentProvider, {
+        int? index,
+      }) async {
     final yt = YoutubeExplode();
 
     try {
-      // Clear the current queue
+      // Clear the current queue and stop playback
       _queue.clear();
-      _player.stop();
+      await _player.stop();
 
       // Temporary lists to hold audios and songs
       List<just.Audio> audioList = [];
@@ -206,75 +206,101 @@ class MusicPlayerProvider with ChangeNotifier {
 
       for (var song in playlist) {
         var songName = song.songName;
-        if (songName != null) {
-          final video = (await yt.search.search(songName)).first;
-          final videoId = video.id.value;
-          var manifest = await yt.videos.streamsClient.getManifest(videoId);
-          audioUrl = manifest.audioOnly.first.url;
 
-          // Create an Audio object for just_audio
-          just.Audio audio = just.Audio.network(
-            audioUrl.toString(),
-            metas: just.Metas(
-              title: song.songName,
-              artist: song.artists,
-              album: provider.selectedSongAlbum,
-              image: just.MetasImage(
-                path: song.imageUrl,
-                type: just.ImageType.network,
+        if (songName != null && songName.isNotEmpty) {
+          try {
+            // Fetch video details
+            final video = (await yt.search.search(songName)).firstOrNull;
+
+            if (video == null) {
+              print('No video found for song: $songName');
+              continue;
+            }
+
+            final videoId = video.id.value;
+            final manifest = await yt.videos.streamsClient.getManifest(videoId);
+
+            if (manifest.audioOnly.isEmpty) {
+              print('No audio streams found for video: $songName');
+              continue;
+            }
+
+            // Fetch the first audio URL
+            final audioUrl = manifest.audioOnly.first.url.toString();
+
+            // Validate the audio URL
+            if (audioUrl.isEmpty || !(audioUrl.startsWith('http://') || audioUrl.startsWith('https://'))) {
+              print('Invalid audio URL: $audioUrl for song: $songName');
+              continue;
+            }
+
+            // Create an Audio object for just_audio
+            just.Audio audio = just.Audio.network(
+              audioUrl,
+              metas: just.Metas(
+                title: song.songName ?? 'Unknown Title',
+                artist: song.artists ?? 'Unknown Artist',
+                album: provider.selectedSongAlbum ?? 'Unknown Album',
+                image: just.MetasImage(
+                  path: song.imageUrl.isNotEmpty
+                      ? song.imageUrl
+                      : 'https://assets.audiomack.com/default-song-image.png',
+                  type: just.ImageType.network,
+                ),
               ),
-            ),
-          );
+            );
 
-          // Add the Audio object to the audio list
-          audioList.add(audio);
+            // Add the Audio object to the audio list
+            audioList.add(audio);
 
-          // Create a new Song object from the current song
-          Song songItem = Song(
-              songName: song.songName,
-              artists: song.artists,
-              imageUrl: song.imageUrl,
-              songId: song.songId);
-
-          // Add the Song object to the songQueue
-          songQueue.add(songItem);
+            // Add the song to the songQueue
+            songQueue.add(song);
+          } catch (e, stackTrace) {
+            print('Error processing song: $songName\n$e\n$stackTrace');
+          }
+        } else {
+          print('Invalid song name: $songName');
         }
       }
 
-      // Update the queue with the new songQueue
+      // Update the queue with the new songs
       _queue.addAll(songQueue);
 
-      // Open the playlist
-      await _player.open(
-        just.Playlist(audios: audioList, startIndex: index ?? 0),
-        loopMode: just.LoopMode.playlist,
-        showNotification: true,
-        respectSilentMode: true,
-        autoStart: true,
-        playInBackground: just.PlayInBackground.enabled,
-        notificationSettings: just.NotificationSettings(
-          seekBarEnabled: true,
-          playPauseEnabled: true,
-          customNextAction: (player) =>
-              handleNextAction(_player, provider, recentProvider),
-          customPrevAction: (player) => handlePrevAction(_player, provider),
-          customPlayPauseAction: (player) async {
-            if (player.isPlaying.value) {
-              await player.pause();
-              togglePlayPause();
-            } else {
-              await player.play();
-              togglePlayPause();
-            }
-          },
-        ),
-      );
+      // Open the playlist if there are valid songs
+      if (audioList.isNotEmpty) {
+        await _player.open(
+          just.Playlist(audios: audioList, startIndex: index ?? 0),
+          loopMode: just.LoopMode.playlist,
+          showNotification: true,
+          respectSilentMode: true,
+          autoStart: true,
+          playInBackground: just.PlayInBackground.enabled,
+          notificationSettings: just.NotificationSettings(
+            seekBarEnabled: true,
+            playPauseEnabled: true,
+            customNextAction: (player) =>
+                handleNextAction(_player, provider, recentProvider),
+            customPrevAction: (player) => handlePrevAction(_player, provider),
+            customPlayPauseAction: (player) async {
+              if (player.isPlaying.value) {
+                await player.pause();
+                togglePlayPause();
+              } else {
+                await player.play();
+                togglePlayPause();
+              }
+            },
+          ),
+        );
 
-      // Update metadata for the current song
-      final currentSongMetas = _player.playlist!.audios.first.metas;
-      provider.setSongName(currentSongMetas.title ?? 'Unknown Title');
-      provider.setSongArtist(currentSongMetas.artist ?? 'Unknown Artist');
-      provider.setSongImage(currentSongMetas.image?.path ?? '');
+        // Update metadata for the current song
+        final currentSongMetas = _player.playlist!.audios.first.metas;
+        provider.setSongName(currentSongMetas.title ?? 'Unknown Title');
+        provider.setSongArtist(currentSongMetas.artist ?? 'Unknown Artist');
+        provider.setSongImage(currentSongMetas.image?.path ?? '');
+      } else {
+        print('No valid audio found to play.');
+      }
 
       // Listen for changes in the current playing song
       _player.current.listen((playing) {
@@ -289,12 +315,13 @@ class MusicPlayerProvider with ChangeNotifier {
 
       // Notify provider listeners
       provider.notifyListeners();
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error fetching playlist: $e');
-      }
+    } catch (e, stackTrace) {
+      print('Error fetching playlist: $e\n$stackTrace');
+    } finally {
+      yt.close();
     }
   }
+
 
   Future<void> handleNextAction(
     just.AssetsAudioPlayer player,
@@ -444,7 +471,8 @@ class MusicPlayerProvider with ChangeNotifier {
 
     recentProvider.addRecentlyPlayed(recentlyPlayed);
 
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Playing playlist')));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text('Playing Music')));
 
     // Fetch the playlist in MusicPlayerProvider
     await musicPlayerProvider.fetchPlaylist(
